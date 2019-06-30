@@ -1,12 +1,47 @@
 version: 2
 jobs:
-  build:
+  init:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - run: npm install
+  tests:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - run: npm run tests
+  eslint:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - run: npm run eslint
+  webext-lint:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - run: npm run webext-lint
+  coverage:
     docker:
       - image: circleci/node:latest
         environment:
           CODECOV_TOKEN: "03abe765-47ae-4fb7-a03e-3c2a67df98eb"
     steps:
-      - checkout
-      - run: npm install
-      - run: npm test
       - run: npm run coverage
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - init
+      - tests:
+          requires:
+            - init
+      - eslint:
+          requires:
+            - init
+      - webext-lint:
+          requires:
+            - init
+      - coverage:
+          requires:
+            - init
