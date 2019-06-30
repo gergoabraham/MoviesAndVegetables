@@ -4,30 +4,36 @@ jobs:
   checkout_and_install_npm:
     docker:
       - image: circleci/node:latest
-    working_directory: ~/movies-and-vegetables-workflows
     steps:
       - checkout
       - run: npm install
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ./
 
   tests:
     docker:
       - image: circleci/node:latest
-    working_directory: ~/movies-and-vegetables-workflows
     steps:
+      - attach_workspace:
+          at: ./
       - run: npm run tests
 
   eslint:
     docker:
       - image: circleci/node:latest
-    working_directory: ~/movies-and-vegetables-workflows
     steps:
+      - attach_workspace:
+          at: ./
       - run: npm run eslint
 
   webext-lint:
     docker:
       - image: circleci/node:latest
-    working_directory: ~/movies-and-vegetables-workflows
     steps:
+      - attach_workspace:
+          at: ./
       - run: npm run webext-lint
 
   coverage:
@@ -35,8 +41,9 @@ jobs:
       - image: circleci/node:latest
     environment:
       CODECOV_TOKEN: "03abe765-47ae-4fb7-a03e-3c2a67df98eb"
-    working_directory: ~/movies-and-vegetables-workflows
     steps:
+      - attach_workspace:
+          at: ./
       - run: npm run coverage
 
 
