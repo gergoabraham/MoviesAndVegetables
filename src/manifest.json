@@ -6,16 +6,9 @@
   "description": "Linking movies' IMDb and RottenTomatoes pages.",
 
   "permissions": [
-    "cookies",
-    "contextualIdentities",
-    "storage"
   ],
 
-  "browser_action": {
-    "default_popup": "popup.html"
-  },
-
   "background": {
-    "page": "background.html"
+    "page": "background.js"
   }
 }
