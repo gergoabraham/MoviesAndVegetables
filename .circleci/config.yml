@@ -1,47 +1,59 @@
 version: 2
 jobs:
-  init:
+
+  checkout_and_install_npm:
     docker:
       - image: circleci/node:latest
+    working_directory: ~/movies-and-vegetables-workflows
     steps:
       - checkout
       - run: npm install
+
   tests:
     docker:
       - image: circleci/node:latest
+    working_directory: ~/movies-and-vegetables-workflows
     steps:
       - run: npm run tests
+
   eslint:
     docker:
       - image: circleci/node:latest
+    working_directory: ~/movies-and-vegetables-workflows
     steps:
       - run: npm run eslint
+
   webext-lint:
     docker:
       - image: circleci/node:latest
+    working_directory: ~/movies-and-vegetables-workflows
     steps:
       - run: npm run webext-lint
+
   coverage:
     docker:
       - image: circleci/node:latest
-        environment:
-          CODECOV_TOKEN: "03abe765-47ae-4fb7-a03e-3c2a67df98eb"
+    environment:
+      CODECOV_TOKEN: "03abe765-47ae-4fb7-a03e-3c2a67df98eb"
+    working_directory: ~/movies-and-vegetables-workflows
     steps:
       - run: npm run coverage
+
+
 workflows:
   version: 2
   build_and_test:
     jobs:
-      - init
+      - checkout_and_install_npm
       - tests:
           requires:
-            - init
+            - checkout_and_install_npm
       - eslint:
           requires:
-            - init
+            - checkout_and_install_npm
       - webext-lint:
           requires:
-            - init
+            - checkout_and_install_npm
       - coverage:
           requires:
-            - init
+            - checkout_and_install_npm
