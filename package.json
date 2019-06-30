@@ -2,8 +2,11 @@
   "name": "movies-and-vegetables",
   "version": "0.0.0",
   "scripts": {
-    "pretest": "eslint --ignore-path .gitignore .",
-    "test": "mocha test/**/*.test.js",
+    "eslint": "eslint --ignore-path .gitignore .",
+    "webext-lint": "web-ext -s src lint",
+    "tests": "mocha test/**/*.test.js",
+    "test": "npm run eslint & npm run webext-lint & npm run tests",
+
     "coverage": "nyc --reporter=lcov --reporter=text mocha test/**/*.test.js --timeout 60000 && codecov",
     
     "fix-eslint": "eslint --ignore-path .gitignore . --fix"
