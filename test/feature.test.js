@@ -28,9 +28,10 @@ describe('Random Container Tab', () => {
       });
 
       it('should create a tab in the correct container', async () => {
-        const createdRandomContainer = await webExtension.background.browser.contextualIdentities.create.firstCall.returnValue;
+        const createdRandomContainer =
+          await webExtension.background.browser.contextualIdentities.create.firstCall.returnValue;
         expect(webExtension.background.browser.tabs.create).to.have.been.calledWithMatch({
-          cookieStoreId: createdRandomContainer.cookieStoreId
+          cookieStoreId: createdRandomContainer.cookieStoreId,
         });
       });
     });
