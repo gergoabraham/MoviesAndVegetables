@@ -3,6 +3,8 @@ jobs:
   build:
     docker:
       - image: circleci/node:latest
+        environment:
+          CODECOV_TOKEN: "03abe765-47ae-4fb7-a03e-3c2a67df98eb"
     steps:
       - checkout
       - run: npm install
