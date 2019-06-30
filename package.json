@@ -1,11 +1,11 @@
 {
-  "name": "random-container-tab",
+  "name": "movies-and-vegetables",
   "version": "0.0.0",
   "scripts": {
     "test": "mocha test/**/*.test.js",
     "coverage": "nyc --reporter=html --reporter=text mocha test/**/*.test.js --timeout 60000"
   },
-  "author": "stoically <stoically@protonmail.com>",
+  "author": "gergooo <abrahamgergo@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",

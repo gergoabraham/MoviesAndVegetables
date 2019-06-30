@@ -1,9 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "Random Container Tab",
-  "version": "0.0.1",
+  "name": "Movies and Vegetables",
+  "version": "0.0.0",
 
-  "description": "Example WebExtension that creates a tab in a random container",
+  "description": "Linking movies' IMDb and RottenTomatoes pages.",
 
   "permissions": [
     "cookies",
