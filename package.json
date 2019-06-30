@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "test": "mocha test/**/*.test.js",
-    "coverage": "nyc --reporter=html --reporter=text mocha test/**/*.test.js --timeout 60000 && codecov"
+    "coverage": "nyc --reporter=lcovonly mocha test/**/*.test.js --timeout 60000 && codecov"
   },
   "author": "gergooo <abrahamgergo@gmail.com>",
   "license": "MIT",
