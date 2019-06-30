@@ -2,6 +2,7 @@
   "name": "movies-and-vegetables",
   "version": "0.0.0",
   "scripts": {
+    "pretest": "eslint --ignore-path .gitignore . --fix",
     "test": "mocha test/**/*.test.js",
     "coverage": "nyc --reporter=lcov --reporter=text mocha test/**/*.test.js --timeout 60000 && codecov"
   },
@@ -9,10 +10,12 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
+    "codecov": "^3.5.0",
+    "eslint": "^6.0.1",
+    "eslint-config-google": "^0.13.0",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
     "sinon-chai": "^3.3.0",
-    "webextensions-jsdom": "^0.16.0",
-    "codecov": "^3.5.0"
+    "webextensions-jsdom": "^0.16.0"
   }
 }
