@@ -9,7 +9,8 @@ const manifestPath = path.resolve(path.join(__dirname, '../src/manifest.json'));
 describe('Movies and Vegetables', () => {
   let webExtension;
   beforeEach(async () => {
-    webExtension = await webExtensionsJSDOM.fromManifest(manifestPath, {apiFake: true, wiring: true});
+    webExtension = await webExtensionsJSDOM
+        .fromManifest(manifestPath, {apiFake: true, wiring: true});
   });
 
   describe('Started', () => {
