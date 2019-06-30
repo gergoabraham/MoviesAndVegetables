@@ -2,9 +2,11 @@
   "name": "movies-and-vegetables",
   "version": "0.0.0",
   "scripts": {
-    "pretest": "eslint --ignore-path .gitignore . --fix",
+    "pretest": "eslint --ignore-path .gitignore .",
     "test": "mocha test/**/*.test.js",
-    "coverage": "nyc --reporter=lcov --reporter=text mocha test/**/*.test.js --timeout 60000 && codecov"
+    "coverage": "nyc --reporter=lcov --reporter=text mocha test/**/*.test.js --timeout 60000 && codecov",
+    
+    "fix-eslint": "eslint --ignore-path .gitignore . --fix"
   },
   "author": "gergooo <abrahamgergo@gmail.com>",
   "license": "MIT",
