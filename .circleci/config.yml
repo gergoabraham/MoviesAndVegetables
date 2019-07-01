@@ -44,7 +44,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npm run coverage
+      - run: npm run coverageCI
 
 
 workflows:
