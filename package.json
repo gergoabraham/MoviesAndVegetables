@@ -5,8 +5,9 @@
     "eslint": "eslint --ignore-path .gitignore .",
     "webext-lint": "web-ext -s src lint",
     "tests": "mocha test/**/*.test.js",
-    "test": "npm run eslint && npm run webext-lint && npm run tests",
-    "coverage": "nyc --reporter=lcov --reporter=text mocha test/**/*.test.js --timeout 60000 && codecov",
+    "test": "npm run eslint && npm run webext-lint && npm run tests && npm run coverage",
+    "coverage": "nyc --reporter=lcov --reporter=text mocha test/**/*.test.js --timeout 60000",
+    "coverageCI": "npm run coverage && codecov",
     "fix-eslint": "eslint --ignore-path .gitignore . --fix"
   },
   "author": "gergooo <abrahamgergo@gmail.com>",
@@ -19,7 +20,6 @@
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
     "sinon-chai": "^3.3.0",
-    "webextensions-jsdom": "^0.16.0",
     "web-ext": "^3.1.0"
   }
 }
