@@ -2,13 +2,17 @@
   "manifest_version": 2,
   "name": "Movies and Vegetables",
   "version": "0.0.0",
-
+  "homepage_url": "https://github.com/gergooo/MoviesAndVegetables",
+  
   "description": "Linking movies' IMDb and RottenTomatoes pages.",
 
   "permissions": [
   ],
 
-  "background": {
-    "page": "background.js"
-  }
+  "content_scripts": [
+    {
+      "matches": ["*://*.imdb.com/title/*"],
+      "js": ["addRottenToImdb.js"]
+    }
+  ]
 }
