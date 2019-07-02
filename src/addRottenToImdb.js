@@ -1,13 +1,20 @@
+// This is seen by the tests...
+add = function(a, b) {
+  return a + b;
+};
 
-document.body.onload = addRotten;
+sub = function(a, b) {
+  return a - b;
+};
 
 /**
  * Adds dummy rotten score to imdb page.
+ * @param {*} doc document
  */
-function addRotten() {
+function addRotten(doc) { // eslint-disable-line no-unused-vars
   // Create <a> and <div>
-  const a = document.createElement('a');
-  const div = document.createElement('div');
+  const a = doc.createElement('a');
+  const div = doc.createElement('div');
   a.appendChild(div);
   div.title = 'Open in RottenTomatoes';
   div.setAttribute('align', 'center');
@@ -16,9 +23,9 @@ function addRotten() {
   a.setAttribute('href', 'https://www.rottentomatoes.com/m/shawshank_redemption');
 
   // Add movie's score
-  div.textContent = '🍅91%';
+  div.textContent = '🍅' + add(90, 5) + '%';
 
   // Inject element into the html after the user rating
-  const currentDiv = document.getElementById('star-rating-widget');
+  const currentDiv = doc.getElementById('star-rating-widget');
   currentDiv.parentNode.insertBefore(a, currentDiv.nextSibling);
 }

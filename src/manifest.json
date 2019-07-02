@@ -12,7 +12,10 @@
   "content_scripts": [
     {
       "matches": ["*://*.imdb.com/title/*"],
-      "js": ["addRottenToImdb.js"]
+      "js": [
+        "addRottenToImdb.js",
+        "addRottenToImdbWrapper.js"
+      ]
     }
   ]
 }
