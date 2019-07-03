@@ -11,7 +11,7 @@ sub = function(a, b) {
  * Adds dummy rotten score to imdb page.
  * @param {*} doc document
  */
-function addRotten(doc) { // eslint-disable-line no-unused-vars
+injectRottenScore = function(doc) {
   // Create <a> and <div>
   const a = doc.createElement('a');
   const div = doc.createElement('div');
@@ -28,4 +28,4 @@ function addRotten(doc) { // eslint-disable-line no-unused-vars
   // Inject element into the html after the user rating
   const currentDiv = doc.getElementById('star-rating-widget');
   currentDiv.parentNode.insertBefore(a, currentDiv.nextSibling);
-}
+};
