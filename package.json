@@ -5,9 +5,10 @@
     "firefox": "web-ext -s src run",
     "eslint": "eslint --ignore-path .gitignore .",
     "webext-lint": "web-ext -s src lint",
-    "tests": "mocha test/**/*.test.js",
-    "test": "npm run eslint && npm run webext-lint && npm run tests && npm run coverage",
-    "coverage": "nyc --reporter=lcov --reporter=text mocha test/**/*.test.js --timeout 60000",
+    "unit-test": "mocha",
+    "tdd": "mocha --watch",
+    "test": "npm run eslint && npm run webext-lint && npm run unit-test && npm run coverage",
+    "coverage": "nyc --reporter=lcov --reporter=text mocha --timeout 60000",
     "coverageCI": "npm run coverage && codecov",
     "fix-eslint": "eslint --ignore-path .gitignore . --fix"
   },

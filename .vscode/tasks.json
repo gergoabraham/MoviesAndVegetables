@@ -5,7 +5,7 @@
     "tasks": [
         {
             "type": "npm",
-            "script": "tests",
+            "script": "tdd",
             "group": {
                 "kind": "build",
                 "isDefault": true
