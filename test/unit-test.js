@@ -34,16 +34,31 @@ describe('injectRottenScore', function() {
         </div>
     </div>
     `);
-    doc = dom.window.document;
+    document = dom.window.document;
   });
 
   it('should add one child to rating-wrapper', function() {
-    const ratingsWrapper = doc.getElementById('star-rating-widget').parentNode;
+    const ratingsWrapper =
+      document.getElementById('star-rating-widget').parentNode;
     ratingsWrapper.childElementCount.should.equal(2);
 
-    injectRottenScore(doc);
+    injectRottenScore(document);
 
     ratingsWrapper.childElementCount.should.equal(3);
+  });
+
+  it('should child\'s id be movies-and-vegetables-rotten-rating', function() {
+    injectRottenScore(document);
+
+    should.exist(
+        document.getElementById('movies-and-vegetables-rotten-rating'));
+  });
+
+  it('should add given percent', function() {
+    injectRottenScore(document, 93);
+
+    document.getElementById('movies-and-vegetables-rotten-rating').
+        innerHTML.should.equal('🍅93%');
   });
 
   // todo: some tests are still needed

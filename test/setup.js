@@ -1,6 +1,6 @@
 
 const chai = require('chai');
-chai.should();
+should = chai.should();
 
 // Import file under test
 // eslint-disable-next-line no-unused-vars
