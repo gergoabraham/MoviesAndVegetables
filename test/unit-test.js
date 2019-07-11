@@ -22,10 +22,16 @@ describe('When on a movie\'s imdb page', function() {
     });
 
     it('should child\'s id be movies-and-vegetables-rotten-rating', function() {
+      const ratingsWrapper =
+        document.getElementById('star-rating-widget').parentNode;
+
       injectRottenScore(document);
 
-      should.exist(
-          document.getElementById('movies-and-vegetables-rotten-rating'));
+      const moviesAndVegetables =
+        document.getElementById('movies-and-vegetables-rotten-rating');
+
+      should.exist(moviesAndVegetables);
+      moviesAndVegetables.parentNode.parentNode.should.equal(ratingsWrapper);
     });
 
     it('should add given percent', function() {
