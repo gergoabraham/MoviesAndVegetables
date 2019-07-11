@@ -8,3 +8,6 @@ A Firefox extension.
 Test environment is based on the [webextensions-jsdom](https://github.com/webexts/webextensions-jsdom) github repo.
 
 Branching strategy is based on the great [article](https://nvie.com/posts/a-successful-git-branching-model/) of Vincent Driessen.
+
+## Disclaimer
+This extension is neither a robot, nor a crawler. It is a simple browser extension that spares some mouse clicks for the user, triggered by the user's actions, and visualizes the result in a simple way.
