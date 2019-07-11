@@ -4,6 +4,18 @@
 # Movies and Vegetables
 A Firefox extension.
 
+## Development notes
+### Scripts
+- `npm run tdd` - for TDD. :-)
+- `npm test` - to use before commit. Runs unit tests, eslint, web-ext lint and coverage.
+- `npm run firefox` - for testing the extension in Firefox.
+- `npm run fix-eslint`- runs ESLint, and also fixes errors that ESLint can fix automatically.
+
+### Branching
+- `master` - production-ready state,
+- `develop` - integration branch,
+- `feature branches` - for features.
+
 ## Sources
 Test environment is based on the [webextensions-jsdom](https://github.com/webexts/webextensions-jsdom) github repo.
 
