@@ -27,6 +27,21 @@ describe('When on a movie\'s imdb page', function() {
     });
   });
 
+  describe('search url constructor', function() {
+    it('should construct search url for movie', function() {
+      movieData = {
+        name: 'The Shawshank Redemption',
+        year: '1994',
+        director: 'Frank Darabont',
+      };
+
+      constructSearchUrlForRotten(movieData)
+          .should.equal('https://www.google.com/search?btnI=true' +
+              '&q=Frank+Darabont+The+Shawshank+Redemption+1994+movie' +
+              '+Rotten+Tomatoes');
+    });
+  });
+
   describe('injectRottenScore', function() {
     it('should add one child to rating-wrapper', function() {
       const ratingsWrapper =

@@ -12,6 +12,13 @@ readMovieDataFromImdbPage = function(doc) {
   return movieData;
 };
 
+constructSearchUrlForRotten = function(movieData) {
+  const {name, director, year} = movieData;
+
+  return `https://www.google.com/search?btnI=true&q=${director}+${name}+${year}+movie+Rotten+Tomatoes`
+      .replace(/ /g, '+',);
+};
+
 injectRottenScore = function(doc, percent) {
   // Create <a> and <div>
   const a = doc.createElement('a');
