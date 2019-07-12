@@ -1,8 +1,17 @@
-/**
- * Adds dummy rotten score to imdb page.
- * @param {*} doc document
- * @param {*} percent movie's rotten score
- */
+readMovieDataFromImdbPage = function(doc) {
+  const rawJSONContainingMovieData =
+    doc.head.querySelector('[type="application/ld+json"]').textContent;
+  const movieDataJSON = JSON.parse(rawJSONContainingMovieData);
+
+  movieData = {
+    name: movieDataJSON.name,
+    year: movieDataJSON.datePublished.substring(0, 4),
+    director: movieDataJSON.director.name,
+  };
+
+  return movieData;
+};
+
 injectRottenScore = function(doc, percent) {
   // Create <a> and <div>
   const a = doc.createElement('a');

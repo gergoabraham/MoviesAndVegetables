@@ -1,13 +1,30 @@
 
 const jsdom = require('jsdom');
-const {JSDOM} = jsdom; // eslint-disable-line no-unused-vars
+const {JSDOM} = jsdom;
 const fs = require('fs');
 
 describe('When on a movie\'s imdb page', function() {
   beforeEach(function() {
-    sampleImdbPage = fs.readFileSync('./test/testImdbPage.html');
-    const dom = new JSDOM(sampleImdbPage);
+    testImdbPage = fs.readFileSync('./test/testImdbPage.html');
+    const dom = new JSDOM(testImdbPage);
     document = dom.window.document;
+  });
+
+  describe('readMovieDataFromImdbPage', function() {
+    it('should read movie title', function() {
+      const movieData = readMovieDataFromImdbPage(document);
+      movieData['name'].should.deep.equal('The Shawshank Redemption');
+    });
+
+    it('should read movie\'s release year', function() {
+      const movieData = readMovieDataFromImdbPage(document);
+      movieData['year'].should.deep.equal('1994');
+    });
+
+    it('should read director\'s name', function() {
+      const movieData = readMovieDataFromImdbPage(document);
+      movieData['director'].should.deep.equal('Frank Darabont');
+    });
   });
 
   describe('injectRottenScore', function() {
