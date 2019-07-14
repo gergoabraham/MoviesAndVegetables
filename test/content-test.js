@@ -28,11 +28,6 @@ describe('When on a movie\'s imdb page', function() {
       const movieData = readMovieDataFromImdbPage(document);
       movieData['year'].should.deep.equal('1994');
     });
-
-    it('should read director\'s name', function() {
-      const movieData = readMovieDataFromImdbPage(document);
-      movieData['director'].should.deep.equal('Frank Darabont');
-    });
   });
 
   describe('injectRottenScore', function() {

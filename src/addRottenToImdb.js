@@ -8,7 +8,6 @@ window.readMovieDataFromImdbPage = function(doc) {
   const movieData = {
     title: movieDataJSON.name,
     year: movieDataJSON.datePublished.substring(0, 4),
-    director: movieDataJSON.director.name,
   };
 
   return movieData;

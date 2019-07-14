@@ -22,7 +22,6 @@ describe('Background script', function() {
       const movieData = {
         title: 'The Shawshank Redemption',
         year: '1994',
-        director: 'Frank Darabont',
       };
 
       constructSearchUrlForRotten(movieData)
@@ -35,7 +34,6 @@ describe('Background script', function() {
       const movieData = {
         title: 'The Old Man & The Gun',
         year: '2018',
-        director: 'David Lowery',
       };
 
       constructSearchUrlForRotten(movieData)
