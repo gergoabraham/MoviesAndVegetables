@@ -1,24 +1,17 @@
 'use strict';
 
-// Let's replace the followings with some mock
-let myListener;
-global.browser = {};
-global.browser.runtime = {};
-global.browser.runtime.onMessage = {};
-global.browser.runtime.onMessage.addListener;
-browser.runtime.onMessage.addListener = (listener) => {
-  myListener = listener;
-};
-
-global.window = {};
+// Code under test
 require('../src/backgroundScript');
+
+// Functions under test
 const {constructSearchUrlForRotten, getRottenData} = window;
 
 
 describe('Background script', function() {
   describe('on startup', function() {
     it('should register message listener', function() {
-      myListener.should.equal(getRottenData);
+      global.browser.runtime.onMessage.addedListener
+          .should.equal(getRottenData);
     });
   });
 

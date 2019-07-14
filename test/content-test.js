@@ -6,7 +6,11 @@ const fs = require('fs');
 
 let document;
 
+// Code under test
 require('../src/addRottenToImdb');
+
+// Functions under test
+const {readMovieDataFromImdbPage, injectRottenScore} = window;
 
 describe('When on a movie\'s imdb page', function() {
   beforeEach(function() {
@@ -17,17 +21,17 @@ describe('When on a movie\'s imdb page', function() {
 
   describe('readMovieDataFromImdbPage', function() {
     it('should read movie title', function() {
-      const movieData = window.readMovieDataFromImdbPage(document);
+      const movieData = readMovieDataFromImdbPage(document);
       movieData['title'].should.deep.equal('The Shawshank Redemption');
     });
 
     it('should read movie\'s release year', function() {
-      const movieData = window.readMovieDataFromImdbPage(document);
+      const movieData = readMovieDataFromImdbPage(document);
       movieData['year'].should.deep.equal('1994');
     });
 
     it('should read director\'s name', function() {
-      const movieData = window.readMovieDataFromImdbPage(document);
+      const movieData = readMovieDataFromImdbPage(document);
       movieData['director'].should.deep.equal('Frank Darabont');
     });
   });
@@ -38,7 +42,7 @@ describe('When on a movie\'s imdb page', function() {
         document.getElementById('star-rating-widget').parentNode;
       ratingsWrapper.childElementCount.should.equal(2);
 
-      window.injectRottenScore(document);
+      injectRottenScore(document);
 
       ratingsWrapper.childElementCount.should.equal(3);
     });
@@ -47,7 +51,7 @@ describe('When on a movie\'s imdb page', function() {
       const ratingsWrapper =
         document.getElementById('star-rating-widget').parentNode;
 
-      window.injectRottenScore(document);
+      injectRottenScore(document);
 
       const moviesAndVegetables =
         document.getElementById('movies-and-vegetables-rotten-rating');
@@ -57,7 +61,7 @@ describe('When on a movie\'s imdb page', function() {
     });
 
     it('should add given percent', function() {
-      window.injectRottenScore(document, 93);
+      injectRottenScore(document, 93);
 
       document.getElementById('movies-and-vegetables-rotten-rating').
           innerHTML.should.equal('🍅93%');
