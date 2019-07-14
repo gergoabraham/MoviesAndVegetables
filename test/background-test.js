@@ -4,7 +4,9 @@
 require('../src/backgroundScript');
 
 // Functions under test
-const {constructSearchUrlForRotten, getRottenData} = window;
+const {constructSearchUrlForRotten,
+  getRottenData,
+  getRottenPage} = window;
 
 
 describe('Background script', function() {
@@ -29,7 +31,7 @@ describe('Background script', function() {
               '+Rotten+Tomatoes');
     });
 
-    it('should remove "&" character from url', function() {
+    it('should remove "&" character from movie title', function() {
       const movieData = {
         title: 'The Old Man & The Gun',
         year: '2018',
@@ -40,6 +42,22 @@ describe('Background script', function() {
           .should.equal('https://www.google.com/search?btnI=true' +
               '&q=The+Old+Man++The+Gun+2018+movie' +
               '+Rotten+Tomatoes');
+    });
+  });
+
+  describe('getRottenPage', function() {
+    it('should parse the webpage from the Response object', async function() {
+      const response = {
+        text: sinon.fake.resolves('Text content from Response'),
+      };
+      const parseFromString = sinon.fake.returns('HTML document');
+      global.DOMParser = sinon.fake.returns({parseFromString});
+
+      const rottenPage = await getRottenPage(response);
+
+      parseFromString.should.have.been
+          .calledOnceWith('Text content from Response', 'text/html');
+      rottenPage.should.equal('HTML document');
     });
   });
 });

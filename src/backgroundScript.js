@@ -26,14 +26,15 @@ window.constructSearchUrlForRotten = (movieData) => {
   const {title, year} = movieData;
 
   const titleWithoutSpecialCharacters = title.replace(/&/g, '');
-  return `https://www.google.com/search?btnI=true&q=${titleWithoutSpecialCharacters}+${year}+movie+Rotten+Tomatoes`
-      .replace(/ /g, '+');
+  return `https://www.google.com/search?btnI=true&` +
+         `q=${titleWithoutSpecialCharacters}+${year}+movie+Rotten+Tomatoes`
+             .replace(/ /g, '+');
 };
 
 window.getRottenPage = async (response) => {
-  const stuff = await response.text();
+  const rottenPage = await response.text();
   const parser = new DOMParser();
-  return parser.parseFromString(stuff, 'text/html');
+  return parser.parseFromString(rottenPage, 'text/html');
 };
 
 browser.runtime.onMessage.addListener(window.getRottenData);

@@ -5,7 +5,7 @@
     "firefox": "web-ext -s src run",
     "eslint": "eslint --ignore-path .gitignore .",
     "webext-lint": "web-ext -s src lint",
-    "unit-test": "mocha",
+    "unit-test": "mocha --forbid-pending --forbid-only",
     "tdd": "mocha --watch",
     "test": "npm run eslint && npm run webext-lint && npm run unit-test && npm run coverage",
     "coverage": "nyc --reporter=lcov --reporter=text-summary --reporter=text --all mocha --timeout 60000",
@@ -22,6 +22,8 @@
     "jsdom": "^15.1.1",
     "mocha": "^6.1.4",
     "nyc": "^14.1.1",
+    "sinon": "^7.3.2",
+    "sinon-chai": "^3.3.0",
     "web-ext": "^3.1.0"
   },
   "mocha": {
