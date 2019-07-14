@@ -15,3 +15,8 @@ chai.use(chaiAsPromised);
 
 // Window globals
 global.window = {};
+
+afterEach(() => {
+  // Restore the default sandbox
+  sinon.restore();
+});
