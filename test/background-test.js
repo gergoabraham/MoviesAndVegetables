@@ -6,7 +6,7 @@ let getRottenData;
 let getRottenPage;
 
 describe('Background script', function() {
-  before(function() {
+  before('reading in script under test', function() {
     global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};
     require('../src/backgroundScript');
     ({constructSearchUrlForRotten, getRottenData, getRottenPage} = window);
@@ -46,7 +46,7 @@ describe('Background script', function() {
   });
 
   describe('getRottenPage', function() {
-    it('should parse the webpage from the Response object', async function() {
+    it('should parse the Response object for the webpage', async function() {
       const response = {
         text: sinon.fake.resolves('Text content from Response'),
       };

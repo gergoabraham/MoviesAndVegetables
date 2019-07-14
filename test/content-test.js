@@ -2,7 +2,6 @@
 
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
-const fs = require('fs');
 
 let document;
 
@@ -13,13 +12,13 @@ require('../src/addRottenToImdb');
 const {readMovieDataFromImdbPage, injectRottenScore} = window;
 
 describe('When on a movie\'s imdb page', function() {
-  beforeEach(function() {
-    const testImdbPage = fs.readFileSync('./test/testImdbPage.html');
-    const dom = new JSDOM(testImdbPage);
-    document = dom.window.document;
-  });
-
   describe('readMovieDataFromImdbPage', function() {
+    before(async function() {
+      const dom = await JSDOM.fromFile('./test/testImdbPage.html',
+          {url: `https://www.imdb.com/title/tt0111161/`});
+      document = dom.window.document;
+    });
+
     it('should read movie title', function() {
       const movieData = readMovieDataFromImdbPage(document);
       movieData['title'].should.deep.equal('The Shawshank Redemption');
@@ -37,36 +36,25 @@ describe('When on a movie\'s imdb page', function() {
   });
 
   describe('injectRottenScore', function() {
-    it('should add one child to rating-wrapper', function() {
-      const ratingsWrapper =
-        document.getElementById('star-rating-widget').parentNode;
-      ratingsWrapper.childElementCount.should.equal(2);
-
-      injectRottenScore(document);
-
-      ratingsWrapper.childElementCount.should.equal(3);
+    before(function() {
+      injectRottenScore(document, 93);
     });
 
-    it('should child\'s id be movies-and-vegetables-rotten-rating', function() {
-      const ratingsWrapper =
-        document.getElementById('star-rating-widget').parentNode;
+    it('should add child with id "movies-and-vegetables-rotten-rating"',
+        function() {
+          const ratingsWrapper =
+              document.getElementById('star-rating-widget').parentNode;
+          const moviesAndVegetables =
+              document.getElementById('movies-and-vegetables-rotten-rating');
 
-      injectRottenScore(document);
-
-      const moviesAndVegetables =
-        document.getElementById('movies-and-vegetables-rotten-rating');
-
-      should.exist(moviesAndVegetables);
-      moviesAndVegetables.parentNode.parentNode.should.equal(ratingsWrapper);
-    });
+          should.exist(moviesAndVegetables);
+          moviesAndVegetables.parentNode.parentNode
+              .should.equal(ratingsWrapper);
+        });
 
     it('should add given percent', function() {
-      injectRottenScore(document, 93);
-
       document.getElementById('movies-and-vegetables-rotten-rating').
           innerHTML.should.equal('🍅93%');
     });
   });
 });
-
-
