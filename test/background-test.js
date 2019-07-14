@@ -55,11 +55,10 @@ describe('Background script', function() {
       const parseFromString = sinon.fake.returns('HTML document');
       global.DOMParser = sinon.fake.returns({parseFromString});
 
-      const rottenPage = await getRottenPage(response);
+      await getRottenPage(response).should.eventually.equal('HTML document');
 
       parseFromString.should.have.been
           .calledOnceWith('Text content from Response', 'text/html');
-      rottenPage.should.equal('HTML document');
     });
   });
 
@@ -69,9 +68,9 @@ describe('Background script', function() {
           sinon.fake.returns('the search URL'));
       global.fetch = sinon.fake.resolves('the response object');
 
-      const resp = await fetchRottenResponse('movieData');
+      await fetchRottenResponse('movieData')
+          .should.eventually.equal('the response object');
 
-      resp.should.equal('the response object');
       window.constructSearchUrlForRotten
           .should.have.been.calledOnceWith('movieData');
       global.fetch.should.have.been.calledOnceWith('the search URL');

@@ -10,6 +10,8 @@ const chai = require('chai');
 should = chai.should();
 const sinonChai = require('sinon-chai');
 chai.use(sinonChai);
+const chaiAsPromised = require('chai-as-promised');
+chai.use(chaiAsPromised);
 
 // Window globals
 global.window = {};
