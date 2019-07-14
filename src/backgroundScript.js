@@ -2,7 +2,6 @@
 
 window.getRottenData = async (movieData) => {
   const response = await window.fetchRottenResponse(movieData);
-  console.log(`response url: ${response.url}`);
   const rottenPage = await window.getRottenPage(response);
 
   const rottenScores =
@@ -18,7 +17,6 @@ window.getRottenData = async (movieData) => {
 
 window.fetchRottenResponse = async (movieData) => {
   const searchURL = window.constructSearchUrlForRotten(movieData);
-  console.log(`search url: ${searchURL}`);
   return fetch(searchURL);
 };
 
@@ -33,6 +31,7 @@ window.constructSearchUrlForRotten = (movieData) => {
 
 window.getRottenPage = async (response) => {
   const rottenPage = await response.text();
+
   const parser = new DOMParser();
   return parser.parseFromString(rottenPage, 'text/html');
 };
