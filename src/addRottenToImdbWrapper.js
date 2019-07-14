@@ -1,11 +1,17 @@
-document.body.onload = addRottenOnLoad;
+'use strict';
 
 /**
  * Wrapper function for addRotten function
  */
 function addRottenOnLoad() {
-  movieData = readMovieDataFromImdbPage(document);
-  console.log(movieData);
+  const movieData = window.readMovieDataFromImdbPage(document);
 
-  injectRottenScore(document, '91');
+  browser.runtime.sendMessage(movieData)
+      .then((response) => {
+        window.injectRottenScore(document,
+            `${response.tomatoMeter} + ${response.audienceScore}`,
+            response.url);
+      });
 }
+
+document.body.onload = addRottenOnLoad;

@@ -7,7 +7,13 @@
   "description": "Linking movies' IMDb and RottenTomatoes pages.",
 
   "permissions": [
+    "https://www.google.com/*",
+    "https://www.rottentomatoes.com/*"
   ],
+
+  "background": {
+    "scripts": ["backgroundScript.js"]
+  },
 
   "content_scripts": [
     {

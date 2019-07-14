@@ -1,44 +1,34 @@
+'use strict';
 
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
 const fs = require('fs');
 
+let document;
+
+require('../src/addRottenToImdb');
+
 describe('When on a movie\'s imdb page', function() {
   beforeEach(function() {
-    testImdbPage = fs.readFileSync('./test/testImdbPage.html');
+    const testImdbPage = fs.readFileSync('./test/testImdbPage.html');
     const dom = new JSDOM(testImdbPage);
     document = dom.window.document;
   });
 
   describe('readMovieDataFromImdbPage', function() {
     it('should read movie title', function() {
-      const movieData = readMovieDataFromImdbPage(document);
-      movieData['name'].should.deep.equal('The Shawshank Redemption');
+      const movieData = window.readMovieDataFromImdbPage(document);
+      movieData['title'].should.deep.equal('The Shawshank Redemption');
     });
 
     it('should read movie\'s release year', function() {
-      const movieData = readMovieDataFromImdbPage(document);
+      const movieData = window.readMovieDataFromImdbPage(document);
       movieData['year'].should.deep.equal('1994');
     });
 
     it('should read director\'s name', function() {
-      const movieData = readMovieDataFromImdbPage(document);
+      const movieData = window.readMovieDataFromImdbPage(document);
       movieData['director'].should.deep.equal('Frank Darabont');
-    });
-  });
-
-  describe('search url constructor', function() {
-    it('should construct search url for movie', function() {
-      movieData = {
-        name: 'The Shawshank Redemption',
-        year: '1994',
-        director: 'Frank Darabont',
-      };
-
-      constructSearchUrlForRotten(movieData)
-          .should.equal('https://www.google.com/search?btnI=true' +
-              '&q=Frank+Darabont+The+Shawshank+Redemption+1994+movie' +
-              '+Rotten+Tomatoes');
     });
   });
 
@@ -48,7 +38,7 @@ describe('When on a movie\'s imdb page', function() {
         document.getElementById('star-rating-widget').parentNode;
       ratingsWrapper.childElementCount.should.equal(2);
 
-      injectRottenScore(document);
+      window.injectRottenScore(document);
 
       ratingsWrapper.childElementCount.should.equal(3);
     });
@@ -57,7 +47,7 @@ describe('When on a movie\'s imdb page', function() {
       const ratingsWrapper =
         document.getElementById('star-rating-widget').parentNode;
 
-      injectRottenScore(document);
+      window.injectRottenScore(document);
 
       const moviesAndVegetables =
         document.getElementById('movies-and-vegetables-rotten-rating');
@@ -67,7 +57,7 @@ describe('When on a movie\'s imdb page', function() {
     });
 
     it('should add given percent', function() {
-      injectRottenScore(document, 93);
+      window.injectRottenScore(document, 93);
 
       document.getElementById('movies-and-vegetables-rotten-rating').
           innerHTML.should.equal('🍅93%');

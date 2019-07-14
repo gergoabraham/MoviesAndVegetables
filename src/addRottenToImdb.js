@@ -1,10 +1,12 @@
-readMovieDataFromImdbPage = function(doc) {
+'use strict';
+
+window.readMovieDataFromImdbPage = function(doc) {
   const rawJSONContainingMovieData =
     doc.head.querySelector('[type="application/ld+json"]').textContent;
   const movieDataJSON = JSON.parse(rawJSONContainingMovieData);
 
-  movieData = {
-    name: movieDataJSON.name,
+  const movieData = {
+    title: movieDataJSON.name,
     year: movieDataJSON.datePublished.substring(0, 4),
     director: movieDataJSON.director.name,
   };
@@ -12,14 +14,7 @@ readMovieDataFromImdbPage = function(doc) {
   return movieData;
 };
 
-constructSearchUrlForRotten = function(movieData) {
-  const {name, director, year} = movieData;
-
-  return `https://www.google.com/search?btnI=true&q=${director}+${name}+${year}+movie+Rotten+Tomatoes`
-      .replace(/ /g, '+',);
-};
-
-injectRottenScore = function(doc, percent) {
+window.injectRottenScore = function(doc, percent, url) {
   // Create <a> and <div>
   const a = doc.createElement('a');
   const div = doc.createElement('div');
@@ -29,10 +24,10 @@ injectRottenScore = function(doc, percent) {
   div.setAttribute('id', 'movies-and-vegetables-rotten-rating');
 
   // Add hyperlink to movie's rotten page
-  a.setAttribute('href', 'https://www.rottentomatoes.com/m/shawshank_redemption');
+  a.setAttribute('href', url);
 
   // Add movie's score
-  div.textContent = '🍅' + percent + '%';
+  div.textContent = `🍅${percent}%`;
 
   // Inject element into the html after the user rating
   const currentDiv = doc.getElementById('star-rating-widget');
