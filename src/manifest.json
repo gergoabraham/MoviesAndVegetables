@@ -19,8 +19,7 @@
     {
       "matches": ["*://*.imdb.com/title/*"],
       "js": [
-        "addRottenToImdb.js",
-        "addRottenToImdbWrapper.js"
+        "addRottenToImdb.js"
       ]
     }
   ]

@@ -1,5 +1,16 @@
 'use strict';
 
+window.addRottenOnLoad = function() {
+  const movieData = window.readMovieDataFromImdbPage(document);
+
+  browser.runtime.sendMessage(movieData)
+      .then((response) => {
+        window.injectRottenScore(document,
+            `${response.tomatoMeter} + ${response.audienceScore}`,
+            response.url);
+      });
+};
+
 window.readMovieDataFromImdbPage = function(doc) {
   const rawJSONContainingMovieData =
     doc.head.querySelector('[type="application/ld+json"]').textContent;
@@ -32,3 +43,5 @@ window.injectRottenScore = function(doc, percent, url) {
   const currentDiv = doc.getElementById('star-rating-widget');
   currentDiv.parentNode.insertBefore(a, currentDiv.nextSibling);
 };
+
+document.body.onload = window.addRottenOnLoad;
