@@ -1,15 +1,19 @@
 'use strict';
 
 // Functions under test
-let constructSearchUrlForRotten;
 let getRottenData;
+let fetchRottenResponse;
+let constructSearchUrlForRotten;
 let getRottenPage;
 
 describe('Background script', function() {
   before('reading in script under test', function() {
     global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};
     require('../src/backgroundScript');
-    ({constructSearchUrlForRotten, getRottenData, getRottenPage} = window);
+    ({constructSearchUrlForRotten,
+      getRottenData,
+      getRottenPage,
+      fetchRottenResponse} = window);
   });
 
   it('should register message listener on startup', function() {
@@ -56,6 +60,23 @@ describe('Background script', function() {
       parseFromString.should.have.been
           .calledOnceWith('Text content from Response', 'text/html');
       rottenPage.should.equal('HTML document');
+    });
+  });
+
+  describe('fetchRottenResponse', function() {
+    it('should fetch Response object of movie data search', async function() {
+      sinon.replace(window, 'constructSearchUrlForRotten',
+          sinon.fake.returns('the search URL'));
+      global.fetch = sinon.fake.resolves('the response object');
+
+      const resp = await fetchRottenResponse('movieData');
+
+      resp.should.equal('the response object');
+      window.constructSearchUrlForRotten
+          .should.have.been.calledOnceWith('movieData');
+      global.fetch.should.have.been.calledOnceWith('the search URL');
+
+      sinon.restore();
     });
   });
 });

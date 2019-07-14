@@ -1,7 +1,7 @@
 'use strict';
 
 window.getRottenData = async (movieData) => {
-  const response = await window.getRottenResponse(movieData);
+  const response = await window.fetchRottenResponse(movieData);
   console.log(`response url: ${response.url}`);
   const rottenPage = await window.getRottenPage(response);
 
@@ -16,7 +16,7 @@ window.getRottenData = async (movieData) => {
     url: response.url};
 };
 
-window.getRottenResponse = (movieData) => {
+window.fetchRottenResponse = async (movieData) => {
   const searchURL = window.constructSearchUrlForRotten(movieData);
   console.log(`search url: ${searchURL}`);
   return fetch(searchURL);
