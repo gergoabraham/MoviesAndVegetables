@@ -1,20 +1,20 @@
 'use strict';
 
-// Code under test
-require('../src/backgroundScript');
-
 // Functions under test
-const {constructSearchUrlForRotten,
-  getRottenData,
-  getRottenPage} = window;
-
+let constructSearchUrlForRotten;
+let getRottenData;
+let getRottenPage;
 
 describe('Background script', function() {
-  describe('on startup', function() {
-    it('should register message listener', function() {
-      global.browser.runtime.onMessage.addedListener
-          .should.equal(getRottenData);
-    });
+  before(function() {
+    global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};
+    require('../src/backgroundScript');
+    ({constructSearchUrlForRotten, getRottenData, getRottenPage} = window);
+  });
+
+  it('should register message listener on startup', function() {
+    global.browser.runtime.onMessage.addListener
+        .should.have.been.calledOnceWith(getRottenData);
   });
 
   describe('search-url constructor', function() {
