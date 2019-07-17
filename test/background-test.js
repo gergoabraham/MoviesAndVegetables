@@ -21,7 +21,7 @@ describe('Background script', function() {
 
   it('should register message listener on startup', function() {
     global.browser.runtime.onMessage.addListener
-        .should.have.been.calledOnceWith(getRottenData);
+        .should.have.been.calledOnceWithExactly(getRottenData);
   });
 
   describe('search-url constructor', function() {
@@ -31,7 +31,7 @@ describe('Background script', function() {
         year: '1994',
       };
 
-      constructSearchUrlForRotten(movieData)
+      constructSearchUrlForRotten(movieData, `Rotten Tomatoes`)
           .should.equal('https://www.google.com/search?btnI=true' +
               '&q=The+Shawshank+Redemption+1994+movie' +
               '+Rotten+Tomatoes');
@@ -43,7 +43,7 @@ describe('Background script', function() {
         year: '2018',
       };
 
-      constructSearchUrlForRotten(movieData)
+      constructSearchUrlForRotten(movieData, `Rotten Tomatoes`)
           .should.equal('https://www.google.com/search?btnI=true' +
               '&q=The+Old+Man++The+Gun+2018+movie' +
               '+Rotten+Tomatoes');
@@ -61,7 +61,7 @@ describe('Background script', function() {
       await getRottenPage(response).should.eventually.equal('HTML document');
 
       parseFromString.should.have.been
-          .calledOnceWith('Text content from Response', 'text/html');
+          .calledOnceWithExactly('Text content from Response', 'text/html');
     });
   });
 
@@ -71,12 +71,12 @@ describe('Background script', function() {
           sinon.fake.returns('the search URL'));
       global.fetch = sinon.fake.resolves('the response object');
 
-      await fetchRottenResponse('movieData')
+      await fetchRottenResponse('movieData', 'Rotten Tomatoes')
           .should.eventually.equal('the response object');
 
-      window.constructSearchUrlForRotten
-          .should.have.been.calledOnceWith('movieData');
-      global.fetch.should.have.been.calledOnceWith('the search URL');
+      window.constructSearchUrlForRotten.should.have.been
+          .calledOnceWithExactly('movieData', 'Rotten Tomatoes');
+      global.fetch.should.have.been.calledOnceWithExactly('the search URL');
 
       sinon.restore();
     });
@@ -93,6 +93,9 @@ describe('Background script', function() {
 
     it(`should search Rotten page and return with the scores`,
         async function() {
+          // Todo: this test works only because readRottenData is visible,
+          // it shall be mocked.
+
           // Input -> searchURL
           const movieData = {
             title: 'The Shawshank Redemption',
@@ -120,10 +123,10 @@ describe('Background script', function() {
               );
 
           global.fetch
-              .should.have.been.calledOnceWith(
+              .should.have.been.calledOnceWithExactly(
                   'https://www.google.com/search?btnI=true' +
-              '&q=The+Shawshank+Redemption+1994+movie' +
-              '+Rotten+Tomatoes');
+                  '&q=The+Shawshank+Redemption+1994+movie' +
+                  '+Rotten+Tomatoes');
 
           parseFromString
               .should.have.been.calledOnceWithExactly(

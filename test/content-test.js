@@ -15,36 +15,34 @@ describe('Content script', function() {
         .should.equal(addRottenOnLoad);
   });
 
-  context('When on a movie\'s imdb page', function() {
-    describe('addRottenOnLoad', function() {
-      it('should send message to background with movie data', async function() {
-        // todo: Tests are not independent. These functions are visible, because
-        // they are added to `window`. Let's get rid of this in the future.
-        sinon.replace(window, 'readMovieDataFromImdbPage',
-            sinon.fake.returns('movieData'));
-        global.browser = {runtime:
+  describe('addRottenOnLoad', function() {
+    it('should send message to background with movie data', async function() {
+      // todo: Tests are not independent. These functions are visible, because
+      // they are added to `window`. Let's get rid of this in the future.
+      sinon.replace(window, 'readMovieDataFromImdbPage',
+          sinon.fake.returns('movieData'));
+      global.browser = {runtime:
           {sendMessage: sinon.fake.resolves({
             tomatoMeter: 90,
             audienceScore: 85,
             url: 'rottenURL',
           })},
-        };
+      };
 
-        sinon.replace(window, 'injectRottenScore', sinon.spy());
+      sinon.replace(window, 'injectRottenScore', sinon.spy());
 
-        await addRottenOnLoad();
+      await addRottenOnLoad();
 
-        window.readMovieDataFromImdbPage
-            .should.have.been.calledOnceWithExactly(global.document);
+      window.readMovieDataFromImdbPage
+          .should.have.been.calledOnceWithExactly(global.document);
 
-        global.browser.runtime.sendMessage
-            .should.have.been.calledOnceWithExactly('movieData');
+      global.browser.runtime.sendMessage
+          .should.have.been.calledOnceWithExactly('movieData');
 
-        window.injectRottenScore
-            .should.have.been.calledOnceWithExactly(
-                global.document, '90 + 85', 'rottenURL'
-            );
-      });
+      window.injectRottenScore
+          .should.have.been.calledOnceWithExactly(
+              global.document, '90 + 85', 'rottenURL'
+          );
     });
   });
 });

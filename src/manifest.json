@@ -12,7 +12,10 @@
   ],
 
   "background": {
-    "scripts": ["backgroundScript.js"]
+    "scripts": [
+      "backgroundScript.js",
+      "rottenPage.js"
+    ]
   },
 
   "content_scripts": [

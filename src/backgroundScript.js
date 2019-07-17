@@ -1,31 +1,25 @@
 'use strict';
 
 window.getRottenData = async (movieData) => {
-  const response = await window.fetchRottenResponse(movieData);
+  const remotePage = `Rotten Tomatoes`;
+  const response = await window.fetchRottenResponse(movieData, remotePage);
   const rottenPage = await window.getRottenPage(response);
 
-  const rottenScores =
-    rottenPage.body.querySelectorAll('span.mop-ratings-wrap__percentage');
-
-  const tomatoMeter = rottenScores[0].innerHTML.replace(/[^0-9]/g, '');
-  const audienceScore = rottenScores[1].innerHTML.replace(/[^0-9]/g, '');
-
-  return {tomatoMeter: tomatoMeter,
-    audienceScore: audienceScore,
-    url: response.url};
+  return window.readRottenData(rottenPage, response.url);
 };
 
-window.fetchRottenResponse = async (movieData) => {
-  const searchURL = window.constructSearchUrlForRotten(movieData);
+window.fetchRottenResponse = async (movieData, remotePage) => {
+  const searchURL =
+    window.constructSearchUrlForRotten(movieData, remotePage);
   return fetch(searchURL);
 };
 
-window.constructSearchUrlForRotten = (movieData) => {
+window.constructSearchUrlForRotten = (movieData, where) => {
   const {title, year} = movieData;
 
   const titleWithoutSpecialCharacters = title.replace(/&/g, '');
   return `https://www.google.com/search?btnI=true&` +
-         `q=${titleWithoutSpecialCharacters}+${year}+movie+Rotten+Tomatoes`
+         `q=${titleWithoutSpecialCharacters}+${year}+movie+${where}`
              .replace(/ /g, '+');
 };
 
