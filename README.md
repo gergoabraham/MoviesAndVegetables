@@ -17,7 +17,7 @@ A Firefox extension.
 - `feature branches` - for features.
 
 ## Sources
-Test environment is based on the [webextensions-jsdom](https://github.com/webexts/webextensions-jsdom) github repo.
+The example test environment in the [webextensions-jsdom](https://github.com/webexts/webextensions-jsdom) github repo was a huge help when starting this project.
 
 Branching strategy is based on the great [article](https://nvie.com/posts/a-successful-git-branching-model/) of Vincent Driessen.
 
