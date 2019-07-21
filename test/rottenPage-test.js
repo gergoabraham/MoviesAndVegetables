@@ -25,5 +25,10 @@ describe('rottenPage', function() {
       readRottenData(document, 'movieUrl')
           .should.contain({audienceScore: '98'});
     });
+
+    it('should read number of votes on TomatoMeter', function() {
+      readRottenData(document, 'movieUrl')
+          .should.contain({tomatoMeterCount: '68'});
+    });
   });
 });

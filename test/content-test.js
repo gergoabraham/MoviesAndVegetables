@@ -28,6 +28,7 @@ describe('Content script', function() {
             tomatoMeter: 90,
             audienceScore: 85,
             url: 'rottenURL',
+            tomatoMeterCount: 68,
           })},
       };
 
@@ -47,7 +48,7 @@ describe('Content script', function() {
           );
       window.injectTomatoMeter
           .should.have.been.calledOnceWithExactly(
-              global.document, 90, 'rottenURL', 0);
+              global.document, 90, 'rottenURL', 68);
     });
   });
 });

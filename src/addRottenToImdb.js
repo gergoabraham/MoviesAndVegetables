@@ -9,7 +9,7 @@ window.addRottenOnLoad = function() {
             `${response.audienceScore}`,
             response.url);
         window.injectTomatoMeter(document,
-            response.tomatoMeter, response.url, 0);
+            response.tomatoMeter, response.url, response.tomatoMeterCount);
       });
 };
 

@@ -119,6 +119,7 @@ describe('Background script', function() {
                     tomatoMeter: '91',
                     audienceScore: '98',
                     url: `responseURL`,
+                    tomatoMeterCount: '68',
                   }
               );
 
