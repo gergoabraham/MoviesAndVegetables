@@ -14,7 +14,8 @@
         "linebreak-style": 0,
         "strict": ["error", "global"],
         "no-const-assign": "error",
-        "no-use-before-define": "error",
-        "no-undef": "error"
+        "no-use-before-define": ["error", {"functions":false}],
+        "no-undef": "error",
+        "require-jsdoc": "off"
     }
 }

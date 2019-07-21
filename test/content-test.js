@@ -21,6 +21,8 @@ describe('Content script', function() {
       // they are added to `window`. Let's get rid of this in the future.
       sinon.replace(window, 'readMovieDataFromImdbPage',
           sinon.fake.returns('movieData'));
+      sinon.replace(window, 'injectTomatoMeter',
+          sinon.fake());
       global.browser = {runtime:
           {sendMessage: sinon.fake.resolves({
             tomatoMeter: 90,
@@ -41,8 +43,11 @@ describe('Content script', function() {
 
       window.injectRottenScore
           .should.have.been.calledOnceWithExactly(
-              global.document, '90 + 85', 'rottenURL'
+              global.document, '85', 'rottenURL'
           );
+      window.injectTomatoMeter
+          .should.have.been.calledOnceWithExactly(
+              global.document, 90, 'rottenURL', 0);
     });
   });
 });
