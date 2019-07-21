@@ -31,7 +31,7 @@ describe('imdbPage', function() {
     });
   });
 
-  describe.only('injectTomatoMeter', function() {
+  describe('injectTomatoMeter', function() {
     let titleReviewBar;
 
     context('Injecting', function() {
@@ -44,24 +44,25 @@ describe('imdbPage', function() {
           document.getElementsByClassName('titleReviewBar')[0];
       });
 
-      it('should inject TomatoMeter and a divider next to MetaScore', function() {
-        const dividers = titleReviewBar.getElementsByClassName('divider');
+      it('should inject TomatoMeter and a divider next to MetaScore',
+          function() {
+            const dividers = titleReviewBar.getElementsByClassName('divider');
 
-        // Before: 3 item + 2 dividers
-        titleReviewBar.childElementCount.should.equal(5);
-        dividers.length.should.equal(2);
+            // Before: 3 item + 2 dividers
+            titleReviewBar.childElementCount.should.equal(5);
+            dividers.length.should.equal(2);
 
-        injectTomatoMeter(document, 93, 'someUrl');
+            injectTomatoMeter(document, 93, 'someUrl');
 
-        // After: 4 item + 3 dividers
-        titleReviewBar.childElementCount.should.equal(7);
-        dividers.length.should.equal(3);
+            // After: 4 item + 3 dividers
+            titleReviewBar.childElementCount.should.equal(7);
+            dividers.length.should.equal(3);
 
-        // TomatoMeter at position 2
-        titleReviewBar.children[2].getAttribute('class')
-            .should.contain('titleReviewBarItem')
-            .and.contain('TomatoMeter');
-      });
+            // TomatoMeter at position 2
+            titleReviewBar.children[2].getAttribute('class')
+                .should.contain('titleReviewBarItem')
+                .and.contain('TomatoMeter');
+          });
     });
 
     context('Details', function() {
@@ -84,7 +85,8 @@ describe('imdbPage', function() {
       it('should build HTML for TomatoMeterPercentage', function() {
         tomatoMeter.children[0].tagName.should.equal('A');
         tomatoMeter.children[0].children[0].tagName.should.equal('DIV');
-        tomatoMeter.children[0].children[0].children[0].tagName.should.equal('SPAN');
+        tomatoMeter.children[0].children[0].children[0].tagName
+            .should.equal('SPAN');
 
         tomatoMeter.children[0].children[0].getAttribute('class')
             .should.contain('metacriticScore')
@@ -102,11 +104,13 @@ describe('imdbPage', function() {
 
         // First line
         tomatoMeter.children[1].children[0].tagName.should.equal('DIV');
-        tomatoMeter.children[1].children[0].children[0].tagName.should.equal('A');
+        tomatoMeter.children[1].children[0].children[0].tagName
+            .should.equal('A');
 
         // Second line
         tomatoMeter.children[1].children[1].tagName.should.equal('DIV');
-        tomatoMeter.children[1].children[1].children[0].tagName.should.equal('SPAN');
+        tomatoMeter.children[1].children[1].children[0].tagName
+            .should.equal('SPAN');
         tomatoMeter.children[1].children[1].children[0]
             .getAttribute('class').should.equal('subText');
       });
@@ -125,19 +129,23 @@ describe('imdbPage', function() {
         tomatoMeterContainer.getAttribute('style').should.equal('width: 40px');
       });
 
-      it('should write "TomatoMeter" description next to percentage', function() {
-        const tomatoMeterDescription = tomatoMeter.children[1].children[0].children[0];
-        tomatoMeterDescription.innerHTML.should.equal('Tomatometer');
-      });
+      it('should write "TomatoMeter" description next to percentage',
+          function() {
+            const tomatoMeterDescription =
+          tomatoMeter.children[1].children[0].children[0];
+            tomatoMeterDescription.innerHTML.should.equal('Tomatometer');
+          });
 
       it('should add rotten URL for "TomatoMeter" description', function() {
-        const tomatoMeterDescription = tomatoMeter.children[1].children[0].children[0];
+        const tomatoMeterDescription =
+          tomatoMeter.children[1].children[0].children[0];
         tomatoMeterDescription.getAttribute('href')
             .should.equal(rottenURL);
       });
 
       it('should write number of votes', function() {
-        const tomatoMeterSubDescription = tomatoMeter.children[1].children[1].children[0];
+        const tomatoMeterSubDescription =
+          tomatoMeter.children[1].children[1].children[0];
         tomatoMeterSubDescription.innerHTML.should.equal(`Total Count: 68`);
       });
     });

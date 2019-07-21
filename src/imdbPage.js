@@ -61,7 +61,7 @@ function createTomatoMeterElement(doc, url, percent, votes) {
   scoreContainerA.appendChild(scoreContainedDiv);
 
   const scoreContainerSpan = doc.createElement('span');
-  scoreContainerSpan.innerHTML = `${percent}%`;
+  scoreContainerSpan.textContent = `${percent}%`;
   scoreContainedDiv.appendChild(scoreContainerSpan);
 
   tomatoMeter.appendChild(doc.createTextNode(' '));
@@ -72,7 +72,8 @@ function createTomatoMeterElement(doc, url, percent, votes) {
   tomatoMeter.appendChild(titleReviewBarSubItem);
   titleReviewBarSubItem.appendChild(doc.createElement('div'));
   titleReviewBarSubItem.children[0].appendChild(doc.createElement('a'));
-  const tomatoMeterDescription = tomatoMeter.children[1].children[0].children[0];
+  const tomatoMeterDescription =
+    tomatoMeter.children[1].children[0].children[0];
   tomatoMeterDescription.innerHTML = 'Tomatometer';
   tomatoMeterDescription.setAttribute('href', url);
   // number of votes
@@ -81,7 +82,7 @@ function createTomatoMeterElement(doc, url, percent, votes) {
   const subText = doc.createElement('span');
   subTextContainer.appendChild(subText);
   subText.setAttribute('class', 'subText');
-  subText.innerHTML = `Total Count: ${votes}`;
+  subText.textContent = `Total Count: ${votes}`;
 
   return tomatoMeter;
 }

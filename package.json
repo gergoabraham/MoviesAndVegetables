@@ -5,7 +5,7 @@
     "firefox": "web-ext -s src run",
     "eslint": "eslint --ignore-path .gitignore .",
     "webext-lint": "web-ext -s src lint",
-    "unit-test": "mocha --forbid-pending --forbid-only",
+    "unit-test": "mocha --forbid-only",
     "tdd": "mocha --watch",
     "test": "npm run eslint && npm run webext-lint && npm run unit-test && npm run coverage",
     "coverage": "nyc --reporter=lcov --reporter=text-summary --reporter=text --all mocha --timeout 60000",
