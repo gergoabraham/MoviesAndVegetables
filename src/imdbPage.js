@@ -21,7 +21,7 @@ window.injectTomatoMeter = function(doc, percent, url, votes) {
   myDivider.setAttribute('class', 'divider');
   titleReviewBar.insertBefore(myDivider, firstDivider);
 
-  const tomatoMeter = createTomatoMeterElement(doc, url, percent, votes);
+  const tomatoMeter = createTomatoMeterElement(url, percent, votes);
   titleReviewBar.insertBefore(tomatoMeter, firstDivider);
 };
 
@@ -45,46 +45,28 @@ window.injectRottenScore = function(doc, percent, url) {
   currentDiv.parentNode.insertBefore(a, currentDiv.nextSibling);
 };
 
-function createTomatoMeterElement(doc, url, percent, votes) {
-  const tomatoMeter = doc.createElement('div');
-  tomatoMeter.setAttribute('class', `titleReviewBarItem TomatoMeter`);
+function createTomatoMeterElement(url, percent, votes) {
+  const innerHTML =
+    `<div class="titleReviewBarItem TomatoMeter">
+      <a href="${url}">
+        <div class="metacriticScore ${window.getFavorableness(percent)}
+        titleReviewBarSubItem" style="width: 40px">
+          <span>${percent}%</span>
+      </div></a>
+      <div class="titleReviewBarSubItem">
+        <div>
+          <a href="${url}">Tomatometer</a>
+        </div>
+        <div>
+          <span class="subText">Total Count: ${votes}</span>
+        </div>
+      </div>
+    </div>`;
 
-  const scoreContainerA = doc.createElement('a');
-  scoreContainerA.setAttribute('href', url);
-  tomatoMeter.appendChild(scoreContainerA);
+  const parser = new DOMParser();
+  const stuff = parser.parseFromString(innerHTML, 'text/html');
 
-  const scoreContainedDiv = doc.createElement('div');
-  const favorableness = window.getFavorableness(percent);
-  scoreContainedDiv.setAttribute('class',
-      `metacriticScore ${favorableness} titleReviewBarSubItem`);
-  scoreContainedDiv.setAttribute('style', 'width: 40px');
-  scoreContainerA.appendChild(scoreContainedDiv);
-
-  const scoreContainerSpan = doc.createElement('span');
-  scoreContainerSpan.textContent = `${percent}%`;
-  scoreContainedDiv.appendChild(scoreContainerSpan);
-
-  tomatoMeter.appendChild(doc.createTextNode(' '));
-
-  // Description
-  const titleReviewBarSubItem = doc.createElement('div');
-  titleReviewBarSubItem.setAttribute('class', 'titleReviewBarSubItem');
-  tomatoMeter.appendChild(titleReviewBarSubItem);
-  titleReviewBarSubItem.appendChild(doc.createElement('div'));
-  titleReviewBarSubItem.children[0].appendChild(doc.createElement('a'));
-  const tomatoMeterDescription =
-    tomatoMeter.children[1].children[0].children[0];
-  tomatoMeterDescription.innerHTML = 'Tomatometer';
-  tomatoMeterDescription.setAttribute('href', url);
-  // number of votes
-  const subTextContainer = doc.createElement('div');
-  titleReviewBarSubItem.appendChild(subTextContainer);
-  const subText = doc.createElement('span');
-  subTextContainer.appendChild(subText);
-  subText.setAttribute('class', 'subText');
-  subText.textContent = `Total Count: ${votes}`;
-
-  return tomatoMeter;
+  return stuff.body.children[0];
 }
 
 window.getFavorableness = function(percent) {

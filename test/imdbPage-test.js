@@ -39,6 +39,7 @@ describe('imdbPage', function() {
         const dom = await JSDOM.fromFile('./test/testImdbPage.html',
             {url: `https://www.imdb.com/title/tt0111161/`});
         document = dom.window.document;
+        global.DOMParser = new JSDOM().window.DOMParser;
 
         titleReviewBar =
           document.getElementsByClassName('titleReviewBar')[0];
@@ -92,9 +93,6 @@ describe('imdbPage', function() {
             .should.contain('metacriticScore')
             .and.contain('score_')
             .and.contain('titleReviewBarSubItem');
-
-        tomatoMeter.childNodes[1].data
-            .should.equal(' ');
       });
 
       it('should build HTML for description', function() {
@@ -151,11 +149,6 @@ describe('imdbPage', function() {
     });
 
     context('Favorableness', function() {
-      const unfavorable = 'score_unfavorable';
-      const mixed = 'score_mixed';
-      const favorable = 'score_favorable';
-
-
       before(async function() {
         const dom = await JSDOM.fromFile('./test/testImdbPage.html',
             {url: `https://www.imdb.com/title/tt0111161/`});
@@ -173,25 +166,27 @@ describe('imdbPage', function() {
           document.getElementsByClassName('titleReviewBar')[0];
         const tomatoMeter = titleReviewBar.children[2];
         const tomatoMeterContainer = tomatoMeter.children[0].children[0];
-
         tomatoMeterContainer.getAttribute('class')
             .should.contain('fakeFavorableness')
             .but.not.contain('score_favorable');
       });
 
       it('should give unfavorable style in 0...40', function() {
+        const unfavorable = 'score_unfavorable';
         getFavorableness(0).should.equal(unfavorable);
         getFavorableness(33).should.equal(unfavorable);
         getFavorableness(40).should.equal(unfavorable);
       });
 
       it('should give mixed style in 41...60', function() {
+        const mixed = 'score_mixed';
         getFavorableness(41).should.equal(mixed);
         getFavorableness(50).should.equal(mixed);
         getFavorableness(60).should.equal(mixed);
       });
 
       it('should give favorable style in 61...100', function() {
+        const favorable = 'score_favorable';
         getFavorableness(61).should.equal(favorable);
         getFavorableness(80).should.equal(favorable);
         getFavorableness(100).should.equal(favorable);
