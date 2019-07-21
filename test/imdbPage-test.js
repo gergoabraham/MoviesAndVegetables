@@ -34,7 +34,7 @@ describe('imdbPage', function() {
   describe('injectTomatoMeter', function() {
     let titleReviewBar;
 
-    context('Injecting', function() {
+    context('Position', function() {
       beforeEach(async function() {
         const dom = await JSDOM.fromFile('./test/testImdbPage.html',
             {url: `https://www.imdb.com/title/tt0111161/`});
@@ -66,7 +66,7 @@ describe('imdbPage', function() {
           });
     });
 
-    context('Details', function() {
+    context('Data', function() {
       let tomatoMeter;
       const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
 
@@ -74,90 +74,38 @@ describe('imdbPage', function() {
         const dom = await JSDOM.fromFile('./test/testImdbPage.html',
             {url: `https://www.imdb.com/title/tt0111161/`});
         document = dom.window.document;
-
-        titleReviewBar =
-          document.getElementsByClassName('titleReviewBar')[0];
+        global.DOMParser = new JSDOM().window.DOMParser;
 
         injectTomatoMeter(document, 93, rottenURL, 68);
 
+        titleReviewBar =
+          document.getElementsByClassName('titleReviewBar')[0];
         tomatoMeter = titleReviewBar.children[2];
       });
 
-      it('should build HTML for TomatoMeterPercentage', function() {
-        tomatoMeter.children[0].tagName.should.equal('A');
-        tomatoMeter.children[0].children[0].tagName.should.equal('DIV');
-        tomatoMeter.children[0].children[0].children[0].tagName
-            .should.equal('SPAN');
-
-        tomatoMeter.children[0].children[0].getAttribute('class')
-            .should.contain('metacriticScore')
-            .and.contain('score_')
-            .and.contain('titleReviewBarSubItem');
+      it('should add correct TomatoMeter percentage', function() {
+        tomatoMeter.innerHTML.should.contain('93');
       });
 
-      it('should build HTML for description', function() {
-        tomatoMeter.children[1].tagName.should.equal('DIV');
-        tomatoMeter.children[1].getAttribute('class')
-            .should.equal('titleReviewBarSubItem');
-
-        // First line
-        tomatoMeter.children[1].children[0].tagName.should.equal('DIV');
-        tomatoMeter.children[1].children[0].children[0].tagName
-            .should.equal('A');
-
-        // Second line
-        tomatoMeter.children[1].children[1].tagName.should.equal('DIV');
-        tomatoMeter.children[1].children[1].children[0].tagName
-            .should.equal('SPAN');
-        tomatoMeter.children[1].children[1].children[0]
-            .getAttribute('class').should.equal('subText');
+      it('should add rotten URL', function() {
+        tomatoMeter.innerHTML.should.contain(rottenURL);
       });
 
-      it('should inject correct TomatoMeter percentage', function() {
-        const score = tomatoMeter.children[0].children[0].children[0];
-        score.innerHTML.should.equal('93%');
-      });
-
-      it('should add URL on TomatoMeter percentage', function() {
-        tomatoMeter.children[0].getAttribute('href').should.equal(rottenURL);
-      });
-
-      it('should format TomatoMeter percentage wider', function() {
-        const tomatoMeterContainer = tomatoMeter.children[0].children[0];
-        tomatoMeterContainer.getAttribute('style').should.equal('width: 40px');
-      });
-
-      it('should write "TomatoMeter" description next to percentage',
-          function() {
-            const tomatoMeterDescription =
-          tomatoMeter.children[1].children[0].children[0];
-            tomatoMeterDescription.innerHTML.should.equal('Tomatometer');
-          });
-
-      it('should add rotten URL for "TomatoMeter" description', function() {
-        const tomatoMeterDescription =
-          tomatoMeter.children[1].children[0].children[0];
-        tomatoMeterDescription.getAttribute('href')
-            .should.equal(rottenURL);
-      });
-
-      it('should write number of votes', function() {
-        const tomatoMeterSubDescription =
-          tomatoMeter.children[1].children[1].children[0];
-        tomatoMeterSubDescription.innerHTML.should.equal(`Total Count: 68`);
+      it('should add number of votes', function() {
+        tomatoMeter.innerHTML.should.contain(`68`);
       });
     });
 
     context('Favorableness', function() {
       before(async function() {
-        const dom = await JSDOM.fromFile('./test/testImdbPage.html',
-            {url: `https://www.imdb.com/title/tt0111161/`});
+        const dom = await JSDOM.fromFile('./test/testImdbPage.html');
         document = dom.window.document;
       });
 
       it('should change favorableness based on TomatoMeter', function() {
         sinon.replace(window, 'getFavorableness',
             sinon.fake.returns('fakeFavorableness'));
+        global.DOMParser = new JSDOM().window.DOMParser;
 
         injectTomatoMeter(document, 93, 'someUrl');
 
@@ -165,8 +113,7 @@ describe('imdbPage', function() {
         const titleReviewBar =
           document.getElementsByClassName('titleReviewBar')[0];
         const tomatoMeter = titleReviewBar.children[2];
-        const tomatoMeterContainer = tomatoMeter.children[0].children[0];
-        tomatoMeterContainer.getAttribute('class')
+        tomatoMeter.innerHTML
             .should.contain('fakeFavorableness')
             .but.not.contain('score_favorable');
       });
