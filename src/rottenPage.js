@@ -8,6 +8,5 @@ window.readRottenData = function(rottenPage, url) {
   const audienceScore = rottenScores[1].innerHTML.replace(/[^0-9]/g, '');
 
   return {tomatoMeter: tomatoMeter,
-    audienceScore: audienceScore,
-    url: url};
+    audienceScore: audienceScore};
 };

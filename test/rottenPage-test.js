@@ -16,15 +16,14 @@ describe('rottenPage', function() {
   });
 
   describe(`readRottenData`, function() {
-    it('should read movie scores from Rotten page', function() {
+    it('should read Tomatometer from Rotten page', function() {
       readRottenData(document, 'movieUrl')
-          .should.deep.equal(
-              {
-                tomatoMeter: '91',
-                audienceScore: '98',
-                url: `movieUrl`,
-              }
-          );
+          .should.contain({tomatoMeter: '91'});
+    });
+
+    it('should read AudienceScore from Rotten page', function() {
+      readRottenData(document, 'movieUrl')
+          .should.contain({audienceScore: '98'});
     });
   });
 });

@@ -5,7 +5,7 @@ window.getRottenData = async (movieData) => {
   const response = await window.fetchRottenResponse(movieData, remotePage);
   const rottenPage = await window.getRottenPage(response);
 
-  return window.readRottenData(rottenPage, response.url);
+  return {...window.readRottenData(rottenPage), url: response.url};
 };
 
 window.fetchRottenResponse = async (movieData, remotePage) => {
