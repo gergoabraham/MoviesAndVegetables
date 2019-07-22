@@ -30,5 +30,10 @@ describe('rottenPage', function() {
       readRottenData(document, 'movieUrl')
           .should.contain({tomatoMeterCount: '68'});
     });
+
+    it('should read number of votes on AudienceScore', function() {
+      readRottenData(document, 'movieUrl')
+          .should.contain({audienceScoreCount: '885203'});
+    });
   });
 });

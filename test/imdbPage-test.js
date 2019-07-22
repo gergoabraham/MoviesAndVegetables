@@ -151,7 +151,7 @@ describe('imdbPage', function() {
 
       // Function-under-test is called here, to avoid calling it multiple times,
       // which would result in reloading the html file multiple times.
-      injectRottenScore(document, 93);
+      injectRottenScore(document, 93, 'url', 853666);
     });
 
     it('should add child with id "movies-and-vegetables-rotten-rating"',
@@ -168,7 +168,7 @@ describe('imdbPage', function() {
 
     it('should add given percent', function() {
       document.getElementById('movies-and-vegetables-rotten-rating').
-          innerHTML.should.equal('🍅93%');
+          innerHTML.should.equal('🍅93% by 853666');
     });
   });
 });

@@ -29,6 +29,7 @@ describe('Content script', function() {
             audienceScore: 85,
             url: 'rottenURL',
             tomatoMeterCount: 68,
+            audienceScoreCount: 885203,
           })},
       };
 
@@ -44,7 +45,7 @@ describe('Content script', function() {
 
       window.injectRottenScore
           .should.have.been.calledOnceWithExactly(
-              global.document, '85', 'rottenURL'
+              global.document, 85, 'rottenURL', 885203,
           );
       window.injectTomatoMeter
           .should.have.been.calledOnceWithExactly(

@@ -7,11 +7,18 @@ window.readRottenData = function(rottenPage, url) {
   const tomatoMeter = rottenScores[0].innerHTML.replace(/[^0-9]/g, '');
   const audienceScore = rottenScores[1].innerHTML.replace(/[^0-9]/g, '');
 
-  const numberOfVotesHtml = rottenPage.body
+  const numberOfCriticRatingsHTML = rottenPage.body
       .querySelectorAll('small.mop-ratings-wrap__text--small')[0];
-  const numberOfVotes = numberOfVotesHtml.textContent.replace(/[^0-9]/g, '');
+  const numberOfCriticRatings =
+    numberOfCriticRatingsHTML.textContent.replace(/[^0-9]/g, '');
+
+  const numberOfUserRatingsHtml = rottenPage.body
+      .querySelectorAll('strong.mop-ratings-wrap__text--small')[1];
+  const numberOfUserRatings =
+    numberOfUserRatingsHtml.textContent.replace(/[^0-9]/g, '');
 
   return {tomatoMeter: tomatoMeter,
-    tomatoMeterCount: numberOfVotes,
-    audienceScore: audienceScore};
+    tomatoMeterCount: numberOfCriticRatings,
+    audienceScore: audienceScore,
+    audienceScoreCount: numberOfUserRatings};
 };

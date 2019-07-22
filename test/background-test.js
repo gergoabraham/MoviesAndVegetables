@@ -120,6 +120,7 @@ describe('Background script', function() {
                     audienceScore: '98',
                     url: `responseURL`,
                     tomatoMeterCount: '68',
+                    audienceScoreCount: '885203',
                   }
               );
 

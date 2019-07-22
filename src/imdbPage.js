@@ -25,7 +25,7 @@ window.injectTomatoMeter = function(doc, percent, url, votes) {
   titleReviewBar.insertBefore(tomatoMeter, firstDivider);
 };
 
-window.injectRottenScore = function(doc, percent, url) {
+window.injectRottenScore = function(doc, percent, url, votes) {
   // Create <a> and <div>
   const a = doc.createElement('a');
   const div = doc.createElement('div');
@@ -38,7 +38,7 @@ window.injectRottenScore = function(doc, percent, url) {
   a.setAttribute('href', url);
 
   // Add movie's score
-  div.textContent = `🍅${percent}%`;
+  div.textContent = `🍅${percent}% by ${votes}`;
 
   // Inject element into the html after the user rating
   const currentDiv = doc.getElementById('star-rating-widget');
