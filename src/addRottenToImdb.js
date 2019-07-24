@@ -5,10 +5,8 @@ window.addRottenOnLoad = function() {
 
   browser.runtime.sendMessage(movieData)
       .then((response) => {
-        window.injectRottenScore(document,
-            response.audienceScore,
-            response.url,
-            response.audienceScoreCount);
+        window.injectAudienceScore(document,
+            response.audienceScore, response.url, response.audienceScoreCount);
         window.injectTomatoMeter(document,
             response.tomatoMeter, response.url, response.tomatoMeterCount);
       });

@@ -25,26 +25,6 @@ window.injectTomatoMeter = function(doc, percent, url, votes) {
   titleReviewBar.insertBefore(tomatoMeter, firstDivider);
 };
 
-window.injectRottenScore = function(doc, percent, url, votes) {
-  // Create <a> and <div>
-  const a = doc.createElement('a');
-  const div = doc.createElement('div');
-  a.appendChild(div);
-  div.title = 'Open in RottenTomatoes';
-  div.setAttribute('align', 'center');
-  div.setAttribute('id', 'movies-and-vegetables-rotten-rating');
-
-  // Add hyperlink to movie's rotten page
-  a.setAttribute('href', url);
-
-  // Add movie's score
-  div.textContent = `🍅${percent}% by ${votes}`;
-
-  // Inject element into the html after the user rating
-  const currentDiv = doc.getElementById('star-rating-widget');
-  currentDiv.parentNode.insertBefore(a, currentDiv.nextSibling);
-};
-
 function createTomatoMeterElement(url, percent, votes) {
   const innerHTML =
     `<div class="titleReviewBarItem TomatoMeter">\n` +
@@ -58,7 +38,8 @@ function createTomatoMeterElement(url, percent, votes) {
           `<a href="${url}">Tomatometer</a>\n` +
         `</div>\n` +
         `<div>\n` +
-          `<span class="subText">Total Count: ${votes}</span>\n` +
+          `<span class="subText">` +
+            `Total Count: ${window.groupThousands(votes)}</span>\n` +
         `</div>\n` +
       `</div>\n` +
     `</div>`;
@@ -81,4 +62,46 @@ window.getFavorableness = function(percent) {
   }
 
   return `score_${favorableness}`;
+};
+
+window.injectAudienceScore = function(doc, percent, url, votes) {
+  const ratingsWrapper = doc.getElementsByClassName('ratings_wrapper')[0];
+  const starRatingWidget = doc.getElementById('star-rating-widget');
+
+  const element = createAudienceScoreElement(percent, url, votes);
+  ratingsWrapper.insertBefore(element, starRatingWidget);
+
+  const button = starRatingWidget.children[0].children[0];
+  button.setAttribute('style', 'border-left-width: 0px');
+};
+
+function createAudienceScoreElement(percent, url, votes) {
+  const innerHTML =
+    `<div class="imdbRating" id="audience-score"` +
+      `style="background:none; text-align:center; padding:2px 0 0 2px;\n`+
+      `width:90px;border-left:1px solid #6b6b6b;">\n` +
+      `<div class="ratingValue">\n` +
+        `<strong title="HINT">\n` +
+          `<span itemprop="ratingValue">${percent}%</span>\n` +
+        `</strong>\n` +
+      `</div>\n` +
+      `<a href="${url}">\n` +
+        `<span class="small" itemprop="ratingCount">` +
+          `${window.groupThousands(votes)}</span>\n` +
+      `</a>\n` +
+    `</div>`;
+
+  const parser = new DOMParser();
+  const audienceScoreElement = parser.parseFromString(innerHTML, 'text/html');
+
+  return audienceScoreElement.body.children[0];
+}
+
+window.groupThousands = function(number) {
+  const pattern = /(\d)((\d{3})+$)/g;
+  const replaceValue = '$1 $2';
+
+  return String(number)
+      .replace(pattern, replaceValue)
+      .replace(pattern, replaceValue);
 };

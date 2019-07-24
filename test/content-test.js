@@ -33,7 +33,7 @@ describe('Content script', function() {
           })},
       };
 
-      sinon.replace(window, 'injectRottenScore', sinon.spy());
+      sinon.replace(window, 'injectAudienceScore', sinon.spy());
 
       await addRottenOnLoad();
 
@@ -43,7 +43,7 @@ describe('Content script', function() {
       global.browser.runtime.sendMessage
           .should.have.been.calledOnceWithExactly('movieData');
 
-      window.injectRottenScore
+      window.injectAudienceScore
           .should.have.been.calledOnceWithExactly(
               global.document, 85, 'rottenURL', 885203,
           );
