@@ -45,7 +45,7 @@ describe('imdbPage', function() {
           document.getElementsByClassName('titleReviewBar')[0];
       });
 
-      it('should inject TomatoMeter and a divider next to MetaScore',
+      it('should add TomatoMeter and a divider next to MetaScore',
           function() {
             const dividers = titleReviewBar.getElementsByClassName('divider');
 
@@ -93,6 +93,25 @@ describe('imdbPage', function() {
 
       it('should add number of votes', function() {
         tomatoMeter.innerHTML.should.contain(`68`);
+      });
+
+      it('should add the HTML element with the movie scores', function() {
+        tomatoMeter.innerHTML.should.equal(
+            `\n` +
+            `<a href="${rottenURL}">\n` +
+              `<div class="metacriticScore score_favorable\n` +
+                `titleReviewBarSubItem" style="width: 40px">\n` +
+                `<span>93%</span>\n` +
+            `</div></a>\n` +
+            `<div class="titleReviewBarSubItem">\n` +
+              `<div>\n` +
+                `<a href="${rottenURL}">Tomatometer</a>\n` +
+              `</div>\n` +
+              `<div>\n` +
+                `<span class="subText">Total Count: 68</span>\n` +
+              `</div>\n` +
+            `</div>\n`
+        );
       });
     });
 

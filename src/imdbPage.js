@@ -47,26 +47,26 @@ window.injectRottenScore = function(doc, percent, url, votes) {
 
 function createTomatoMeterElement(url, percent, votes) {
   const innerHTML =
-    `<div class="titleReviewBarItem TomatoMeter">
-      <a href="${url}">
-        <div class="metacriticScore ${window.getFavorableness(percent)}
-        titleReviewBarSubItem" style="width: 40px">
-          <span>${percent}%</span>
-      </div></a>
-      <div class="titleReviewBarSubItem">
-        <div>
-          <a href="${url}">Tomatometer</a>
-        </div>
-        <div>
-          <span class="subText">Total Count: ${votes}</span>
-        </div>
-      </div>
-    </div>`;
+    `<div class="titleReviewBarItem TomatoMeter">\n` +
+      `<a href="${url}">\n` +
+        `<div class="metacriticScore ${window.getFavorableness(percent)}\n` +
+          `titleReviewBarSubItem" style="width: 40px">\n` +
+          `<span>${percent}%</span>\n` +
+      `</div></a>\n` +
+      `<div class="titleReviewBarSubItem">\n` +
+        `<div>\n` +
+          `<a href="${url}">Tomatometer</a>\n` +
+        `</div>\n` +
+        `<div>\n` +
+          `<span class="subText">Total Count: ${votes}</span>\n` +
+        `</div>\n` +
+      `</div>\n` +
+    `</div>`;
 
   const parser = new DOMParser();
-  const stuff = parser.parseFromString(innerHTML, 'text/html');
+  const tomatoMeterElement = parser.parseFromString(innerHTML, 'text/html');
 
-  return stuff.body.children[0];
+  return tomatoMeterElement.body.children[0];
 }
 
 window.getFavorableness = function(percent) {
