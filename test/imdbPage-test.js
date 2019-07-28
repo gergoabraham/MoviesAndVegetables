@@ -14,11 +14,17 @@ const {readMovieDataFromImdbPage,
   groupThousands} = window;
 
 describe('imdbPage', function() {
+  const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
+
+  async function prepareTestDocument() {
+    const dom = await JSDOM.fromFile('./test/testImdbPage.html',
+        {url: `https://www.imdb.com/title/tt0111161/`});
+    document = dom.window.document;
+  }
+
   describe('readMovieDataFromImdbPage', function() {
     before(async function() {
-      const dom = await JSDOM.fromFile('./test/testImdbPage.html',
-          {url: `https://www.imdb.com/title/tt0111161/`});
-      document = dom.window.document;
+      await prepareTestDocument();
     });
 
     it('should read movie title', function() {
@@ -35,68 +41,35 @@ describe('imdbPage', function() {
   describe('injectTomatoMeter', function() {
     let titleReviewBar;
 
-    context('Position', function() {
-      beforeEach(async function() {
-        const dom = await JSDOM.fromFile('./test/testImdbPage.html',
-            {url: `https://www.imdb.com/title/tt0111161/`});
-        document = dom.window.document;
-        global.DOMParser = new JSDOM().window.DOMParser;
-
-        titleReviewBar =
-          document.getElementsByClassName('titleReviewBar')[0];
-      });
-
-      it('should add TomatoMeter and a divider next to MetaScore',
-          function() {
-            const dividers = titleReviewBar.getElementsByClassName('divider');
-
-            // Before: 3 item + 2 dividers
-            titleReviewBar.childElementCount.should.equal(5);
-            dividers.length.should.equal(2);
-
-            injectTomatoMeter(document, 93, 'someUrl');
-
-            // After: 4 item + 3 dividers
-            titleReviewBar.childElementCount.should.equal(7);
-            dividers.length.should.equal(3);
-
-            // TomatoMeter at position 2
-            titleReviewBar.children[2].getAttribute('class')
-                .should.contain('titleReviewBarItem')
-                .and.contain('TomatoMeter');
-          });
-    });
-
-    context('Data', function() {
-      let tomatoMeter;
-      const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
-
+    context('Adding', function() {
       before(async function() {
-        const dom = await JSDOM.fromFile('./test/testImdbPage.html',
-            {url: `https://www.imdb.com/title/tt0111161/`});
-        document = dom.window.document;
+        await prepareTestDocument();
         global.DOMParser = new JSDOM().window.DOMParser;
 
         injectTomatoMeter(document, 93, rottenURL, 1268);
 
         titleReviewBar =
           document.getElementsByClassName('titleReviewBar')[0];
-        tomatoMeter = titleReviewBar.children[2];
       });
 
-      it('should add correct TomatoMeter percentage', function() {
-        tomatoMeter.innerHTML.should.contain('93');
-      });
+      it('should add TomatoMeter inside dividers next to MetaScore',
+          function() {
+            titleReviewBar.children[0].getAttribute('class')
+                .should.equal('titleReviewBarItem');
+            titleReviewBar.children[1].getAttribute('class')
+                .should.equal('divider');
 
-      it('should add rotten URL', function() {
-        tomatoMeter.innerHTML.should.contain(rottenURL);
-      });
+            titleReviewBar.children[2].getAttribute('class')
+                .should.contain('titleReviewBarItem')
+                .and.contain('TomatoMeter');
 
-      it('should add number of votes', function() {
-        tomatoMeter.innerHTML.should.contain(`1 268`);
-      });
+            titleReviewBar.children[3].getAttribute('class')
+                .should.equal('divider');
+          });
 
       it('should add TomatoMeter with correct data and format', function() {
+        const tomatoMeter = titleReviewBar.children[2];
+
         tomatoMeter.outerHTML.should.equal(
             `<div class="titleReviewBarItem TomatoMeter">\n` +
               `<a href="${rottenURL}">\n` +
@@ -119,41 +92,40 @@ describe('imdbPage', function() {
 
     context('Favorableness', function() {
       before(async function() {
-        const dom = await JSDOM.fromFile('./test/testImdbPage.html');
-        document = dom.window.document;
+        await prepareTestDocument();
+        global.DOMParser = new JSDOM().window.DOMParser;
       });
 
       it('should change favorableness based on TomatoMeter', function() {
         sinon.replace(window, 'getFavorableness',
             sinon.fake.returns('fakeFavorableness'));
-        global.DOMParser = new JSDOM().window.DOMParser;
 
         injectTomatoMeter(document, 93, 'someUrl');
 
         window.getFavorableness.should.have.been.calledOnceWithExactly(93);
-        const titleReviewBar =
-          document.getElementsByClassName('titleReviewBar')[0];
-        const tomatoMeter = titleReviewBar.children[2];
+
+        const tomatoMeter =
+          document.getElementsByClassName('titleReviewBar')[0].children[2];
         tomatoMeter.innerHTML
             .should.contain('fakeFavorableness')
             .but.not.contain('score_favorable');
       });
 
-      it('should give unfavorable style in 0...40', function() {
+      it('should give unfavorable style for Tomatometer 0...40', function() {
         const unfavorable = 'score_unfavorable';
         getFavorableness(0).should.equal(unfavorable);
         getFavorableness(33).should.equal(unfavorable);
         getFavorableness(40).should.equal(unfavorable);
       });
 
-      it('should give mixed style in 41...60', function() {
+      it('should give mixed style for Tomatometer 41...60', function() {
         const mixed = 'score_mixed';
         getFavorableness(41).should.equal(mixed);
         getFavorableness(50).should.equal(mixed);
         getFavorableness(60).should.equal(mixed);
       });
 
-      it('should give favorable style in 61...100', function() {
+      it('should give favorable style for Tomatometer 61...100', function() {
         const favorable = 'score_favorable';
         getFavorableness(61).should.equal(favorable);
         getFavorableness(80).should.equal(favorable);
@@ -165,17 +137,9 @@ describe('imdbPage', function() {
   });
 
   describe('injectAudienceScore', function() {
-    const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
-
     before(async function() {
-      const dom = await JSDOM.fromFile('./test/testImdbPage.html',
-          {url: `https://www.imdb.com/title/tt0111161/`});
-      document = dom.window.document;
+      await prepareTestDocument();
       global.DOMParser = new JSDOM().window.DOMParser;
-
-      const ratingsWrapper =
-        document.getElementsByClassName('ratings_wrapper')[0];
-      ratingsWrapper.childElementCount.should.equal(2);
 
       injectAudienceScore(document, 98, rottenURL, 885228);
     });
@@ -183,7 +147,7 @@ describe('imdbPage', function() {
     it('should add AudienceScore before star-rating-widget', function() {
       const ratingsWrapper =
         document.getElementsByClassName('ratings_wrapper')[0];
-      ratingsWrapper.childElementCount.should.equal(3);
+
       ratingsWrapper.children[1].id.should.equal('audience-score');
       ratingsWrapper.children[2].id.should.equal('star-rating-widget');
     });
@@ -207,6 +171,15 @@ describe('imdbPage', function() {
       );
     });
 
+    it('should remove border from Rating button', function() {
+      const starRatingWidget = document.getElementById('star-rating-widget');
+      const button = starRatingWidget.children[0].children[0];
+
+      button.getAttribute('style').should.equal('border-left-width: 0px');
+    });
+  });
+
+  describe('Numeric formatting', function() {
     it('should write number of votes with thousand grouping', function() {
       groupThousands(1).should.equal('1');
       groupThousands(13).should.equal('13');
@@ -216,13 +189,6 @@ describe('imdbPage', function() {
       groupThousands(632913).should.equal('632 913');
       groupThousands(8632913).should.equal('8 632 913');
       groupThousands(78632913).should.equal('78 632 913');
-    });
-
-    it('should remove border from Rating button', function() {
-      const starRatingWidget = document.getElementById('star-rating-widget');
-      const button = starRatingWidget.children[0].children[0];
-
-      button.getAttribute('style').should.equal('border-left-width: 0px');
     });
   });
 });
