@@ -21,12 +21,12 @@ window.injectTomatoMeter = function(doc, percent, url, votes) {
   const titleReviewBar = doc.getElementsByClassName('titleReviewBar')[0];
   const firstDivider = titleReviewBar.getElementsByClassName('divider')[0];
 
-  const myDivider = doc.createElement('div');
-  myDivider.setAttribute('class', 'divider');
-  titleReviewBar.insertBefore(myDivider, firstDivider);
-
   const tomatoMeter = createTomatoMeterElement(url, percent, votes);
-  titleReviewBar.insertBefore(tomatoMeter, firstDivider);
+  firstDivider.after(tomatoMeter);
+
+  const newDivider = doc.createElement('div');
+  newDivider.setAttribute('class', 'divider');
+  tomatoMeter.after(newDivider);
 };
 
 function createTomatoMeterElement(url, percent, votes) {
@@ -69,11 +69,10 @@ window.getFavorableness = function(percent) {
 };
 
 window.injectAudienceScore = function(doc, percent, url, votes) {
-  const ratingsWrapper = doc.getElementsByClassName('ratings_wrapper')[0];
   const starRatingWidget = doc.getElementById('star-rating-widget');
 
-  const element = createAudienceScoreElement(percent, url, votes);
-  ratingsWrapper.insertBefore(element, starRatingWidget);
+  const audienceScoreElement = createAudienceScoreElement(percent, url, votes);
+  starRatingWidget.before(audienceScoreElement);
 
   const button = starRatingWidget.children[0].children[0];
   button.setAttribute('style', 'border-left-width: 0px');

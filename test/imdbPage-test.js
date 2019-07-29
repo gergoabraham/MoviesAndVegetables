@@ -22,6 +22,10 @@ describe('imdbPage', function() {
     document = dom.window.document;
   }
 
+  before(function() {
+    global.DOMParser = new JSDOM().window.DOMParser;
+  });
+
   describe('readMovieDataFromImdbPage', function() {
     context(`on a movie's imdb page`, function() {
       before(async function() {
@@ -58,7 +62,6 @@ describe('imdbPage', function() {
     context('Adding', function() {
       before(async function() {
         await prepareTestDocument();
-        global.DOMParser = new JSDOM().window.DOMParser;
 
         injectTomatoMeter(document, 93, rottenURL, 1268);
 
@@ -107,7 +110,6 @@ describe('imdbPage', function() {
     context('Favorableness', function() {
       before(async function() {
         await prepareTestDocument();
-        global.DOMParser = new JSDOM().window.DOMParser;
       });
 
       it('should change favorableness based on TomatoMeter', function() {
@@ -153,7 +155,6 @@ describe('imdbPage', function() {
   describe('injectAudienceScore', function() {
     before(async function() {
       await prepareTestDocument();
-      global.DOMParser = new JSDOM().window.DOMParser;
 
       injectAudienceScore(document, 98, rottenURL, 885228);
     });
