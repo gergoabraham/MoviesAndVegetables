@@ -160,7 +160,7 @@ describe('imdbPage', function() {
             `style="background:none; text-align:center; padding:2px 0 0 2px;\n`+
             `width:90px;border-left:1px solid #6b6b6b;">\n` +
             `<div class="ratingValue">\n` +
-              `<strong title="HINT">\n` +
+              `<strong title="Audience score from RottenTomatoes">\n` +
                 `<span itemprop="ratingValue">98%</span>\n` +
               `</strong>\n` +
             `</div>\n` +
