@@ -24,6 +24,6 @@ Branching strategy is based on the great [article](https://nvie.com/posts/a-succ
 ## Disclaimer
 This extension is neither a robot, nor a crawler. It is a simple browser extension that spares some mouse clicks for the user, triggered by the user's actions, and visualizes the result in a simple way.
 
-`testImdbPage.html` is an unmodified copy of a movie's IMDb page, I do not own it. It is the intellectual property of its owners, and the sole purpose of storing it is to be able to test the web extension without downloading the page from the internet every time. So we can say, that it is practically a cached page.
+`testImdbPage-*.html` are unmodified copies of movie's and series' IMDb pages, I do not own them. They are the intellectual properties of their owners, and the sole purpose of storing them is to be able to test the web extension without downloading the pages from the internet every time. So we can say, that those are practically cached pages.
 
 `testRottenTomatoesPage.html` is an unmodified copy of a movie's RottenTomatoes page, I do not own it. Same, as above.

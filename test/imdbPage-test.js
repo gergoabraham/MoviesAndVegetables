@@ -16,25 +16,39 @@ const {readMovieDataFromImdbPage,
 describe('imdbPage', function() {
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
 
-  async function prepareTestDocument() {
-    const dom = await JSDOM.fromFile('./test/testImdbPage.html',
+  async function prepareTestDocument(filename = 'testImdbPage.html') {
+    const dom = await JSDOM.fromFile(`./test/${filename}`,
         {url: `https://www.imdb.com/title/tt0111161/`});
     document = dom.window.document;
   }
 
   describe('readMovieDataFromImdbPage', function() {
-    before(async function() {
-      await prepareTestDocument();
+    context(`on a movie's imdb page`, function() {
+      before(async function() {
+        await prepareTestDocument();
+      });
+
+      it('should read movie title', function() {
+        const movieData = readMovieDataFromImdbPage(document);
+        movieData['title'].should.deep.equal('The Shawshank Redemption');
+      });
+
+      it('should read movie\'s release year', function() {
+        const movieData = readMovieDataFromImdbPage(document);
+        movieData['year'].should.deep.equal('1994');
+      });
     });
 
-    it('should read movie title', function() {
-      const movieData = readMovieDataFromImdbPage(document);
-      movieData['title'].should.deep.equal('The Shawshank Redemption');
-    });
+    context(`on a series' imdb page`, function() {
+      before(async function() {
+        await prepareTestDocument('testImdbPage-Series.html');
+      });
 
-    it('should read movie\'s release year', function() {
-      const movieData = readMovieDataFromImdbPage(document);
-      movieData['year'].should.deep.equal('1994');
+      it('should throw an error (for now, TODO)', function() {
+        (function() {
+          readMovieDataFromImdbPage(document);
+        }).should.throw('Not a movie');
+      });
     });
   });
 

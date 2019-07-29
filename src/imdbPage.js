@@ -5,6 +5,10 @@ window.readMovieDataFromImdbPage = function(doc) {
     doc.head.querySelector('[type="application/ld+json"]').textContent;
   const movieDataJSON = JSON.parse(rawJSONContainingMovieData);
 
+  if (movieDataJSON['@type'] != 'Movie') {
+    throw new Error('Not a movie');
+  }
+
   const movieData = {
     title: movieDataJSON.name,
     year: movieDataJSON.datePublished.substring(0, 4),
