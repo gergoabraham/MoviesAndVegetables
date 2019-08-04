@@ -4,6 +4,29 @@
 # Movies and Vegetables
 A Firefox extension.
 
+## Description
+**Please consider that this extension is currently under development. New features will be implemented and released continuously.**
+
+Do you like to check out a movie both on IMDb and RottenTomatoes when you're searching for tonight's entertainment?
+
+But do you hate to do all the searches **TWICE**? Once for RottenTomatoes, once for IMDb...
+
+Look no further then! This extension can **spare your time** by searching for the movies' other page automatically! Moreover, you can see **all the scores** on IMDb in a nicely blended way.
+
+### Current features
+- Shows a movie's Tomatometer and AudienceScore on its IMDb page,
+- Clicking on the Tomatometer or AudienceScore forwards you to the movie's RottenTomatoes page.
+
+### Coming soon!
+- Shows a movie's Metascore and User score on RottenTomatoes,
+- Switches between the movie's IMDb and RottenTomatoes page with a hotkey.
+
+### Release log
+- v0.1: First release, showing RottenTomatoes scores on IMDb.
+
+### Support
+Please write a mail [to this address](mailto:sw.gergo.abraham@gmail.com) if you find any issue, or have a feature request.
+
 ## Development notes
 ### Scripts
 - `npm run tdd` - for TDD. :-)

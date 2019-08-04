@@ -1,10 +1,12 @@
 {
   "manifest_version": 2,
+
   "name": "Movies and Vegetables",
+  "description": "Links movies' IMDb and RottenTomatoes pages by showing their scores.",
   "version": "0.0.0",
-  "homepage_url": "https://github.com/gergooo/MoviesAndVegetables",
   
-  "description": "Linking movies' IMDb and RottenTomatoes pages.",
+  "author": "Gergő Ábrahám",
+  "homepage_url": "https://github.com/gergooo/MoviesAndVegetables",
 
   "permissions": [
     "https://www.google.com/*",
