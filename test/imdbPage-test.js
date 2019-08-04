@@ -153,16 +153,15 @@ describe('imdbPage', function() {
   });
 
   describe('injectAudienceScore', function() {
+    let ratingsWrapper;
+
     before(async function() {
       await prepareTestDocument();
-
       injectAudienceScore(document, 98, rottenURL, 885228);
+      ratingsWrapper = document.getElementsByClassName('ratings_wrapper')[0];
     });
 
     it('should add AudienceScore before star-rating-widget', function() {
-      const ratingsWrapper =
-        document.getElementsByClassName('ratings_wrapper')[0];
-
       ratingsWrapper.children[1].id.should.equal('audience-score');
       ratingsWrapper.children[2].id.should.equal('star-rating-widget');
     });
@@ -184,6 +183,11 @@ describe('imdbPage', function() {
             `</a>\n` +
           `</div>`
       );
+    });
+
+    it('should increase the width of the User Score', function() {
+      ratingsWrapper.children[0].getAttribute('style')
+          .should.contain('width:95px');
     });
 
     it('should remove border from Rating button', function() {

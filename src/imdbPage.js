@@ -76,6 +76,9 @@ window.injectAudienceScore = function(doc, percent, url, votes) {
 
   const button = starRatingWidget.children[0].children[0];
   button.setAttribute('style', 'border-left-width: 0px');
+
+  const imdbRating = audienceScoreElement.previousElementSibling;
+  imdbRating.setAttribute('style', 'width:95px');
 };
 
 function createAudienceScoreElement(percent, url, votes) {
