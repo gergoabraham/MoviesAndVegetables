@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/rotten-score-on-imdb.svg?style=svg&circle-token=deac9a2ced9ed3937ff44eb0f9cf3f63aa6bff08)](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/rotten-score-on-imdb)  [![codecov](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/rotten-score-on-imdb/graph/badge.svg?token=nUY2twqHRv)](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/rotten-score-on-imdb)
+[![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/develop.svg?style=svg&circle-token=deac9a2ced9ed3937ff44eb0f9cf3f63aa6bff08)](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/develop)  [![codecov](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/develop/graph/badge.svg?token=nUY2twqHRv)](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/develop)
 
 
 # Movies and Vegetables ![Icon](src/icons/icon-48.png)
