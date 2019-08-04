@@ -7,14 +7,15 @@
     "extends": [
         "google"
     ],
-    "globals": {
-        "Atomics": "readonly",
-        "SharedArrayBuffer": "readonly"
-    },
     "parserOptions": {
         "ecmaVersion": 2018
     },
     "rules": {
-        "linebreak-style": 0
+        "linebreak-style": 0,
+        "strict": ["error", "global"],
+        "no-const-assign": "error",
+        "no-use-before-define": ["error", {"functions":false}],
+        "no-undef": "error",
+        "require-jsdoc": "off"
     }
 }

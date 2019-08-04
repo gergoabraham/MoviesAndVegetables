@@ -1,14 +1,37 @@
 {
   "manifest_version": 2,
-  "name": "Movies and Vegetables",
-  "version": "0.0.0",
 
-  "description": "Linking movies' IMDb and RottenTomatoes pages.",
+  "name": "Movies and Vegetables",
+  "description": "Links movies' IMDb and RottenTomatoes pages by showing their scores.",
+  "version": "0.0.0",
+  
+  "author": "Gergő Ábrahám",
+  "homepage_url": "https://github.com/gergooo/MoviesAndVegetables",
 
   "permissions": [
+    "https://www.google.com/*",
+    "https://www.rottentomatoes.com/*"
   ],
 
+  "icons": {
+    "48": "icons/icon-48.png",
+    "96": "icons/icon-96.png"
+  },
+
   "background": {
-    "page": "background.js"
-  }
+    "scripts": [
+      "backgroundScript.js",
+      "rottenPage.js"
+    ]
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://*.imdb.com/title/*"],
+      "js": [
+        "addRottenToImdb.js",
+        "imdbPage.js"
+      ]
+    }
+  ]
 }

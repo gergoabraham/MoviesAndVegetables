@@ -18,13 +18,13 @@ jobs:
           paths:
             - ./
 
-  tests:
+  unit_test:
     docker:
       - image: circleci/node:latest
     steps:
       - attach_workspace:
           at: ./
-      - run: npm run tests
+      - run: npm run unit-test
 
   eslint:
     docker:
@@ -58,7 +58,7 @@ workflows:
   build_and_test:
     jobs:
       - checkout_and_install_npm
-      - tests:
+      - unit_test:
           requires:
             - checkout_and_install_npm
       - eslint:

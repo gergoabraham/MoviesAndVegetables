@@ -1,5 +1,10 @@
 {
     "env": {
-        "mocha": true
+        "mocha": true,
+        "node": true
+    },
+    "globals": {
+        "sinon": "readonly",
+        "should": "readonly"
     }
 }
