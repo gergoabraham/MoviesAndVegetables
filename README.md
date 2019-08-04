@@ -33,6 +33,7 @@ Please write a mail [to this address](mailto:sw.gergo.abraham@gmail.com) if you 
 - `npm test` - to use before commit. Runs unit tests, eslint, web-ext lint and coverage.
 - `npm run firefox` - for testing the extension in Firefox.
 - `npm run fix-eslint`- runs ESLint, and also fixes errors that ESLint can fix automatically.
+- `npm run build` - builds extension for publishing on AMO.
 
 ### Branching
 - `master` - production-ready state,

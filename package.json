@@ -10,7 +10,8 @@
     "test": "npm run eslint && npm run webext-lint && npm run unit-test && npm run coverage",
     "coverage": "nyc --reporter=lcov --reporter=text-summary --reporter=text --all mocha --timeout 60000",
     "coverageCI": "npm run coverage && codecov",
-    "fix-eslint": "eslint --ignore-path .gitignore . --fix"
+    "fix-eslint": "eslint --ignore-path .gitignore . --fix",
+    "build": "web-ext -s src build -i icons/icon.psd"
   },
   "author": "gergooo <abrahamgergo@gmail.com>",
   "license": "MIT",
