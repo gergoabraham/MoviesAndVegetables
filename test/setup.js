@@ -1,3 +1,9 @@
+/**
+ * Movies and Vegetables
+ *
+ * @author Gergő Ábrahám (abrahamgergo@gmail.com)
+ */
+
 /* eslint-disable strict */
 
 // Todo: why does strict mode have a problem with this line?

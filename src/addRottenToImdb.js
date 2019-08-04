@@ -1,3 +1,9 @@
+/**
+ * Movies and Vegetables
+ *
+ * @author Gergő Ábrahám (abrahamgergo@gmail.com)
+ */
+
 'use strict';
 
 window.addRottenOnLoad = function() {
