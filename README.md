@@ -23,7 +23,8 @@ Look no further then! This extension can <b>spare your time</b> by searching for
 - Switches between the movie's IMDb and RottenTomatoes page with a hotkey.
 
 <b>Release log</b>
-- v0.1: First release, showing RottenTomatoes scores on IMDb.
+- v0.1.0: First release, showing RottenTomatoes scores on IMDb.
+- v0.1.1: Icon is updated.
 
 <b>Why does this extension need access for my data on IMDb, RottenTomatoes and especially on Google?</b>
 First, the extension modifies the currently viewed IMDb (and in the next release the RottenTomatoes) page by adding the score.
