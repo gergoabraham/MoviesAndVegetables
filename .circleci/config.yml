@@ -1,0 +1,72 @@
+version: 2
+jobs:
+
+  checkout_and_install_npm:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - persist_to_workspace:
+          root: ./
+          paths:
+            - ./
+
+  unit_test:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npm run unit-test
+
+  eslint:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npm run eslint
+
+  webext-lint:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npm run webext-lint
+
+  coverage:
+    docker:
+      - image: circleci/node:latest
+    environment:
+      CODECOV_TOKEN: "03abe765-47ae-4fb7-a03e-3c2a67df98eb"
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npm run coverageCI
+
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - checkout_and_install_npm
+      - unit_test:
+          requires:
+            - checkout_and_install_npm
+      - eslint:
+          requires:
+            - checkout_and_install_npm
+      - webext-lint:
+          requires:
+            - checkout_and_install_npm
+      - coverage:
+          requires:
+            - checkout_and_install_npm
