@@ -6,27 +6,32 @@ Latest commit: [![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables.
 A Firefox extension.
 
 ## Description
-**Please consider that this extension is currently under development. New features will be implemented and released continuously.**
+<b>Please consider that this extension is currently being under development. New features are being implemented and released continuously. There are also some known issues.</b> Nothing serious though, it simply doesn't find some movies, and doesn't look nice in some cases.
 
 Do you like to check out a movie both on IMDb and RottenTomatoes when you're searching for tonight's entertainment?
 
-But do you hate to do all the searches **TWICE**? Once for RottenTomatoes, once for IMDb...
+But do you hate to do all the searches <b>TWICE</b>? Once for RottenTomatoes, once for IMDb...
 
-Look no further then! This extension can **spare your time** by searching for the movies' other page automatically! Moreover, you can see **all the scores** on IMDb in a nicely blended way.
+Look no further then! This extension can <b>spare your time</b> by searching for the movies' other page automatically! Moreover, you can see <b>all the scores</b> on IMDb in a nicely blended way.
 
-### Current features
+<b>Current features</b>
 - Shows a movie's Tomatometer and AudienceScore on its IMDb page,
 - Clicking on the Tomatometer or AudienceScore forwards you to the movie's RottenTomatoes page.
 
-### Coming soon!
+<b>Coming soon!</b>
 - Shows a movie's Metascore and User score on RottenTomatoes,
 - Switches between the movie's IMDb and RottenTomatoes page with a hotkey.
 
-### Release log
-- v0.1: First release, showing RottenTomatoes scores on IMDb.
+<b>Release log</b>
+- v0.1.0: First release, showing RottenTomatoes scores on IMDb.
+- v0.1.1: Icon is updated.
 
-### Support
-Please write a mail [to this address](mailto:sw.gergo.abraham@gmail.com) if you find any issue, or have a feature request.
+<b>Why does this extension need access for my data on IMDb, RottenTomatoes and especially on Google?</b>
+First, the extension modifies the currently viewed IMDb (and in the next release the RottenTomatoes) page by adding the score.
+Second, it does the same what you would do: searches for the movie's pages in Google and opens its RottenTomatoes page in the background to get the scores. The given permissions are needed to make the extension be able to do this. (In the future, this may be changed to use some movie database API.)
+
+<b> Support</b>
+Please write a mail to the following address if you find any issue, or have a feature request: sw.gergo.abraham@gmail.com
 
 ## Development notes
 ### Scripts
@@ -34,6 +39,7 @@ Please write a mail [to this address](mailto:sw.gergo.abraham@gmail.com) if you 
 - `npm test` - to use before commit. Runs unit tests, eslint, web-ext lint and coverage.
 - `npm run firefox` - for testing the extension in Firefox.
 - `npm run fix-eslint`- runs ESLint, and also fixes errors that ESLint can fix automatically.
+- `npm run build` - builds extension for publishing on AMO.
 
 ### Branching
 - `master` - production-ready state,
