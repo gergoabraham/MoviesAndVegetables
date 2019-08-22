@@ -110,10 +110,5 @@ function createAudienceScoreElement(percent, url, votes) {
 }
 
 window.groupThousands = function(number) {
-  const pattern = /(\d)((\d{3})+$)/g;
-  const replaceValue = '$1 $2';
-
-  return String(number)
-      .replace(pattern, replaceValue)
-      .replace(pattern, replaceValue);
+  return new Intl.NumberFormat(window.navigator.language).format(number);
 };
