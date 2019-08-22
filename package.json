@@ -1,6 +1,6 @@
 {
   "name": "movies-and-vegetables",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "scripts": {
     "firefox": "web-ext -s src run",
     "eslint": "eslint --ignore-path .gitignore .",
