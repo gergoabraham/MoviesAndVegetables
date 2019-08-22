@@ -30,6 +30,7 @@ describe('imdbPage', function() {
 
   before(function() {
     global.DOMParser = new JSDOM().window.DOMParser;
+    window.navigator = {language: 'hu'};
   });
 
   describe('readMovieDataFromImdbPage', function() {
@@ -105,7 +106,7 @@ describe('imdbPage', function() {
                   `<a href="${rottenURL}">Tomatometer</a>\n` +
                 `</div>\n` +
                 `<div>\n` +
-                  `<span class="subText">Total Count: 1 268</span>\n` +
+                  `<span class="subText">Total Count: 1,268</span>\n` +
                 `</div>\n` +
               `</div>\n` +
             `</div>`
@@ -185,7 +186,7 @@ describe('imdbPage', function() {
               `</strong>\n` +
             `</div>\n` +
             `<a href="${rottenURL}">\n` +
-              `<span class="small" itemprop="ratingCount">885 228</span>\n` +
+              `<span class="small" itemprop="ratingCount">885,228</span>\n` +
             `</a>\n` +
           `</div>`
       );
@@ -206,14 +207,18 @@ describe('imdbPage', function() {
 
   describe('Numeric formatting', function() {
     it('should write number of votes with thousand grouping', function() {
-      groupThousands(1).should.equal('1');
-      groupThousands(13).should.equal('13');
-      groupThousands(913).should.equal('913');
-      groupThousands(2913).should.equal('2 913');
-      groupThousands(32913).should.equal('32 913');
-      groupThousands(632913).should.equal('632 913');
-      groupThousands(8632913).should.equal('8 632 913');
-      groupThousands(78632913).should.equal('78 632 913');
+      groupThousands(3333333).should.equal('3,333,333');
+    });
+
+    it(`should be based on browser's preferred language`, function() {
+      window.navigator = {language: 'hu'};
+      const fakeFormat = sinon.fake.returns('formatted number');
+      sinon.replace(Intl, 'NumberFormat',
+          sinon.fake.returns({format: fakeFormat}));
+
+      groupThousands(666).should.equal('formatted number');
+
+      Intl.NumberFormat.should.have.been.calledOnceWithExactly('hu');
     });
   });
 });

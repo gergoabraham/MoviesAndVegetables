@@ -25,6 +25,7 @@ Look no further then! This extension can <b>spare your time</b> by searching for
 <b>Release log</b>
 - v0.1.0: First release, showing RottenTomatoes scores on IMDb.
 - v0.1.1: Icon is updated.
+- v0.1.2: Number formatting is based on the browser's preferred language, just like on IMDb.
 
 <b>Why does this extension need access for my data on IMDb, RottenTomatoes and especially on Google?</b>
 First, the extension modifies the currently viewed IMDb (and in the next release the RottenTomatoes) page by adding the score.
