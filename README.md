@@ -3,7 +3,10 @@ Develop: [![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/d
 Latest commit: [![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables.svg?style=svg&circle-token=deac9a2ced9ed3937ff44eb0f9cf3f63aa6bff08)](https://circleci.com/gh/gergooo/MoviesAndVegetables)
 
 # Movies and Vegetables ![Icon](src/icons/icon-48.png)
-A Firefox extension.
+![Version](https://img.shields.io/amo/v/movies-and-vegetables)
+![Downloads](https://img.shields.io/amo/dw/movies-and-vegetables)
+![Users](https://img.shields.io/amo/users/movies-and-vegetables)
+![Rating](https://img.shields.io/amo/rating/movies-and-vegetables)
 
 ## Description
 <b>Please consider that this extension is currently being under development. New features are being implemented and released continuously. There are also some known issues.</b> Nothing serious though, it simply doesn't find some movies, and doesn't look nice in some cases.
