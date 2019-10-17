@@ -14,6 +14,7 @@ let getRottenData;
 let fetchRottenResponse;
 let constructSearchUrlForRotten;
 let getRottenPage;
+let removeForwardWarning;
 
 describe('Background script', function() {
   before('reading in script under test', function() {
@@ -22,7 +23,8 @@ describe('Background script', function() {
     ({constructSearchUrlForRotten,
       getRottenData,
       getRottenPage,
-      fetchRottenResponse} = window);
+      fetchRottenResponse,
+      removeForwardWarning} = window);
   });
 
   it('should register message listener on startup', function() {
@@ -88,6 +90,13 @@ describe('Background script', function() {
     });
   });
 
+  describe('skipForwardWarning', function() {
+    it('should get movie url in order to skip forward warning', function() {
+      removeForwardWarning(`https://www.google.com/url?q=https://www.rottentomatoes.com/m/the_dark_knight`)
+          .should.equal(`https://www.rottentomatoes.com/m/the_dark_knight`);
+    });
+  });
+
   describe('getRottenData', function() {
     let document;
 
@@ -130,11 +139,9 @@ describe('Background script', function() {
                   }
               );
 
+          // Todo: fetch and removeForwardWarning is not tested correctly
           global.fetch
-              .should.have.been.calledOnceWithExactly(
-                  'https://www.google.com/search?btnI=true' +
-                  '&q=The+Shawshank+Redemption+1994+movie' +
-                  '+Rotten+Tomatoes');
+              .should.have.been.calledTwice;
 
           parseFromString
               .should.have.been.calledOnceWithExactly(
