@@ -8,10 +8,13 @@
 
 window.getRottenData = async (movieData) => {
   const remotePage = `Rotten Tomatoes`;
-  const response = await window.fetchRottenResponse(movieData, remotePage);
-  const rottenPage = await window.getRottenPage(response);
+  const responseOfSearchUrl =
+              await window.fetchRottenResponse(movieData, remotePage);
+  const movieUrl = window.removeForwardWarning(responseOfSearchUrl.url);
+  const moviePageResponse = await fetch(movieUrl);
+  const moviePage = await window.getRottenPage(moviePageResponse);
 
-  return {...window.readRottenData(rottenPage), url: response.url};
+  return {...window.readRottenData(moviePage), url: moviePageResponse.url};
 };
 
 window.fetchRottenResponse = async (movieData, remotePage) => {
@@ -27,6 +30,10 @@ window.constructSearchUrlForRotten = (movieData, where) => {
   return `https://www.google.com/search?btnI=true&` +
          `q=${titleWithoutSpecialCharacters}+${year}+movie+${where}`
              .replace(/ /g, '+');
+};
+
+window.removeForwardWarning = function(url) {
+  return url.replace('https://www\.google\.com/url\?q=', '');
 };
 
 window.getRottenPage = async (response) => {
