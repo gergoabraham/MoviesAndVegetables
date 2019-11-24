@@ -28,3 +28,15 @@ window.readRottenData = function(rottenPage, url) {
     audienceScore: audienceScore,
     audienceScoreCount: numberOfUserRatings};
 };
+
+window.readMovieDataFromRottenPage = function() {
+
+};
+
+window.injectUserScore = function() {
+
+};
+
+window.injectMetaScore = function() {
+
+};
