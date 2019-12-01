@@ -30,7 +30,7 @@ describe('imdbPage', function() {
 
   before(function() {
     global.DOMParser = new JSDOM().window.DOMParser;
-    window.navigator = {language: 'hu'};
+    window.navigator = {language: 'en'};
   });
 
   describe('readMovieDataFromImdbPage', function() {
