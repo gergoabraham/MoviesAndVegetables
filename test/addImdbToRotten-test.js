@@ -41,7 +41,9 @@ describe('Content script on RottenTomatoes', function() {
           .should.have.been.calledOnceWithExactly(global.document);
 
       global.browser.runtime.sendMessage
-          .should.have.been.calledOnceWithExactly('movieData');
+          .should.have.been.calledOnceWithExactly(
+              {movieData: 'movieData', remotePage: 'IMDb'}
+          );
 
       window.injectUserScore
           .should.have.been.calledOnceWithExactly(

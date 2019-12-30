@@ -47,11 +47,13 @@ describe('Content script on IMDb', function() {
           .should.have.been.calledOnceWithExactly(global.document);
 
       global.browser.runtime.sendMessage
-          .should.have.been.calledOnceWithExactly('movieData');
+          .should.have.been.calledOnceWithExactly(
+              {movieData: 'movieData', remotePage: 'Rotten Tomatoes'}
+          );
 
       window.injectAudienceScore
           .should.have.been.calledOnceWithExactly(
-              global.document, 85, 'rottenURL', 885203,
+              global.document, 85, 'rottenURL', 885203
           );
       window.injectTomatoMeter
           .should.have.been.calledOnceWithExactly(

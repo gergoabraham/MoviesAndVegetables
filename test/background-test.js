@@ -128,7 +128,7 @@ describe('Background script', function() {
           const parseFromString = sinon.fake.resolves(document);
           global.DOMParser = sinon.fake.returns({parseFromString});
 
-          await getRottenData(movieData)
+          await getRottenData({movieData, remotePage: 'remote page name'})
               .should.eventually.deep.equal(
                   {
                     tomatoMeter: '91',

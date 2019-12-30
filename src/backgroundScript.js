@@ -6,8 +6,9 @@
 
 'use strict';
 
-window.getRottenData = async (movieData) => {
-  const remotePage = `Rotten Tomatoes`;
+window.getRottenData = async (input) => {
+  const {movieData, remotePage} = input;
+
   const responseOfSearchUrl =
               await window.fetchRottenResponse(movieData, remotePage);
   const movieUrl = window.removeForwardWarning(responseOfSearchUrl.url);
