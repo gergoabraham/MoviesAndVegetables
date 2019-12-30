@@ -9,7 +9,7 @@
 // Functions under test
 let addRottenOnLoad;
 
-describe('Content script', function() {
+describe('Content script on IMDb', function() {
   before(function() {
     global.document = {body: {onload: {}}};
     require('../src/addRottenToImdb');
