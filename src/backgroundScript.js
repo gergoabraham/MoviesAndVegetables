@@ -6,30 +6,30 @@
 
 'use strict';
 
-window.getRottenData = async (input) => {
+window.getRemotePageData = async (input) => {
   const {movieData, remotePage} = input;
 
   const responseOfSearchUrl =
-              await window.fetchRottenResponse(movieData, remotePage);
+              await window.fetchResponse(movieData, remotePage);
   const movieUrl = window.removeForwardWarning(responseOfSearchUrl.url);
   const moviePageResponse = await fetch(movieUrl);
-  const moviePage = await window.getRottenPage(moviePageResponse);
+  const moviePage = await window.getRemotePage(moviePageResponse);
 
   return {...window.readRottenData(moviePage), url: moviePageResponse.url};
 };
 
-window.fetchRottenResponse = async (movieData, remotePage) => {
+window.fetchResponse = async (movieData, remotePage) => {
   const searchURL =
-    window.constructSearchUrlForRotten(movieData, remotePage);
+    window.constructSearchUrl(movieData, remotePage);
   return fetch(searchURL);
 };
 
-window.constructSearchUrlForRotten = (movieData, where) => {
+window.constructSearchUrl = (movieData, remotePage) => {
   const {title, year} = movieData;
 
   const titleWithoutSpecialCharacters = title.replace(/&/g, '');
   return `https://www.google.com/search?btnI=true&` +
-         `q=${titleWithoutSpecialCharacters}+${year}+movie+${where}`
+         `q=${titleWithoutSpecialCharacters}+${year}+movie+${remotePage}`
              .replace(/ /g, '+');
 };
 
@@ -37,11 +37,11 @@ window.removeForwardWarning = function(url) {
   return url.replace('https://www\.google\.com/url\?q=', '');
 };
 
-window.getRottenPage = async (response) => {
-  const rottenPage = await response.text();
+window.getRemotePage = async (response) => {
+  const remotePage = await response.text();
 
   const parser = new DOMParser();
-  return parser.parseFromString(rottenPage, 'text/html');
+  return parser.parseFromString(remotePage, 'text/html');
 };
 
-browser.runtime.onMessage.addListener(window.getRottenData);
+browser.runtime.onMessage.addListener(window.getRemotePageData);

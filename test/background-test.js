@@ -10,26 +10,26 @@ const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
 
 // Functions under test
-let getRottenData;
-let fetchRottenResponse;
-let constructSearchUrlForRotten;
-let getRottenPage;
+let getRemotePageData;
+let fetchResponse;
+let constructSearchUrl;
+let getRemotePage;
 let removeForwardWarning;
 
 describe('Background script', function() {
   before('reading in script under test', function() {
     global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};
     require('../src/backgroundScript');
-    ({constructSearchUrlForRotten,
-      getRottenData,
-      getRottenPage,
-      fetchRottenResponse,
+    ({constructSearchUrl,
+      getRemotePageData,
+      getRemotePage,
+      fetchResponse,
       removeForwardWarning} = window);
   });
 
   it('should register message listener on startup', function() {
     global.browser.runtime.onMessage.addListener
-        .should.have.been.calledOnceWithExactly(getRottenData);
+        .should.have.been.calledOnceWithExactly(getRemotePageData);
   });
 
   describe('search-url constructor', function() {
@@ -39,7 +39,7 @@ describe('Background script', function() {
         year: '1994',
       };
 
-      constructSearchUrlForRotten(movieData, `Rotten Tomatoes`)
+      constructSearchUrl(movieData, `Rotten Tomatoes`)
           .should.equal('https://www.google.com/search?btnI=true' +
               '&q=The+Shawshank+Redemption+1994+movie' +
               '+Rotten+Tomatoes');
@@ -51,14 +51,14 @@ describe('Background script', function() {
         year: '2018',
       };
 
-      constructSearchUrlForRotten(movieData, `Rotten Tomatoes`)
+      constructSearchUrl(movieData, `Rotten Tomatoes`)
           .should.equal('https://www.google.com/search?btnI=true' +
               '&q=The+Old+Man++The+Gun+2018+movie' +
               '+Rotten+Tomatoes');
     });
   });
 
-  describe('getRottenPage', function() {
+  describe('getRemotePage', function() {
     it('should parse the Response object for the webpage', async function() {
       const response = {
         text: sinon.fake.resolves('Text content from Response'),
@@ -66,23 +66,23 @@ describe('Background script', function() {
       const parseFromString = sinon.fake.resolves('HTML document');
       global.DOMParser = sinon.fake.returns({parseFromString});
 
-      await getRottenPage(response).should.eventually.equal('HTML document');
+      await getRemotePage(response).should.eventually.equal('HTML document');
 
       parseFromString.should.have.been
           .calledOnceWithExactly('Text content from Response', 'text/html');
     });
   });
 
-  describe('fetchRottenResponse', function() {
+  describe('fetchResponse', function() {
     it('should fetch Response object of movie data search', async function() {
-      sinon.replace(window, 'constructSearchUrlForRotten',
+      sinon.replace(window, 'constructSearchUrl',
           sinon.fake.returns('the search URL'));
       global.fetch = sinon.fake.resolves('the response object');
 
-      await fetchRottenResponse('movieData', 'Rotten Tomatoes')
+      await fetchResponse('movieData', 'Rotten Tomatoes')
           .should.eventually.equal('the response object');
 
-      window.constructSearchUrlForRotten.should.have.been
+      window.constructSearchUrl.should.have.been
           .calledOnceWithExactly('movieData', 'Rotten Tomatoes');
       global.fetch.should.have.been.calledOnceWithExactly('the search URL');
 
@@ -97,7 +97,7 @@ describe('Background script', function() {
     });
   });
 
-  describe('getRottenData', function() {
+  describe('getRemotePageData', function() {
     let document;
 
     before(async function() {
@@ -128,7 +128,7 @@ describe('Background script', function() {
           const parseFromString = sinon.fake.resolves(document);
           global.DOMParser = sinon.fake.returns({parseFromString});
 
-          await getRottenData({movieData, remotePage: 'remote page name'})
+          await getRemotePageData({movieData, remotePage: 'remote page name'})
               .should.eventually.deep.equal(
                   {
                     tomatoMeter: '91',
