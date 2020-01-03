@@ -8,8 +8,9 @@
 
 window.addRottenOnLoad = function() {
   const movieData = window.readMovieDataFromImdbPage(document);
+  const moviePage = new MoviePage();
 
-  browser.runtime.sendMessage({movieData, remotePage: `Rotten Tomatoes`})
+  browser.runtime.sendMessage({movieData, remotePage: moviePage.remoteName})
       .then((response) => {
         window.injectAudienceScore(document,
             response.audienceScore, response.url, response.audienceScoreCount);

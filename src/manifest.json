@@ -32,8 +32,9 @@
     {
       "matches": ["*://*.imdb.com/title/*"],
       "js": [
-        "addRottenToImdb.js",
-        "imdbPage.js"
+        "MoviePage.js",
+        "imdbPage.js",
+        "addRottenToImdb.js"
       ]
     },
     {
