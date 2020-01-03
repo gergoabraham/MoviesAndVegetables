@@ -16,7 +16,7 @@
         "strict": ["error", "global"],
         "no-const-assign": "error",
         "no-use-before-define": ["error", {"functions":false}],
-        "no-undef": "error",
+        "no-undef": "warn",
         "require-jsdoc": "off"
     }
 }

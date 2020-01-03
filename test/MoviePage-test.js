@@ -9,7 +9,7 @@
 const {MoviePage} = require('../src/MoviePage');
 
 describe('MoviePage', function() {
-  it('first should be able to be instantiated', function() {
+  it('should contain remoteName', function() {
     const moviePage = new MoviePage();
     moviePage.remoteName.should.equal('Rotten Tomatoes');
   });
