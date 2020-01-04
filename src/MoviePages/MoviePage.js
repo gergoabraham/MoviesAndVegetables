@@ -8,6 +8,18 @@
 
 class MoviePage {
   constructor() {
+    if (this.constructor === MoviePage) {
+      throw new Error(`Class MoviePages shouldn't be instantiated.`);
+    }
+  }
+
+  readMovieData() {
+    // todo: create type (class) for moviedata
+    throw new Error(`Function not implemented.`);
+  }
+
+  injectRatings() {
+    throw new Error(`Function not implemented.`);
   }
 };
 
