@@ -14,7 +14,7 @@ let BackgroundScript;
 describe('Background script', function() {
   before('reading in script under test', function() {
     global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};
-    ({BackgroundScript} = require('../src/backgroundScript'));
+    ({BackgroundScript} = require('../src/BackgroundScript'));
   });
 
   it('should register message listener on startup', function() {

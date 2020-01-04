@@ -23,7 +23,7 @@
 
   "background": {
     "scripts": [
-      "backgroundScript.js",
+      "BackgroundScript.js",
       "rottenPage.js"
     ]
   },
