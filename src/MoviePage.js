@@ -8,7 +8,6 @@
 
 class MoviePage {
   constructor() {
-    this.remoteName = 'Rotten Tomatoes';
   }
 };
 

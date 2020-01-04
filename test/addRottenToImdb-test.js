@@ -12,11 +12,6 @@ let addRottenOnLoad;
 describe('Content script on IMDb', function() {
   before(function() {
     global.document = {body: {onload: {}}};
-
-    // Todo: mock if needed
-    const {MoviePage} = require('../src/MoviePage');
-    global.MoviePage = MoviePage;
-
     ({addRottenOnLoad} = require('../src/addRottenToImdb'));
   });
 
