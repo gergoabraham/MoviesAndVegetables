@@ -6,7 +6,7 @@
 
 'use strict';
 
-const {MoviePage} = require('../src/MoviePage');
+const {MoviePage} = require('../../src/MoviePages/MoviePage');
 
 describe('MoviePage', function() {
   it('should contain remoteName', function() {

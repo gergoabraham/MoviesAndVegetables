@@ -96,7 +96,8 @@ describe('Background script', function() {
     let document;
 
     before(async function() {
-      const dom = await JSDOM.fromFile('./test/testRottenTomatoesPage.html',
+      const dom = await JSDOM.fromFile(
+          './test/html/testRottenTomatoesPage.html',
           {url: `https://www.rottentomatoes.com/m/shawshank_redemption`});
       document = dom.window.document;
     });

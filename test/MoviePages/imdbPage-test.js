@@ -12,7 +12,7 @@ const {JSDOM} = jsdom;
 let document;
 
 // Functions under test
-require('../src/imdbPage');
+require('../../src/MoviePages/imdbPage');
 const {readMovieDataFromImdbPage,
   injectAudienceScore,
   injectTomatoMeter,
@@ -23,7 +23,7 @@ describe('imdbPage', function() {
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
 
   async function prepareTestDocument(filename = 'testImdbPage.html') {
-    const dom = await JSDOM.fromFile(`./test/${filename}`,
+    const dom = await JSDOM.fromFile(`./test/html/${filename}`,
         {url: `https://www.imdb.com/title/tt0111161/`});
     document = dom.window.document;
   }

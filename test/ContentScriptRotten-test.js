@@ -13,7 +13,7 @@ describe('Content script on RottenTomatoes', function() {
   before(function() {
     global.document = {};
     global.browser = {runtime: {sendMessage: sinon.fake.resolves({})}};
-    ({addImdbOnLoad} = require('../src/addImdbToRotten'));
+    ({addImdbOnLoad} = require('../src/ContentScriptRotten'));
   });
 
   describe('addImdbOnLoad', function() {

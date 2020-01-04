@@ -12,7 +12,7 @@ let addRottenOnLoad;
 describe('Content script on IMDb', function() {
   before(function() {
     global.document = {body: {onload: {}}};
-    ({addRottenOnLoad} = require('../src/addRottenToImdb'));
+    ({addRottenOnLoad} = require('../src/ContentScriptImdb'));
   });
 
   it('should register its function on page loaded event', function() {

@@ -24,7 +24,7 @@
   "background": {
     "scripts": [
       "BackgroundScript.js",
-      "rottenPage.js"
+      "MoviePages/rottenPage.js"
     ]
   },
 
@@ -32,16 +32,16 @@
     {
       "matches": ["*://*.imdb.com/title/*"],
       "js": [
-        "MoviePage.js",
-        "imdbPage.js",
-        "addRottenToImdb.js"
+        "MoviePages/MoviePage.js",
+        "MoviePages/imdbPage.js",
+        "ContentScriptImdb.js"
       ]
     },
     {
       "matches": ["*://*.rottentomatoes.com/m/*"],
       "js": [
-        "rottenPage.js",
-        "addImdbToRotten.js"
+        "MoviePages/rottenPage.js",
+        "ContentScriptRotten.js"
       ]
     }
   ]

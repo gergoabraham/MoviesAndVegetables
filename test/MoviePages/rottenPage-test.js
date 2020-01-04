@@ -10,14 +10,14 @@ const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
 
 // Functions under test
-require('../src/rottenPage');
+require('../../src/MoviePages/rottenPage');
 const {readRottenData} = window;
 
 describe('rottenPage', function() {
   let document;
 
   before(async function() {
-    const dom = await JSDOM.fromFile('./test/testRottenTomatoesPage.html');
+    const dom = await JSDOM.fromFile('./test/html/testRottenTomatoesPage.html');
     document = dom.window.document;
   });
 

@@ -29,6 +29,7 @@
     "web-ext": "^3.1.1"
   },
   "mocha": {
+    "recursive": true,
     "file": "./test/setup.js"
   }
 }
