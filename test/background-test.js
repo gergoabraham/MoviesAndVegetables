@@ -9,27 +9,18 @@
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
 
-// Functions under test
-let getRemotePageData;
-let fetchResponse;
-let constructSearchUrl;
-let getRemotePage;
-let removeForwardWarning;
+let BackgroundScript;
 
 describe('Background script', function() {
   before('reading in script under test', function() {
     global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};
-    require('../src/backgroundScript');
-    ({constructSearchUrl,
-      getRemotePageData,
-      getRemotePage,
-      fetchResponse,
-      removeForwardWarning} = window);
+    ({BackgroundScript} = require('../src/backgroundScript'));
   });
 
   it('should register message listener on startup', function() {
     global.browser.runtime.onMessage.addListener
-        .should.have.been.calledOnceWithExactly(getRemotePageData);
+        .should.have.been
+        .calledOnceWithExactly(BackgroundScript.getRemotePageData);
   });
 
   describe('search-url constructor', function() {
@@ -39,7 +30,7 @@ describe('Background script', function() {
         year: '1994',
       };
 
-      constructSearchUrl(movieData, `Rotten Tomatoes`)
+      BackgroundScript.constructSearchUrl(movieData, `Rotten Tomatoes`)
           .should.equal('https://www.google.com/search?btnI=true' +
               '&q=The+Shawshank+Redemption+1994+movie' +
               '+Rotten+Tomatoes');
@@ -51,7 +42,7 @@ describe('Background script', function() {
         year: '2018',
       };
 
-      constructSearchUrl(movieData, `Rotten Tomatoes`)
+      BackgroundScript.constructSearchUrl(movieData, `Rotten Tomatoes`)
           .should.equal('https://www.google.com/search?btnI=true' +
               '&q=The+Old+Man++The+Gun+2018+movie' +
               '+Rotten+Tomatoes');
@@ -66,7 +57,8 @@ describe('Background script', function() {
       const parseFromString = sinon.fake.resolves('HTML document');
       global.DOMParser = sinon.fake.returns({parseFromString});
 
-      await getRemotePage(response).should.eventually.equal('HTML document');
+      await BackgroundScript.getRemotePage(response)
+          .should.eventually.equal('HTML document');
 
       parseFromString.should.have.been
           .calledOnceWithExactly('Text content from Response', 'text/html');
@@ -75,14 +67,14 @@ describe('Background script', function() {
 
   describe('fetchResponse', function() {
     it('should fetch Response object of movie data search', async function() {
-      sinon.replace(window, 'constructSearchUrl',
+      sinon.replace(BackgroundScript, 'constructSearchUrl',
           sinon.fake.returns('the search URL'));
       global.fetch = sinon.fake.resolves('the response object');
 
-      await fetchResponse('movieData', 'Rotten Tomatoes')
+      await BackgroundScript.fetchResponse('movieData', 'Rotten Tomatoes')
           .should.eventually.equal('the response object');
 
-      window.constructSearchUrl.should.have.been
+      BackgroundScript.constructSearchUrl.should.have.been
           .calledOnceWithExactly('movieData', 'Rotten Tomatoes');
       global.fetch.should.have.been.calledOnceWithExactly('the search URL');
 
@@ -92,7 +84,10 @@ describe('Background script', function() {
 
   describe('skipForwardWarning', function() {
     it('should get movie url in order to skip forward warning', function() {
-      removeForwardWarning(`https://www.google.com/url?q=https://www.rottentomatoes.com/m/the_dark_knight`)
+      BackgroundScript
+          .removeForwardWarning(
+              `https://www.google.com/url?` +
+              `q=https://www.rottentomatoes.com/m/the_dark_knight`)
           .should.equal(`https://www.rottentomatoes.com/m/the_dark_knight`);
     });
   });
@@ -128,7 +123,8 @@ describe('Background script', function() {
           const parseFromString = sinon.fake.resolves(document);
           global.DOMParser = sinon.fake.returns({parseFromString});
 
-          await getRemotePageData({movieData, remotePage: 'remote page name'})
+          await BackgroundScript
+              .getRemotePageData({movieData, remotePage: 'remote page name'})
               .should.eventually.deep.equal(
                   {
                     tomatoMeter: '91',
