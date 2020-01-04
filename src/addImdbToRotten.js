@@ -6,7 +6,7 @@
 
 'use strict';
 
-window.addImdbOnLoad = function() {
+function addImdbOnLoad() {
   const movieData = window.readMovieDataFromRottenPage(document);
 
   browser.runtime.sendMessage({movieData, remotePage: 'IMDb'})
@@ -18,4 +18,8 @@ window.addImdbOnLoad = function() {
       });
 };
 
-window.addImdbOnLoad();
+addImdbOnLoad();
+
+if (typeof module !== 'undefined') {
+  module.exports = {addImdbOnLoad};
+}

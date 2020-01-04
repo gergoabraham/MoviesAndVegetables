@@ -17,8 +17,7 @@ describe('Content script on IMDb', function() {
     const {MoviePage} = require('../src/MoviePage');
     global.MoviePage = MoviePage;
 
-    require('../src/addRottenToImdb');
-    ({addRottenOnLoad} = window);
+    ({addRottenOnLoad} = require('../src/addRottenToImdb'));
   });
 
   it('should register its function on page loaded event', function() {

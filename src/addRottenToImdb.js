@@ -6,7 +6,7 @@
 
 'use strict';
 
-window.addRottenOnLoad = function() {
+function addRottenOnLoad() {
   const movieData = window.readMovieDataFromImdbPage(document);
   const moviePage = new MoviePage();
 
@@ -19,4 +19,8 @@ window.addRottenOnLoad = function() {
       });
 };
 
-document.body.onload = window.addRottenOnLoad;
+document.body.onload = addRottenOnLoad;
+
+if (typeof module !== 'undefined') {
+  module.exports = {addRottenOnLoad};
+}
