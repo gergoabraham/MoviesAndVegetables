@@ -4,21 +4,31 @@
  * @author Gergő Ábrahám (abrahamgergo@gmail.com)
  */
 
+/* eslint-disable valid-jsdoc */
 'use strict';
 
 class MoviePage {
-  constructor() {
+  /**
+   * @param  {Document} document
+   */
+  constructor(document) {
     if (this.constructor === MoviePage) {
       throw new Error(`Class MoviePages shouldn't be instantiated.`);
     }
-  }
 
-  readMovieData() {
-    // todo: create type (class) for moviedata
+    this.document = document;
+  }
+  /**
+   * @return {MovieData}
+   */
+  getMovieData() {
     throw new Error(`Function not implemented.`);
   }
 
-  injectRatings() {
+  /**
+   * @param  {MovieData} movieData
+   */
+  injectRatings(movieData) {
     throw new Error(`Function not implemented.`);
   }
 };

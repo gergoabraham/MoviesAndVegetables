@@ -9,14 +9,14 @@
 const {MoviePage} = require('../../src/MoviePages/MoviePage');
 
 describe('MoviePage', function() {
-  it('should throw error on instantiate', function() {
-    (function() {
-      new MoviePage();
-    }).should.throw(`Class MoviePages shouldn't be instantiated.`);
-  });
+  context('abstract class', function() {
+    it('should throw error on instantiating parent class', function() {
+      (function() {
+        new MoviePage();
+      }).should.throw(`Class MoviePages shouldn't be instantiated.`);
+    });
 
-  context('abstract methods', function() {
-    context('unimplemented methods', function() {
+    context('methods', function() {
       let unimplementedMoviePage;
 
       before(function() {
@@ -24,9 +24,9 @@ describe('MoviePage', function() {
         unimplementedMoviePage = new UnimplementedMoviePage();
       });
 
-      it('should throw error on unimplemented readMovieData', function() {
+      it('should throw error on unimplemented getMovieData', function() {
         (function() {
-          unimplementedMoviePage.readMovieData();
+          unimplementedMoviePage.getMovieData();
         }).should.throw(`Function not implemented.`);
       });
 
@@ -36,20 +36,30 @@ describe('MoviePage', function() {
         }).should.throw(`Function not implemented.`);
       });
     });
+  });
 
-    context('implemented methods', function() {
+  context('child classes', function() {
+    it('should store doc on instantiating child class', function() {
+      class ChildMoviePage extends MoviePage {};
+      const inputDocument = 'input document';
+      const childMoviePage = new ChildMoviePage(inputDocument);
+
+      childMoviePage.document.should.equal(inputDocument);
+    });
+
+    context('methods', function() {
       let implementedMoviePage;
 
       before(function() {
         class ImplementedMoviePage extends MoviePage {
-          readMovieData() {};
+          getMovieData() {};
           injectRatings() {};
         };
         implementedMoviePage = new ImplementedMoviePage();
       });
 
-      it('should be OK on implemented readMovieData', function() {
-        implementedMoviePage.readMovieData();
+      it('should be OK on implemented getMovieData', function() {
+        implementedMoviePage.getMovieData();
       });
 
       it('should be OK on implemented injectRatings', function() {
