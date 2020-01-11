@@ -9,6 +9,9 @@
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
 
+const {MovieData} = require('../src/MoviePages/MovieData');
+global.MovieData = MovieData;
+
 let BackgroundScript;
 
 describe('Background script', function() {
@@ -110,7 +113,7 @@ describe('Background script', function() {
           // Input -> searchURL
           const movieData = {
             title: 'The Shawshank Redemption',
-            year: '1994',
+            year: 1994,
           };
 
           // Fetch(searchURL) -> response -> 'responseURL'
@@ -127,13 +130,11 @@ describe('Background script', function() {
           await BackgroundScript
               .getRemotePageData({movieData, remotePage: 'remote page name'})
               .should.eventually.deep.equal(
-                  {
-                    tomatoMeter: '91',
-                    audienceScore: '98',
-                    url: `responseURL`,
-                    tomatoMeterCount: '68',
-                    audienceScoreCount: '885203',
-                  }
+                  new MovieData(
+                      '', 1994, 'responseURL',
+                      '98', '885203',
+                      '91', '68') // todo: update types
+
               );
 
           // Todo: fetch and removeForwardWarning is not tested correctly

@@ -13,10 +13,7 @@ function addRottenOnLoad() {
 
   browser.runtime.sendMessage({movieData, remotePage: 'Rotten Tomatoes'})
       .then((response) => {
-        window.injectAudienceScore(document,
-            response.audienceScore, response.url, response.audienceScoreCount);
-        window.injectTomatoMeter(document,
-            response.tomatoMeter, response.url, response.tomatoMeterCount);
+        imdbPage.injectRatings(response);
       });
 };
 

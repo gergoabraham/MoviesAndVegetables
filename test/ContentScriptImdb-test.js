@@ -9,6 +9,8 @@
 // Functions under test
 let addRottenOnLoad;
 
+const {MovieData} = require('../src/MoviePages/MovieData');
+
 describe('Content script on IMDb', function() {
   before(function() {
     global.document = {body: {onload: {}}};
@@ -22,48 +24,43 @@ describe('Content script on IMDb', function() {
 
   describe('addRottenOnLoad', function() {
     it('should send message to background with movie data', async function() {
+      const movieData = new MovieData(
+          'title', 2007, 'rottenURL',
+          85, 885203,
+          90, 68
+      );
+
       const fakeImdbPageGetMovieData = sinon.fake.returns('movieData');
+      const fakeImdbPageInjectRatings = sinon.fake();
       let imdbPageConstructorParameter;
       global.ImdbPage = class {
         constructor(doc) {
           imdbPageConstructorParameter = doc;
           return {
             getMovieData: fakeImdbPageGetMovieData,
+            injectRatings: fakeImdbPageInjectRatings,
           };
         }
       };
 
-      sinon.replace(window, 'injectTomatoMeter',
-          sinon.fake());
       global.browser = {runtime:
-          {sendMessage: sinon.fake.resolves({
-            tomatoMeter: 90,
-            audienceScore: 85,
-            url: 'rottenURL',
-            tomatoMeterCount: 68,
-            audienceScoreCount: 885203,
-          })},
+          {sendMessage: sinon.fake.resolves(movieData)},
       };
-
-      sinon.replace(window, 'injectAudienceScore', sinon.spy());
 
       await addRottenOnLoad();
 
-      fakeImdbPageGetMovieData.should.have.been.calledOnce;
       imdbPageConstructorParameter.should.equal(global.document);
+
+      fakeImdbPageGetMovieData.should.have.been.calledOnce;
 
       global.browser.runtime.sendMessage
           .should.have.been.calledOnceWithExactly(
               {movieData: 'movieData', remotePage: 'Rotten Tomatoes'}
           );
 
-      window.injectAudienceScore
-          .should.have.been.calledOnceWithExactly(
-              global.document, 85, 'rottenURL', 885203
-          );
-      window.injectTomatoMeter
-          .should.have.been.calledOnceWithExactly(
-              global.document, 90, 'rottenURL', 68);
+      fakeImdbPageInjectRatings.should.have.been.calledOnceWithExactly(
+          movieData
+      );
     });
   });
 });

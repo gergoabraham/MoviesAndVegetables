@@ -23,6 +23,7 @@
 
   "background": {
     "scripts": [
+      "MoviePages/MovieData.js",
       "BackgroundScript.js",
       "MoviePages/rottenPage.js"
     ]

@@ -13,11 +13,8 @@ let document;
 
 const {MoviePage} = require('../../src/MoviePages/MoviePage');
 global.MoviePage = MoviePage;
+const {MovieData} = require('../../src/MoviePages/MovieData');
 const {ImdbPage} = require('../../src/MoviePages/imdbPage');
-const {injectAudienceScore,
-  injectTomatoMeter,
-  getFavorableness,
-  groupThousands} = window;
 
 describe('ImdbPage', function() {
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
@@ -71,14 +68,19 @@ describe('ImdbPage', function() {
     });
   });
 
-  describe('injectTomatoMeter', function() {
+  describe('injectRatings', function() {
     let titleReviewBar;
+    let imdbPage;
 
-    context('Adding', function() {
+    context('Tomatometer', function() {
       before(async function() {
         document = await getTestDocument();
-
-        injectTomatoMeter(document, 93, rottenURL, 1268);
+        imdbPage = new ImdbPage(document);
+        imdbPage.injectRatings(
+            new MovieData(
+                'title', 2002, rottenURL,
+                85, 666,
+                93, 1268));
 
         titleReviewBar =
           document.getElementsByClassName('titleReviewBar')[0];
@@ -122,18 +124,76 @@ describe('ImdbPage', function() {
       });
     });
 
-    context('Favorableness', function() {
+    describe('AudienceScore', function() {
+      let ratingsWrapper;
+
       before(async function() {
         document = await getTestDocument();
+        imdbPage = new ImdbPage(document);
+        imdbPage.injectRatings(
+            new MovieData(
+                'title', 2002, rottenURL,
+                98, 885228,
+                93, 1268));
+
+        ratingsWrapper = document.getElementsByClassName('ratings_wrapper')[0];
+      });
+
+      it('should add AudienceScore before star-rating-widget', function() {
+        ratingsWrapper.children[1].id.should.equal('audience-score');
+        ratingsWrapper.children[2].id.should.equal('star-rating-widget');
+      });
+
+      it('should add AudienceScore with correct data and format', function() {
+        const audienceScore = document.getElementById('audience-score');
+
+        audienceScore.outerHTML.should.equal(
+            `<div class="imdbRating" id="audience-score" ` +
+              `style="background:none; text-align:center;`+
+                                      ` padding:2px 0 0 2px;\n`+
+              `width:90px;border-left:1px solid #6b6b6b;">\n` +
+              `<div class="ratingValue">\n` +
+                `<strong title="Audience score from RottenTomatoes">\n` +
+                  `<span itemprop="ratingValue">98%</span>\n` +
+                `</strong>\n` +
+              `</div>\n` +
+              `<a href="${rottenURL}">\n` +
+                `<span class="small" itemprop="ratingCount">885,228</span>\n` +
+              `</a>\n` +
+            `</div>`
+        );
+      });
+
+      it('should increase the width of the User Score', function() {
+        ratingsWrapper.children[0].getAttribute('style')
+            .should.contain('width:95px');
+      });
+
+      it('should remove border from Rating button', function() {
+        const starRatingWidget = document.getElementById('star-rating-widget');
+        const button = starRatingWidget.children[0].children[0];
+
+        button.getAttribute('style').should.equal('border-left-width: 0px');
+      });
+    });
+  });
+
+  describe('"private" methods', function() {
+    context('Favorableness', function() {
+      let imdbPage;
+
+      before(async function() {
+        document = await getTestDocument();
+        imdbPage = new ImdbPage(document);
       });
 
       it('should change favorableness based on TomatoMeter', function() {
-        sinon.replace(window, 'getFavorableness',
+        sinon.replace(imdbPage, 'getFavorableness',
             sinon.fake.returns('fakeFavorableness'));
 
-        injectTomatoMeter(document, 93, 'someUrl');
+        imdbPage.injectTomatoMeter(document, 93, 'someUrl');
 
-        window.getFavorableness.should.have.been.calledOnceWithExactly(93);
+        imdbPage.getFavorableness.should.have.been.calledOnceWithExactly(93);
 
         const tomatoMeter =
           document.getElementsByClassName('titleReviewBar')[0].children[2];
@@ -144,78 +204,38 @@ describe('ImdbPage', function() {
 
       it('should give unfavorable style for Tomatometer 0...40', function() {
         const unfavorable = 'score_unfavorable';
-        getFavorableness(0).should.equal(unfavorable);
-        getFavorableness(33).should.equal(unfavorable);
-        getFavorableness(40).should.equal(unfavorable);
+        imdbPage.getFavorableness(0).should.equal(unfavorable);
+        imdbPage.getFavorableness(33).should.equal(unfavorable);
+        imdbPage.getFavorableness(40).should.equal(unfavorable);
       });
 
       it('should give mixed style for Tomatometer 41...60', function() {
         const mixed = 'score_mixed';
-        getFavorableness(41).should.equal(mixed);
-        getFavorableness(50).should.equal(mixed);
-        getFavorableness(60).should.equal(mixed);
+        imdbPage.getFavorableness(41).should.equal(mixed);
+        imdbPage.getFavorableness(50).should.equal(mixed);
+        imdbPage.getFavorableness(60).should.equal(mixed);
       });
 
       it('should give favorable style for Tomatometer 61...100', function() {
         const favorable = 'score_favorable';
-        getFavorableness(61).should.equal(favorable);
-        getFavorableness(80).should.equal(favorable);
-        getFavorableness(100).should.equal(favorable);
+        imdbPage.getFavorableness(61).should.equal(favorable);
+        imdbPage.getFavorableness(80).should.equal(favorable);
+        imdbPage.getFavorableness(100).should.equal(favorable);
       });
 
-      it('should give tbc style if tbd');
-    });
-  });
-
-  describe('injectAudienceScore', function() {
-    let ratingsWrapper;
-
-    before(async function() {
-      document = await getTestDocument();
-      injectAudienceScore(document, 98, rottenURL, 885228);
-      ratingsWrapper = document.getElementsByClassName('ratings_wrapper')[0];
-    });
-
-    it('should add AudienceScore before star-rating-widget', function() {
-      ratingsWrapper.children[1].id.should.equal('audience-score');
-      ratingsWrapper.children[2].id.should.equal('star-rating-widget');
-    });
-
-    it('should add AudienceScore with correct data and format', function() {
-      const audienceScore = document.getElementById('audience-score');
-
-      audienceScore.outerHTML.should.equal(
-          `<div class="imdbRating" id="audience-score" ` +
-            `style="background:none; text-align:center; padding:2px 0 0 2px;\n`+
-            `width:90px;border-left:1px solid #6b6b6b;">\n` +
-            `<div class="ratingValue">\n` +
-              `<strong title="Audience score from RottenTomatoes">\n` +
-                `<span itemprop="ratingValue">98%</span>\n` +
-              `</strong>\n` +
-            `</div>\n` +
-            `<a href="${rottenURL}">\n` +
-              `<span class="small" itemprop="ratingCount">885,228</span>\n` +
-            `</a>\n` +
-          `</div>`
-      );
-    });
-
-    it('should increase the width of the User Score', function() {
-      ratingsWrapper.children[0].getAttribute('style')
-          .should.contain('width:95px');
-    });
-
-    it('should remove border from Rating button', function() {
-      const starRatingWidget = document.getElementById('star-rating-widget');
-      const button = starRatingWidget.children[0].children[0];
-
-      button.getAttribute('style').should.equal('border-left-width: 0px');
+      it('should give TBD style if TBD');
     });
   });
 
   describe('Numeric formatting', function() {
+    let imdbPage;
+
+    before(async function() {
+      imdbPage = new ImdbPage('doc');
+    });
+
     it('should write number of votes with thousand grouping', function() {
-      groupThousands(3333333).should.equal('3,333,333');
+      imdbPage.groupThousands(3333333).should.equal('3,333,333');
     });
 
     it(`should be based on browser's preferred language`, function() {
@@ -224,7 +244,7 @@ describe('ImdbPage', function() {
       sinon.replace(Intl, 'NumberFormat',
           sinon.fake.returns({format: fakeFormat}));
 
-      groupThousands(666).should.equal('formatted number');
+      imdbPage.groupThousands(666).should.equal('formatted number');
 
       Intl.NumberFormat.should.have.been.calledOnceWithExactly('hu');
     });
