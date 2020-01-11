@@ -22,10 +22,17 @@ describe('Content script on IMDb', function() {
 
   describe('addRottenOnLoad', function() {
     it('should send message to background with movie data', async function() {
-      // todo: Tests are not independent. These functions are visible, because
-      // they are added to `window`. Let's get rid of this in the future.
-      sinon.replace(window, 'readMovieDataFromImdbPage',
-          sinon.fake.returns('movieData'));
+      const fakeImdbPageGetMovieData = sinon.fake.returns('movieData');
+      let imdbPageConstructorParameter;
+      global.ImdbPage = class {
+        constructor(doc) {
+          imdbPageConstructorParameter = doc;
+          return {
+            getMovieData: fakeImdbPageGetMovieData,
+          };
+        }
+      };
+
       sinon.replace(window, 'injectTomatoMeter',
           sinon.fake());
       global.browser = {runtime:
@@ -42,8 +49,8 @@ describe('Content script on IMDb', function() {
 
       await addRottenOnLoad();
 
-      window.readMovieDataFromImdbPage
-          .should.have.been.calledOnceWithExactly(global.document);
+      fakeImdbPageGetMovieData.should.have.been.calledOnce;
+      imdbPageConstructorParameter.should.equal(global.document);
 
       global.browser.runtime.sendMessage
           .should.have.been.calledOnceWithExactly(

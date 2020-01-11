@@ -7,7 +7,9 @@
 'use strict';
 
 function addRottenOnLoad() {
-  const movieData = window.readMovieDataFromImdbPage(document);
+  // eslint-disable-next-line no-undef
+  const imdbPage = new ImdbPage(document);
+  const movieData = imdbPage.getMovieData();
 
   browser.runtime.sendMessage({movieData, remotePage: 'Rotten Tomatoes'})
       .then((response) => {

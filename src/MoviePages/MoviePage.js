@@ -18,6 +18,7 @@ class MoviePage {
 
     this.document = document;
   }
+
   /**
    * @return {MovieData}
    */

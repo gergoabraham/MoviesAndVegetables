@@ -11,21 +11,21 @@ const {JSDOM} = jsdom;
 
 let document;
 
-// Functions under test
-require('../../src/MoviePages/imdbPage');
-const {readMovieDataFromImdbPage,
-  injectAudienceScore,
+const {MoviePage} = require('../../src/MoviePages/MoviePage');
+global.MoviePage = MoviePage;
+const {ImdbPage} = require('../../src/MoviePages/imdbPage');
+const {injectAudienceScore,
   injectTomatoMeter,
   getFavorableness,
   groupThousands} = window;
 
-describe('imdbPage', function() {
+describe('ImdbPage', function() {
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
 
-  async function prepareTestDocument(filename = 'testImdbPage.html') {
+  async function getTestDocument(filename = 'testImdbPage.html') {
     const dom = await JSDOM.fromFile(`./test/html/${filename}`,
         {url: `https://www.imdb.com/title/tt0111161/`});
-    document = dom.window.document;
+    return dom.window.document;
   }
 
   before(function() {
@@ -33,31 +33,39 @@ describe('imdbPage', function() {
     window.navigator = {language: 'en'};
   });
 
-  describe('readMovieDataFromImdbPage', function() {
+  it('can be instantiated', function() {
+    const imdbPage = new ImdbPage('input doc');
+    imdbPage.document.should.equal('input doc');
+  });
+
+  describe('getMovieData', function() {
+    let imdbPage;
     context(`on a movie's imdb page`, function() {
       before(async function() {
-        await prepareTestDocument();
+        document = await getTestDocument();
+        imdbPage = new ImdbPage(document);
       });
 
       it('should read movie title', function() {
-        const movieData = readMovieDataFromImdbPage(document);
+        const movieData = imdbPage.getMovieData();
         movieData['title'].should.deep.equal('The Shawshank Redemption');
       });
 
       it('should read movie\'s release year', function() {
-        const movieData = readMovieDataFromImdbPage(document);
+        const movieData = imdbPage.getMovieData();
         movieData['year'].should.deep.equal('1994');
       });
     });
 
     context(`on a series' imdb page`, function() {
       before(async function() {
-        await prepareTestDocument('testImdbPage-Series.html');
+        document = await getTestDocument('testImdbPage-Series.html');
+        imdbPage = new ImdbPage(document);
       });
 
       it('should throw an error (for now, TODO)', function() {
         (function() {
-          readMovieDataFromImdbPage(document);
+          imdbPage.getMovieData();
         }).should.throw('Not a movie');
       });
     });
@@ -68,7 +76,7 @@ describe('imdbPage', function() {
 
     context('Adding', function() {
       before(async function() {
-        await prepareTestDocument();
+        document = await getTestDocument();
 
         injectTomatoMeter(document, 93, rottenURL, 1268);
 
@@ -116,7 +124,7 @@ describe('imdbPage', function() {
 
     context('Favorableness', function() {
       before(async function() {
-        await prepareTestDocument();
+        document = await getTestDocument();
       });
 
       it('should change favorableness based on TomatoMeter', function() {
@@ -163,7 +171,7 @@ describe('imdbPage', function() {
     let ratingsWrapper;
 
     before(async function() {
-      await prepareTestDocument();
+      document = await getTestDocument();
       injectAudienceScore(document, 98, rottenURL, 885228);
       ratingsWrapper = document.getElementsByClassName('ratings_wrapper')[0];
     });

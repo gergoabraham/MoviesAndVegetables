@@ -6,22 +6,26 @@
 
 'use strict';
 
-window.readMovieDataFromImdbPage = function(doc) {
-  const rawJSONContainingMovieData =
-    doc.head.querySelector('[type="application/ld+json"]').textContent;
-  const movieDataJSON = JSON.parse(rawJSONContainingMovieData);
+// eslint-disable-next-line no-undef
+class ImdbPage extends MoviePage {
+  getMovieData() {
+    const rawJSONContainingMovieData =
+    this.document
+        .head.querySelector('[type="application/ld+json"]').textContent;
+    const movieDataJSON = JSON.parse(rawJSONContainingMovieData);
 
-  if (movieDataJSON['@type'] != 'Movie') {
-    throw new Error('Not a movie');
+    if (movieDataJSON['@type'] != 'Movie') {
+      throw new Error('Not a movie');
+    }
+
+    const movieData = {
+      title: movieDataJSON.name,
+      year: movieDataJSON.datePublished.substring(0, 4),
+    };
+
+    return movieData;
   }
-
-  const movieData = {
-    title: movieDataJSON.name,
-    year: movieDataJSON.datePublished.substring(0, 4),
-  };
-
-  return movieData;
-};
+}
 
 window.injectTomatoMeter = function(doc, percent, url, votes) {
   const titleReviewBar = doc.getElementsByClassName('titleReviewBar')[0];
@@ -112,3 +116,7 @@ function createAudienceScoreElement(percent, url, votes) {
 window.groupThousands = function(number) {
   return new Intl.NumberFormat(window.navigator.language).format(number);
 };
+
+if (typeof module !== 'undefined') {
+  module.exports = {ImdbPage};
+}
