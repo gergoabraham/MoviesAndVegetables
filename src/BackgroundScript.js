@@ -17,7 +17,9 @@ class BackgroundScript {
     const moviePageResponse = await fetch(movieUrl);
     const moviePage = await BackgroundScript.getRemotePage(moviePageResponse);
 
-    const rawMovieData = window.readRottenData(moviePage);
+    // eslint-disable-next-line no-undef
+    const rottenPage = new RottenPage(moviePage);
+    const rawMovieData = rottenPage.getMovieData();
     // eslint-disable-next-line no-undef
     const remoteMovieData = new MovieData(
         '', movieData.year, moviePageResponse.url,

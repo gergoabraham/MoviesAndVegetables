@@ -9,9 +9,9 @@
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
 
-// Functions under test
-require('../../src/MoviePages/rottenPage');
-const {readRottenData} = window;
+const {MoviePage} = require('../../src/MoviePages/MoviePage');
+global.MoviePage = MoviePage;
+const {RottenPage} = require('../../src/MoviePages/RottenPage');
 
 describe('rottenPage', function() {
   let document;
@@ -21,24 +21,35 @@ describe('rottenPage', function() {
     document = dom.window.document;
   });
 
-  describe(`readRottenData`, function() {
-    it('should read Tomatometer from Rotten page', function() {
-      readRottenData(document, 'movieUrl')
+  it('can be instantiated', function() {
+    const rottenPage = new RottenPage('input doc');
+    rottenPage.document.should.equal('input doc');
+  });
+
+  describe(`getMovieData`, function() {
+    let rottenPage;
+
+    before(function() {
+      rottenPage = new RottenPage(document);
+    });
+
+    it('should read Tomatometer', function() {
+      rottenPage.getMovieData()
           .should.contain({tomatoMeter: '91'});
     });
 
-    it('should read AudienceScore from Rotten page', function() {
-      readRottenData(document, 'movieUrl')
+    it('should read AudienceScore', function() {
+      rottenPage.getMovieData()
           .should.contain({audienceScore: '98'});
     });
 
     it('should read number of votes on TomatoMeter', function() {
-      readRottenData(document, 'movieUrl')
+      rottenPage.getMovieData()
           .should.contain({tomatoMeterCount: '68'});
     });
 
     it('should read number of votes on AudienceScore', function() {
-      readRottenData(document, 'movieUrl')
+      rottenPage.getMovieData()
           .should.contain({audienceScoreCount: '885203'});
     });
   });

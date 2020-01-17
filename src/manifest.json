@@ -24,8 +24,9 @@
   "background": {
     "scripts": [
       "MoviePages/MovieData.js",
-      "BackgroundScript.js",
-      "MoviePages/rottenPage.js"
+      "MoviePages/MoviePage.js",
+      "MoviePages/RottenPage.js",
+      "BackgroundScript.js"
     ]
   },
 
@@ -41,7 +42,7 @@
     {
       "matches": ["*://*.rottentomatoes.com/m/*"],
       "js": [
-        "MoviePages/rottenPage.js",
+        "MoviePages/RottenPage.js",
         "ContentScriptRotten.js"
       ]
     }

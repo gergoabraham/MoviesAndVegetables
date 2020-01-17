@@ -11,6 +11,10 @@ const {JSDOM} = jsdom;
 
 const {MovieData} = require('../src/MoviePages/MovieData');
 global.MovieData = MovieData;
+const {MoviePage} = require('../src/MoviePages/MoviePage');
+global.MoviePage = MoviePage;
+const {RottenPage} = require('../src/MoviePages/RottenPage');
+global.RottenPage = RottenPage;
 
 let BackgroundScript;
 
@@ -107,7 +111,7 @@ describe('Background script', function() {
 
     it(`should search Rotten page and return with the scores`,
         async function() {
-          // Todo: this test works only because readRottenData is visible,
+          // todo: this test works only because RottenPage is visible,
           // it shall be mocked.
 
           // Input -> searchURL
