@@ -34,7 +34,7 @@
       "matches": ["*://*.imdb.com/title/*"],
       "js": [
         "MoviePages/MoviePage.js",
-        "MoviePages/imdbPage.js",
+        "MoviePages/ImdbPage.js",
         "ContentScriptImdb.js"
       ]
     },
