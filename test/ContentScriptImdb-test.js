@@ -27,7 +27,7 @@ describe('Content script on IMDb', function() {
       const movieData = new MovieData(
           'title', 2007, 'rottenURL',
           85, 885203,
-          90, 68
+          90, 68,
       );
 
       const fakeImdbPageGetMovieData = sinon.fake.returns('movieData');
@@ -55,11 +55,11 @@ describe('Content script on IMDb', function() {
 
       global.browser.runtime.sendMessage
           .should.have.been.calledOnceWithExactly(
-              {movieData: 'movieData', remotePage: 'Rotten Tomatoes'}
+              {movieData: 'movieData', remotePage: 'Rotten Tomatoes'},
           );
 
       fakeImdbPageInjectRatings.should.have.been.calledOnceWithExactly(
-          movieData
+          movieData,
       );
     });
   });

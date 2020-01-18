@@ -14,7 +14,7 @@ describe('MovieData', function() {
         'The Dark Knight', 2008,
         'url of movie',
         9.0, 2160000,
-        84, 0
+        84, 0,
     );
 
     movieData.title.should.equal('The Dark Knight');

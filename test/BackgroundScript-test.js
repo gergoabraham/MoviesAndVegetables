@@ -137,7 +137,7 @@ describe('Background script', function() {
                   new MovieData(
                       '', 1994, 'responseURL',
                       '98', '885203',
-                      '91', '68') // todo: update types
+                      '91', '68'), // todo: update types
 
               );
 

@@ -119,7 +119,7 @@ describe('ImdbPage', function() {
                   `<span class="subText">Total Count: 1,268</span>\n` +
                 `</div>\n` +
               `</div>\n` +
-            `</div>`
+            `</div>`,
         );
       });
     });
@@ -160,7 +160,7 @@ describe('ImdbPage', function() {
               `<a href="${rottenURL}">\n` +
                 `<span class="small" itemprop="ratingCount">885,228</span>\n` +
               `</a>\n` +
-            `</div>`
+            `</div>`,
         );
       });
 

@@ -24,7 +24,7 @@ class BackgroundScript {
     const remoteMovieData = new MovieData(
         '', movieData.year, moviePageResponse.url,
         rawMovieData.audienceScore, rawMovieData.audienceScoreCount,
-        rawMovieData.tomatoMeter, rawMovieData.tomatoMeterCount
+        rawMovieData.tomatoMeter, rawMovieData.tomatoMeterCount,
     );
 
     return remoteMovieData;
