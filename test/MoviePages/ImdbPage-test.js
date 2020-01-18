@@ -37,21 +37,28 @@ describe('ImdbPage', function() {
 
   describe('getMovieData', function() {
     let imdbPage;
+    let movieData;
+
     context(`on a movie's imdb page`, function() {
       before(async function() {
         document = await getTestDocument();
         imdbPage = new ImdbPage(document);
+        movieData = imdbPage.getMovieData();
       });
 
-      it('should read movie title', function() {
-        const movieData = imdbPage.getMovieData();
-        movieData['title'].should.deep.equal('The Shawshank Redemption');
+      it(`should read the title`, function() {
+        movieData.should.contain({title: 'The Shawshank Redemption'});
       });
 
-      it('should read movie\'s release year', function() {
-        const movieData = imdbPage.getMovieData();
-        movieData['year'].should.deep.equal('1994');
+      it(`should read the release year`, function() {
+        movieData.should.contain({year: 1994});
       });
+
+      it(`should read the url of the page`);
+      it(`should read the user rating`);
+      it(`should read the number of users' votes`);
+      it(`should read the critics rating`);
+      it(`should read the number of critics' votes`);
     });
 
     context(`on a series' imdb page`, function() {

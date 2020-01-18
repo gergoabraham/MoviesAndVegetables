@@ -19,13 +19,9 @@ class BackgroundScript {
 
     // eslint-disable-next-line no-undef
     const rottenPage = new RottenPage(moviePage);
-    const rawMovieData = rottenPage.getMovieData();
-    // eslint-disable-next-line no-undef
-    const remoteMovieData = new MovieData(
-        '', movieData.year, moviePageResponse.url,
-        rawMovieData.audienceScore, rawMovieData.audienceScoreCount,
-        rawMovieData.tomatoMeter, rawMovieData.tomatoMeterCount,
-    );
+    const remoteMovieData = rottenPage.getMovieData();
+
+    remoteMovieData.url = moviePageResponse.url; // todo
 
     return remoteMovieData;
   };

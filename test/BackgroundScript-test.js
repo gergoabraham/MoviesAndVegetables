@@ -135,9 +135,9 @@ describe('Background script', function() {
               .getRemotePageData({movieData, remotePage: 'remote page name'})
               .should.eventually.deep.equal(
                   new MovieData(
-                      '', 1994, 'responseURL',
-                      '98', '885203',
-                      '91', '68'), // todo: update types
+                      '', -1, 'responseURL',
+                      98, 885203,
+                      91, 68),
 
               );
 

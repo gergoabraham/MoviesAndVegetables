@@ -28,29 +28,31 @@ describe('rottenPage', function() {
 
   describe(`getMovieData`, function() {
     let rottenPage;
+    let movieData;
 
     before(function() {
       rottenPage = new RottenPage(document);
+      movieData = rottenPage.getMovieData();
     });
 
-    it('should read Tomatometer', function() {
-      rottenPage.getMovieData()
-          .should.contain({tomatoMeter: '91'});
+    it(`should read the title`);
+    it(`should read the release year`);
+    it(`should read the url of the page`);
+
+    it('should read the user rating', function() {
+      movieData.should.contain({userRating: 98});
     });
 
-    it('should read AudienceScore', function() {
-      rottenPage.getMovieData()
-          .should.contain({audienceScore: '98'});
+    it(`should read the number of users' votes`, function() {
+      movieData.should.contain({numberOfUserVotes: 885203});
     });
 
-    it('should read number of votes on TomatoMeter', function() {
-      rottenPage.getMovieData()
-          .should.contain({tomatoMeterCount: '68'});
+    it('should read the critics rating', function() {
+      movieData.should.contain({criticsRating: 91});
     });
 
-    it('should read number of votes on AudienceScore', function() {
-      rottenPage.getMovieData()
-          .should.contain({audienceScoreCount: '885203'});
+    it(`should read the number of critics' votes`, function() {
+      movieData.should.contain({numberOfCriticsVotes: 68});
     });
   });
 });

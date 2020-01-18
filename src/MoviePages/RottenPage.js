@@ -8,6 +8,9 @@
 
 // eslint-disable-next-line no-undef
 class RottenPage extends MoviePage {
+  /**
+   * @return  {MovieData} movieData
+   */
   getMovieData() {
     const rottenScores =
     this.document.body.querySelectorAll('span.mop-ratings-wrap__percentage');
@@ -23,12 +26,14 @@ class RottenPage extends MoviePage {
     const numberOfUserRatingsHtml = this.document.body
         .querySelectorAll('strong.mop-ratings-wrap__text--small')[1];
     const numberOfUserRatings =
-  numberOfUserRatingsHtml.textContent.replace(/[^0-9]/g, '');
+      numberOfUserRatingsHtml.textContent.replace(/[^0-9]/g, '');
 
-    return {tomatoMeter: tomatoMeter,
-      tomatoMeterCount: numberOfCriticRatings,
-      audienceScore: audienceScore,
-      audienceScoreCount: numberOfUserRatings};
+    // eslint-disable-next-line no-undef
+    return new MovieData(
+        '', -1, '',
+        Number(audienceScore), Number(numberOfUserRatings),
+        Number(tomatoMeter), Number(numberOfCriticRatings),
+    );
   }
 }
 

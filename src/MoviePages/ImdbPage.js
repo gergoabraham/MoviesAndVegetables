@@ -8,22 +8,27 @@
 
 // eslint-disable-next-line no-undef
 class ImdbPage extends MoviePage {
+  /**
+   * @return  {MovieData} movieData
+   */
   getMovieData() {
     const rawJSONContainingMovieData =
-    this.document
-        .head.querySelector('[type="application/ld+json"]').textContent;
+      this.document
+          .head.querySelector('[type="application/ld+json"]').textContent;
     const movieDataJSON = JSON.parse(rawJSONContainingMovieData);
 
     if (movieDataJSON['@type'] != 'Movie') {
       throw new Error('Not a movie');
     }
 
-    const movieData = {
-      title: movieDataJSON.name,
-      year: movieDataJSON.datePublished.substring(0, 4),
-    }; // todo: MovieData type
+    const year = Number(movieDataJSON.datePublished.substring(0, 4));
 
-    return movieData;
+    // eslint-disable-next-line no-undef
+    return new MovieData(
+        movieDataJSON.name, year, '',
+        -1, -1,
+        -1, -1,
+    );
   }
 
   /**
