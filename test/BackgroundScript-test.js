@@ -138,8 +138,8 @@ describe('Background script', function() {
               .should.eventually.deep.equal(
                   new MovieData(
                       '', -1, 'responseURL',
-                      98, 885203,
-                      91, 68),
+                      98, 885688,
+                      90, 71),
 
               );
 

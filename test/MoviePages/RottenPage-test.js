@@ -44,15 +44,15 @@ describe('rottenPage', function() {
     });
 
     it(`should read the number of users' votes`, function() {
-      movieData.should.contain({numberOfUserVotes: 885203});
+      movieData.should.contain({numberOfUserVotes: 885688});
     });
 
     it('should read the critics rating', function() {
-      movieData.should.contain({criticsRating: 91});
+      movieData.should.contain({criticsRating: 90});
     });
 
     it(`should read the number of critics' votes`, function() {
-      movieData.should.contain({numberOfCriticsVotes: 68});
+      movieData.should.contain({numberOfCriticsVotes: 71});
     });
   });
 });
