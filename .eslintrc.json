@@ -24,6 +24,7 @@
         "ImdbPage": "writable",
         "RottenPage": "writable",
         "MoviePage": "writable",
-        "MovieData": "writable"
+        "MovieData": "writable",
+        "ContentScript": "writable"
     }
 }

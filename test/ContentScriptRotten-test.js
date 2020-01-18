@@ -6,19 +6,32 @@
 
 'use strict';
 
-// Functions under test
-let addImdbOnLoad;
+let injectImdbScoresOnRotten;
+
+const {ContentScript} = require('../src/ContentScript');
+global.ContentScript = ContentScript;
 
 describe('Content script on RottenTomatoes', function() {
   before(function() {
     global.document = {};
     global.browser = {runtime: {sendMessage: sinon.fake.resolves({})}};
-    ({addImdbOnLoad} = require('../src/ContentScriptRotten'));
+    sinon.replace(ContentScript, 'injectScores', sinon.fake());
+
+    ({injectImdbScoresOnRotten} = require('../src/ContentScriptRotten'));
   });
 
-  describe('addImdbOnLoad', function() {
-    it('todo', async function() {
-      addImdbOnLoad();
+  it('should immediately run its function', function() {
+    ContentScript.injectScores.should.have.been.calledOnce;
+  });
+
+  describe('injectImdbScoresOnRotten', function() {
+    it('should call the common "injectScores" function', async function() {
+      sinon.replace(ContentScript, 'injectScores', sinon.fake());
+
+      injectImdbScoresOnRotten();
+
+      ContentScript.injectScores
+          .should.have.been.calledOnceWithExactly('Imdb', 'RottenTomatoes');
     });
   });
 });

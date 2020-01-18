@@ -6,18 +6,12 @@
 
 'use strict';
 
-function addRottenOnLoad() {
-  const imdbPage = new ImdbPage(document);
-  const movieData = imdbPage.getMovieData();
-
-  browser.runtime.sendMessage({movieData, remotePageName: 'RottenTomatoes'})
-      .then((response) => {
-        imdbPage.injectRatings(response);
-      });
+function injectRottenScoresOnImdb() {
+  ContentScript.injectScores('RottenTomatoes', 'Imdb');
 };
 
-document.body.onload = addRottenOnLoad;
+document.body.onload = injectRottenScoresOnImdb;
 
 if (typeof module !== 'undefined') {
-  module.exports = {addRottenOnLoad};
+  module.exports = {injectRottenScoresOnImdb};
 }

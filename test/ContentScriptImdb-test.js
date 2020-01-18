@@ -6,61 +6,29 @@
 
 'use strict';
 
-// Functions under test
-let addRottenOnLoad;
+let injectRottenScoresOnImdb;
 
-const {MovieData} = require('../src/MoviePages/MovieData');
+const {ContentScript} = require('../src/ContentScript');
+global.ContentScript = ContentScript;
 
 describe('Content script on IMDb', function() {
   before(function() {
     global.document = {body: {onload: {}}};
-    ({addRottenOnLoad} = require('../src/ContentScriptImdb'));
+    ({injectRottenScoresOnImdb} = require('../src/ContentScriptImdb'));
   });
 
   it('should register its function on page loaded event', function() {
-    global.document.body.onload
-        .should.equal(addRottenOnLoad);
+    global.document.body.onload.should.contain(injectRottenScoresOnImdb);
   });
 
-  describe('addRottenOnLoad', function() {
-    it('should send message to background with movie data', async function() {
-      const movieData = new MovieData(
-          'title', 2007, 'rottenURL',
-          85, 885203,
-          90, 68,
-      );
+  describe('injectRottenScoresOnImdb', function() {
+    it('should call the common "injectScores" function', function() {
+      sinon.replace(ContentScript, 'injectScores', sinon.fake());
 
-      const fakeImdbPageGetMovieData = sinon.fake.returns('movieData');
-      const fakeImdbPageInjectRatings = sinon.fake();
-      let imdbPageConstructorParameter;
-      global.ImdbPage = class {
-        constructor(doc) {
-          imdbPageConstructorParameter = doc;
-          return {
-            getMovieData: fakeImdbPageGetMovieData,
-            injectRatings: fakeImdbPageInjectRatings,
-          };
-        }
-      };
+      injectRottenScoresOnImdb();
 
-      global.browser = {runtime:
-          {sendMessage: sinon.fake.resolves(movieData)},
-      };
-
-      await addRottenOnLoad();
-
-      imdbPageConstructorParameter.should.equal(global.document);
-
-      fakeImdbPageGetMovieData.should.have.been.calledOnce;
-
-      global.browser.runtime.sendMessage
-          .should.have.been.calledOnceWithExactly(
-              {movieData: 'movieData', remotePageName: 'RottenTomatoes'},
-          );
-
-      fakeImdbPageInjectRatings.should.have.been.calledOnceWithExactly(
-          movieData,
-      );
+      ContentScript.injectScores
+          .should.have.been.calledOnceWithExactly('RottenTomatoes', 'Imdb');
     });
   });
 });

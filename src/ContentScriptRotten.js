@@ -6,12 +6,12 @@
 
 'use strict';
 
-function addImdbOnLoad() {
-
+function injectImdbScoresOnRotten() {
+  ContentScript.injectScores('Imdb', 'RottenTomatoes');
 };
 
-addImdbOnLoad();
+injectImdbScoresOnRotten();
 
 if (typeof module !== 'undefined') {
-  module.exports = {addImdbOnLoad};
+  module.exports = {injectImdbScoresOnRotten};
 }

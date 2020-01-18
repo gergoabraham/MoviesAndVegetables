@@ -26,6 +26,7 @@
       "MoviePages/MovieData.js",
       "MoviePages/MoviePage.js",
       "MoviePages/RottenPage.js",
+      "MoviePages/ImdbPage.js",
       "MoviePages/MoviePageFactory.js",
       "BackgroundScript.js"
     ]
@@ -38,13 +39,19 @@
         "MoviePages/MovieData.js",
         "MoviePages/MoviePage.js",
         "MoviePages/ImdbPage.js",
+        "MoviePages/MoviePageFactory.js",
+        "ContentScript.js",
         "ContentScriptImdb.js"
       ]
     },
     {
       "matches": ["*://*.rottentomatoes.com/m/*"],
       "js": [
+        "MoviePages/MovieData.js",
+        "MoviePages/MoviePage.js",
         "MoviePages/RottenPage.js",
+        "MoviePages/MoviePageFactory.js",
+        "ContentScript.js",
         "ContentScriptRotten.js"
       ]
     }
