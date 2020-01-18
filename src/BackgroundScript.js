@@ -8,18 +8,18 @@
 
 class BackgroundScript {
   static async getRemotePageData(input) {
-    const {movieData, remotePage} = input;
+    const {movieData, remotePageName} = input;
 
     const responseOfSearchUrl =
-                await BackgroundScript.fetchResponse(movieData, remotePage);
+                await BackgroundScript.fetchResponse(movieData, remotePageName);
     const movieUrl = BackgroundScript
         .removeForwardWarning(responseOfSearchUrl.url);
     const moviePageResponse = await fetch(movieUrl);
     const moviePage = await BackgroundScript.getRemotePage(moviePageResponse);
 
     // eslint-disable-next-line no-undef
-    const rottenPage = new RottenPage(moviePage);
-    const remoteMovieData = rottenPage.getMovieData();
+    const remotePage = MoviePageFactory.create(remotePageName, moviePage);
+    const remoteMovieData = remotePage.getMovieData();
 
     remoteMovieData.url = moviePageResponse.url; // todo
 

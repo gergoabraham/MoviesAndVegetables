@@ -11,7 +11,7 @@ function addRottenOnLoad() {
   const imdbPage = new ImdbPage(document);
   const movieData = imdbPage.getMovieData();
 
-  browser.runtime.sendMessage({movieData, remotePage: 'Rotten Tomatoes'})
+  browser.runtime.sendMessage({movieData, remotePageName: 'RottenTomatoes'})
       .then((response) => {
         imdbPage.injectRatings(response);
       });

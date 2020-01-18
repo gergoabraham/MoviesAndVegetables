@@ -55,7 +55,7 @@ describe('Content script on IMDb', function() {
 
       global.browser.runtime.sendMessage
           .should.have.been.calledOnceWithExactly(
-              {movieData: 'movieData', remotePage: 'Rotten Tomatoes'},
+              {movieData: 'movieData', remotePageName: 'RottenTomatoes'},
           );
 
       fakeImdbPageInjectRatings.should.have.been.calledOnceWithExactly(

@@ -26,6 +26,7 @@
       "MoviePages/MovieData.js",
       "MoviePages/MoviePage.js",
       "MoviePages/RottenPage.js",
+      "MoviePages/MoviePageFactory.js",
       "BackgroundScript.js"
     ]
   },

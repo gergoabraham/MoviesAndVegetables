@@ -15,6 +15,8 @@ const {MoviePage} = require('../src/MoviePages/MoviePage');
 global.MoviePage = MoviePage;
 const {RottenPage} = require('../src/MoviePages/RottenPage');
 global.RottenPage = RottenPage;
+const {MoviePageFactory} = require('../src/MoviePages/MoviePageFactory');
+global.MoviePageFactory = MoviePageFactory;
 
 let BackgroundScript;
 
@@ -132,7 +134,7 @@ describe('Background script', function() {
           global.DOMParser = sinon.fake.returns({parseFromString});
 
           await BackgroundScript
-              .getRemotePageData({movieData, remotePage: 'remote page name'})
+              .getRemotePageData({movieData, remotePageName: 'RottenTomatoes'})
               .should.eventually.deep.equal(
                   new MovieData(
                       '', -1, 'responseURL',
