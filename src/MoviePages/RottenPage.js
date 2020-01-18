@@ -6,7 +6,6 @@
 
 'use strict';
 
-// eslint-disable-next-line no-undef
 class RottenPage extends MoviePage {
   /**
    * @return  {MovieData} movieData
@@ -28,7 +27,6 @@ class RottenPage extends MoviePage {
     const numberOfUserRatings =
       numberOfUserRatingsHtml.textContent.replace(/[^0-9]/g, '');
 
-    // eslint-disable-next-line no-undef
     return new MovieData(
         '', -1, '',
         Number(audienceScore), Number(numberOfUserRatings),

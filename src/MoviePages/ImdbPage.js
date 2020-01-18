@@ -6,7 +6,6 @@
 
 'use strict';
 
-// eslint-disable-next-line no-undef
 class ImdbPage extends MoviePage {
   /**
    * @return  {MovieData} movieData
@@ -23,7 +22,6 @@ class ImdbPage extends MoviePage {
 
     const year = Number(movieDataJSON.datePublished.substring(0, 4));
 
-    // eslint-disable-next-line no-undef
     return new MovieData(
         movieDataJSON.name, year, '',
         -1, -1,

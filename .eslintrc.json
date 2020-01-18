@@ -16,7 +16,14 @@
         "strict": ["error", "global"],
         "no-const-assign": "error",
         "no-use-before-define": ["error", {"functions":false}],
-        "no-undef": "warn",
+        "no-undef": "error",
         "require-jsdoc": "off"
+    },
+    "globals": {
+        "MoviePageFactory": "writable",
+        "ImdbPage": "writable",
+        "RottenPage": "writable",
+        "MoviePage": "writable",
+        "MovieData": "writable"
     }
 }

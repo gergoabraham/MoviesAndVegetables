@@ -18,10 +18,8 @@ class MoviePageFactory {
    */
   static create(moviePageType, document) {
     if (moviePageType == 'Imdb') {
-      // eslint-disable-next-line no-undef
       return new ImdbPage(document);
     } else if (moviePageType == 'RottenTomatoes') {
-      // eslint-disable-next-line no-undef
       return new RottenPage(document);
     } else {
       throw new Error(`MoviePagesFactory cannot instantiate ` +

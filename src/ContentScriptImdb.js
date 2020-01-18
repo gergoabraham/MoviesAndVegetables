@@ -7,7 +7,6 @@
 'use strict';
 
 function addRottenOnLoad() {
-  // eslint-disable-next-line no-undef
   const imdbPage = new ImdbPage(document);
   const movieData = imdbPage.getMovieData();
 

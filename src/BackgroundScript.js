@@ -17,7 +17,6 @@ class BackgroundScript {
     const moviePageResponse = await fetch(movieUrl);
     const moviePage = await BackgroundScript.getRemotePage(moviePageResponse);
 
-    // eslint-disable-next-line no-undef
     const remotePage = MoviePageFactory.create(remotePageName, moviePage);
     const remoteMovieData = remotePage.getMovieData();
 
