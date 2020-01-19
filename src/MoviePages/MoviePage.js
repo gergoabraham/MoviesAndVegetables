@@ -10,19 +10,23 @@
 class MoviePage {
   /**
    * @param  {Document} document
+   * @param  {string} url
    */
-  constructor(document) {
+  constructor(document, url) {
     if (this.constructor === MoviePage) {
       throw new Error(`Class MoviePages shouldn't be instantiated.`);
     }
 
     this.document = document;
+
+    const inputUrl = new URL(url);
+    this.url = inputUrl.origin + inputUrl.pathname;
   }
 
   /**
    * @return {MovieData}
    */
-  getMovieData() {
+  async getMovieData() {
     throw new Error(`Function not implemented.`);
   }
 

@@ -14,13 +14,14 @@ class MoviePageFactory {
   /**
    * @param {string} moviePageType
    * @param {document} document
+   * @param {string} url
    * @return {MoviePage} MoviePage
    */
-  static create(moviePageType, document) {
+  static create(moviePageType, document, url) {
     if (moviePageType == 'Imdb') {
-      return new ImdbPage(document);
+      return new ImdbPage(document, url);
     } else if (moviePageType == 'RottenTomatoes') {
-      return new RottenPage(document);
+      return new RottenPage(document, url);
     } else {
       throw new Error(`MoviePagesFactory cannot instantiate ` +
                       `"${moviePageType}"`);

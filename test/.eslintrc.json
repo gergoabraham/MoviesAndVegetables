@@ -5,6 +5,7 @@
     },
     "globals": {
         "sinon": "readonly",
-        "should": "readonly"
+        "should": "readonly",
+        "fs": "readonly"
     }
 }

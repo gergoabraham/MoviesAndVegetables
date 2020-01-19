@@ -20,8 +20,7 @@ describe('ImdbPage', function() {
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
 
   async function getTestDocument(filename = 'testImdbPage.html') {
-    const dom = await JSDOM.fromFile(`./test/html/${filename}`,
-        {url: `https://www.imdb.com/title/tt0111161/`});
+    const dom = await JSDOM.fromFile(`./test/html/${filename}`);
     return dom.window.document;
   }
 
@@ -31,8 +30,11 @@ describe('ImdbPage', function() {
   });
 
   it('can be instantiated', function() {
-    const imdbPage = new ImdbPage('input doc');
+    const imdbPage = new ImdbPage('input doc',
+        `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`);
+
     imdbPage.document.should.equal('input doc');
+    imdbPage.url.should.equal(`https://www.imdb.com/title/tt0111161/`);
   });
 
   describe('getMovieData', function() {
@@ -42,8 +44,13 @@ describe('ImdbPage', function() {
     context(`on a movie's imdb page`, function() {
       before(async function() {
         document = await getTestDocument();
-        imdbPage = new ImdbPage(document);
-        movieData = imdbPage.getMovieData();
+        imdbPage = new ImdbPage(document,
+            `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`);
+
+        sinon.replace(imdbPage, 'fetchNumberOfCriticVotes',
+            sinon.fake.resolves('fetched number of critics votes'));
+
+        movieData = await imdbPage.getMovieData();
       });
 
       it(`should read the title`, function() {
@@ -54,23 +61,71 @@ describe('ImdbPage', function() {
         movieData.should.contain({year: 1994});
       });
 
-      it(`should read the url of the page`);
-      it(`should read the user rating`);
-      it(`should read the number of users' votes`);
-      it(`should read the critics rating`);
-      it(`should read the number of critics' votes`);
+      it(`should add the url received on instantiating`, function() {
+        movieData.should.contain({url: `https://www.imdb.com/title/tt0111161/`});
+      });
+
+      it(`should read the user rating`, function() {
+        movieData.should.contain({userRating: 9.3});
+      });
+
+      it(`should read the number of users' votes`, function() {
+        movieData.should.contain({numberOfUserVotes: 2181187});
+      });
+
+      it(`should read the critics rating`, function() {
+        movieData.should.contain({criticsRating: 80});
+      });
+
+      it(`should read the number of critics' votes`, function() {
+        movieData.should
+            .contain({numberOfCriticsVotes: 'fetched number of critics votes'});
+      });
+    });
+
+    context(`fetchNumberOfCriticVotes`, function() {
+      before(async function() {
+        document = await getTestDocument();
+        imdbPage = new ImdbPage(document,
+            `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`);
+      });
+
+      it('should be called by getMovieData', async function() {
+        sinon.replace(imdbPage, 'fetchNumberOfCriticVotes',
+            sinon.fake.resolves(6));
+
+        movieData = await imdbPage.getMovieData();
+
+        imdbPage.fetchNumberOfCriticVotes.should.have.been
+            .calledOnceWithExactly(`https://www.imdb.com/title/tt0111161/`);
+      });
+
+      it('should fetch CriticPage and get number of votes', async function() {
+        const criticPageText = fs
+            .readFileSync('./test/html/testImdbPage-CriticReviews.html');
+
+        global.fetch = sinon.fake.resolves({
+          text: sinon.fake.resolves(criticPageText),
+        });
+
+        await imdbPage
+            .fetchNumberOfCriticVotes(`https://www.imdb.com/title/tt0111161/`)
+            .should.eventually.equal(20);
+
+        global.fetch.should.have.been
+            .calledOnceWithExactly(`https://www.imdb.com/title/tt0111161/criticreviews`);
+      });
     });
 
     context(`on a series' imdb page`, function() {
       before(async function() {
         document = await getTestDocument('testImdbPage-Series.html');
-        imdbPage = new ImdbPage(document);
+        imdbPage = new ImdbPage(document, 'https://url');
       });
 
-      it('should throw an error (for now, TODO)', function() {
-        (function() {
-          imdbPage.getMovieData();
-        }).should.throw('Not a movie');
+      it('should reject (for now, TODO)', async function() {
+        await imdbPage.getMovieData()
+            .should.be.rejectedWith(Error);
       });
     });
   });
@@ -82,7 +137,7 @@ describe('ImdbPage', function() {
     context('Tomatometer', function() {
       before(async function() {
         document = await getTestDocument();
-        imdbPage = new ImdbPage(document);
+        imdbPage = new ImdbPage(document, 'https://url');
         imdbPage.injectRatings(
             new MovieData(
                 'title', 2002, rottenURL,
@@ -136,7 +191,7 @@ describe('ImdbPage', function() {
 
       before(async function() {
         document = await getTestDocument();
-        imdbPage = new ImdbPage(document);
+        imdbPage = new ImdbPage(document, 'https://url');
         imdbPage.injectRatings(
             new MovieData(
                 'title', 2002, rottenURL,
@@ -191,7 +246,7 @@ describe('ImdbPage', function() {
 
       before(async function() {
         document = await getTestDocument();
-        imdbPage = new ImdbPage(document);
+        imdbPage = new ImdbPage(document, 'https://url');
       });
 
       it('should change favorableness based on TomatoMeter', function() {
@@ -238,7 +293,7 @@ describe('ImdbPage', function() {
     let imdbPage;
 
     before(async function() {
-      imdbPage = new ImdbPage('doc');
+      imdbPage = new ImdbPage('doc', 'https://url');
     });
 
     it('should write number of votes with thousand grouping', function() {

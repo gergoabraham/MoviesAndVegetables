@@ -12,7 +12,10 @@ const {MovieData} = require('../src/MoviePages/MovieData');
 
 describe('Content script', function() {
   before(function() {
-    global.document = {body: {onload: {}}};
+    global.document = {
+      body: {onload: {}},
+      baseURI: 'page url',
+    };
     ({ContentScript} = require('../src/ContentScript'));
   });
 
@@ -26,10 +29,12 @@ describe('Content script', function() {
 
       const fakeImdbPageGetMovieData = sinon.fake.returns('movieData');
       const fakeImdbPageInjectRatings = sinon.fake();
-      let imdbPageConstructorParameter;
+      let imdbPageConstructorParameterDoc;
+      let imdbPageConstructorParameterUrl;
       global.ImdbPage = class {
-        constructor(doc) {
-          imdbPageConstructorParameter = doc;
+        constructor(doc, url) {
+          imdbPageConstructorParameterDoc = doc;
+          imdbPageConstructorParameterUrl = url;
           return {
             getMovieData: fakeImdbPageGetMovieData,
             injectRatings: fakeImdbPageInjectRatings,
@@ -43,7 +48,8 @@ describe('Content script', function() {
 
       await ContentScript.injectScores('RottenTomatoes', 'Imdb');
 
-      imdbPageConstructorParameter.should.equal(global.document);
+      imdbPageConstructorParameterDoc.should.equal(global.document);
+      imdbPageConstructorParameterUrl.should.equal('page url');
 
       fakeImdbPageGetMovieData.should.have.been.calledOnce;
 

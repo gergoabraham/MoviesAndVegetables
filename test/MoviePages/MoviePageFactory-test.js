@@ -14,7 +14,7 @@ const {MoviePageFactory} = require('../../src/MoviePages/MoviePageFactory');
 
 let ImdbPage;
 
-describe('MoviePage', function() {
+describe('MoviePageFactory', function() {
   before(function() {
     // todo: all require should be in before functions
     ({ImdbPage} = require('../../src/MoviePages/ImdbPage'));
@@ -35,7 +35,7 @@ describe('MoviePage', function() {
     });
 
     it('should create ImdbPage', function() {
-      const imdbPage = MoviePageFactory.create('Imdb', 'doc');
+      const imdbPage = MoviePageFactory.create('Imdb', 'doc', 'https://url');
 
       (imdbPage instanceof ImdbPage).should.be.true;
       (imdbPage instanceof MoviePage).should.be.true;
@@ -43,10 +43,12 @@ describe('MoviePage', function() {
       (imdbPage instanceof RottenPage).should.be.false;
 
       imdbPage.document.should.equal('doc');
+      imdbPage.url.should.equal('https://url/');
     });
 
     it('should create RottenPage', function() {
-      const rottenPage = MoviePageFactory.create('RottenTomatoes', 'doc');
+      const rottenPage = MoviePageFactory
+          .create('RottenTomatoes', 'doc', 'https://url.two');
 
       (rottenPage instanceof RottenPage).should.be.true;
       (rottenPage instanceof MoviePage).should.be.true;
@@ -54,6 +56,7 @@ describe('MoviePage', function() {
       (rottenPage instanceof ImdbPage).should.be.false;
 
       rottenPage.document.should.equal('doc');
+      rottenPage.url.should.equal('https://url.two/');
     });
   });
 });

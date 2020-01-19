@@ -10,7 +10,8 @@
 
   "permissions": [
     "https://www.google.com/*",
-    "https://www.rottentomatoes.com/*"
+    "https://www.rottentomatoes.com/*",
+    "https://www.imdb.com/*"
   ],
 
   "icons": {

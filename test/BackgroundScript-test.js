@@ -125,7 +125,7 @@ describe('Background script', function() {
           // Fetch(searchURL) -> response -> 'responseURL'
           //                              -> 'textContent'
           global.fetch = sinon.fake.resolves({
-            url: 'responseURL',
+            url: 'https://imdb.com/movie',
             text: sinon.fake.resolves('Text content from Response'),
           });
 
@@ -137,7 +137,7 @@ describe('Background script', function() {
               .getRemotePageData({movieData, remotePageName: 'RottenTomatoes'})
               .should.eventually.deep.equal(
                   new MovieData(
-                      'The Shawshank Redemption', 1994, 'responseURL',
+                      'The Shawshank Redemption', 1994, 'https://imdb.com/movie',
                       98, 885688,
                       90, 71),
 

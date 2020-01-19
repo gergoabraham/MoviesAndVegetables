@@ -21,13 +21,12 @@ describe('MoviePage', function() {
 
       before(function() {
         class UnimplementedMoviePage extends MoviePage {};
-        unimplementedMoviePage = new UnimplementedMoviePage();
+        unimplementedMoviePage = new UnimplementedMoviePage('doc', 'https://url');
       });
 
-      it('should throw error on unimplemented getMovieData', function() {
-        (function() {
-          unimplementedMoviePage.getMovieData();
-        }).should.throw(`Function not implemented.`);
+      it('should throw error on unimplemented getMovieData', async function() {
+        await unimplementedMoviePage.getMovieData()
+            .should.be.rejectedWith(Error);
       });
 
       it('should throw error on unimplemented injectRatings', function() {
@@ -39,12 +38,18 @@ describe('MoviePage', function() {
   });
 
   context('child classes', function() {
-    it('should store doc on instantiating child class', function() {
-      class ChildMoviePage extends MoviePage {};
-      const inputDocument = 'input document';
-      const childMoviePage = new ChildMoviePage(inputDocument);
+    class ChildMoviePage extends MoviePage {};
 
-      childMoviePage.document.should.equal(inputDocument);
+    it('should store doc on instantiating', function() {
+      const childMoviePage = new ChildMoviePage('input document', 'https://url');
+      childMoviePage.document.should.equal('input document');
+    });
+
+    it('should shorten url on instantiating', function() {
+      const childMoviePage = new ChildMoviePage('input document',
+          'https://page.com/m/movie_title?stuff=toRemove&also=this');
+
+      childMoviePage.url.should.equal('https://page.com/m/movie_title');
     });
 
     context('methods', function() {
@@ -55,7 +60,7 @@ describe('MoviePage', function() {
           getMovieData() {};
           injectRatings() {};
         };
-        implementedMoviePage = new ImplementedMoviePage();
+        implementedMoviePage = new ImplementedMoviePage('doc', 'https://url');
       });
 
       it('should be OK on implemented getMovieData', function() {

@@ -17,10 +17,9 @@ class BackgroundScript {
     const moviePageResponse = await fetch(movieUrl);
     const moviePage = await BackgroundScript.getRemotePage(moviePageResponse);
 
-    const remotePage = MoviePageFactory.create(remotePageName, moviePage);
-    const remoteMovieData = remotePage.getMovieData();
-
-    remoteMovieData.url = moviePageResponse.url; // todo
+    const remotePage = MoviePageFactory
+        .create(remotePageName, moviePage, moviePageResponse.url);
+    const remoteMovieData = await remotePage.getMovieData();
 
     return remoteMovieData;
   };

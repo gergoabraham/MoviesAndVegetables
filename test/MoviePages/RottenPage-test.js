@@ -17,23 +17,27 @@ describe('rottenPage', function() {
   let document;
 
   before(async function() {
-    const dom = await JSDOM.fromFile('./test/html/testRottenTomatoesPage.html',
-        {url: 'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'});
+    const dom = await JSDOM.fromFile('./test/html/testRottenTomatoesPage.html');
     document = dom.window.document;
   });
 
   it('can be instantiated', function() {
-    const rottenPage = new RottenPage('input doc');
+    const rottenPage = new RottenPage('input doc',
+        'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews');
+
     rottenPage.document.should.equal('input doc');
+    rottenPage.url.should.equal(
+        'https://www.rottentomatoes.com/m/shawshank_redemption');
   });
 
   describe(`getMovieData`, function() {
     let rottenPage;
     let movieData;
 
-    before(function() {
-      rottenPage = new RottenPage(document);
-      movieData = rottenPage.getMovieData();
+    before(async function() {
+      rottenPage = new RottenPage(document,
+          'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews');
+      movieData = await rottenPage.getMovieData();
     });
 
     it(`should read the title`, function() {

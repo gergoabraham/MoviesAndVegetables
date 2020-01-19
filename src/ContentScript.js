@@ -11,9 +11,11 @@ class ContentScript {
    * @param {string} remotePageName
    * @param {string} currentPageName
    */
-  static injectScores(remotePageName, currentPageName) {
-    const currentPage = MoviePageFactory.create(currentPageName, document);
-    const movieData = currentPage.getMovieData();
+  static async injectScores(remotePageName, currentPageName) {
+    const currentPage = MoviePageFactory
+        .create(currentPageName, document, document.baseURI);
+
+    const movieData = await currentPage.getMovieData();
 
     browser.runtime.sendMessage({movieData, remotePageName})
         .then((response) => {

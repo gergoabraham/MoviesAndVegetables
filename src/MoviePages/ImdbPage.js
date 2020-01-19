@@ -10,23 +10,61 @@ class ImdbPage extends MoviePage {
   /**
    * @return  {MovieData} movieData
    */
-  getMovieData() {
-    const rawJSONContainingMovieData =
-      this.document
-          .head.querySelector('[type="application/ld+json"]').textContent;
-    const movieDataJSON = JSON.parse(rawJSONContainingMovieData);
+  async getMovieData() {
+    const movieDataJSON = this.getMovieDataJSON();
 
     if (movieDataJSON['@type'] != 'Movie') {
       throw new Error('Not a movie');
     }
 
+    const title = movieDataJSON.name;
+
     const year = Number(movieDataJSON.datePublished.substring(0, 4));
 
+    const userRating = Number(this.document
+        .querySelector('span[itemprop="ratingValue"').innerHTML
+        .replace(',', '.'));
+
+    const numberOfUserVotes = Number(this.document
+        .querySelector('span[itemprop="ratingCount"').textContent
+        .replace(/[^0-9]/g, ``));
+
+    const criticsRating = Number(this.document
+        .querySelector('div.metacriticScore')
+        .querySelector('span')
+        .innerHTML);
+
+    const numberOfCriticVotes = await this.fetchNumberOfCriticVotes(this.url);
+
     return new MovieData(
-        movieDataJSON.name, year, '',
-        -1, -1,
-        -1, -1,
+        title, year, this.url,
+        userRating, numberOfUserVotes,
+        criticsRating, numberOfCriticVotes,
     );
+  }
+
+  getMovieDataJSON() {
+    const rawJSONContainingMovieData = this.document
+        .head.querySelector('[type="application/ld+json"]').textContent;
+    return JSON.parse(rawJSONContainingMovieData);
+  }
+
+  async fetchNumberOfCriticVotes(movieUrl) {
+    const criticUrl = movieUrl + 'criticreviews';
+    const criticsPage = await this.fetchPage(criticUrl);
+
+    const numberOfCriticVotes = criticsPage
+        .querySelector('span[itemprop="ratingCount"').textContent;
+
+    return Number(numberOfCriticVotes);
+  }
+
+  async fetchPage(url) {
+    const response = await fetch(url);
+    const pageText = await response.text();
+
+    return new DOMParser()
+        .parseFromString(pageText, 'text/html');
   }
 
   /**

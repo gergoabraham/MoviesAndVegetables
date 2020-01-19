@@ -10,7 +10,7 @@ class RottenPage extends MoviePage {
   /**
    * @return  {MovieData} movieData
    */
-  getMovieData() {
+  async getMovieData() {
     const rottenScores = this.document.body
         .querySelectorAll('span.mop-ratings-wrap__percentage');
 
@@ -38,10 +38,8 @@ class RottenPage extends MoviePage {
         .getAttribute('datetime')
         .substring(0, 4);
 
-    const url = new URL(this.document.baseURI);
-
     return new MovieData(
-        title, Number(year), url.origin + url.pathname,
+        title, Number(year), this.url,
         Number(audienceScore), Number(numberOfUserRatings),
         Number(tomatoMeter), Number(numberOfCriticRatings),
     );
