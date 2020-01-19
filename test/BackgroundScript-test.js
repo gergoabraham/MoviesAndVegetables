@@ -137,7 +137,7 @@ describe('Background script', function() {
               .getRemotePageData({movieData, remotePageName: 'RottenTomatoes'})
               .should.eventually.deep.equal(
                   new MovieData(
-                      '', -1, 'responseURL',
+                      'The Shawshank Redemption', 1994, 'responseURL',
                       98, 885688,
                       90, 71),
 

@@ -17,7 +17,8 @@ describe('rottenPage', function() {
   let document;
 
   before(async function() {
-    const dom = await JSDOM.fromFile('./test/html/testRottenTomatoesPage.html');
+    const dom = await JSDOM.fromFile('./test/html/testRottenTomatoesPage.html',
+        {url: 'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'});
     document = dom.window.document;
   });
 
@@ -35,9 +36,18 @@ describe('rottenPage', function() {
       movieData = rottenPage.getMovieData();
     });
 
-    it(`should read the title`);
-    it(`should read the release year`);
-    it(`should read the url of the page`);
+    it(`should read the title`, function() {
+      movieData.should.contain({title: 'The Shawshank Redemption'});
+    });
+
+    it(`should read the release year`, function() {
+      movieData.should.contain({year: 1994});
+    });
+
+    it(`should read the url of the page`, function() {
+      movieData.should.contain(
+          {url: 'https://www.rottentomatoes.com/m/shawshank_redemption'});
+    });
 
     it('should read the user rating', function() {
       movieData.should.contain({userRating: 98});
