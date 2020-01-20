@@ -10,7 +10,8 @@
 
   "permissions": [
     "https://www.google.com/*",
-    "https://www.rottentomatoes.com/*"
+    "https://www.rottentomatoes.com/*",
+    "https://www.imdb.com/*"
   ],
 
   "icons": {
@@ -23,8 +24,12 @@
 
   "background": {
     "scripts": [
-      "backgroundScript.js",
-      "rottenPage.js"
+      "MoviePages/MovieData.js",
+      "MoviePages/MoviePage.js",
+      "MoviePages/RottenPage.js",
+      "MoviePages/ImdbPage.js",
+      "MoviePages/MoviePageFactory.js",
+      "BackgroundScript.js"
     ]
   },
 
@@ -32,8 +37,23 @@
     {
       "matches": ["*://*.imdb.com/title/*"],
       "js": [
-        "addRottenToImdb.js",
-        "imdbPage.js"
+        "MoviePages/MovieData.js",
+        "MoviePages/MoviePage.js",
+        "MoviePages/ImdbPage.js",
+        "MoviePages/MoviePageFactory.js",
+        "ContentScript.js",
+        "ContentScriptImdb.js"
+      ]
+    },
+    {
+      "matches": ["*://*.rottentomatoes.com/m/*"],
+      "js": [
+        "MoviePages/MovieData.js",
+        "MoviePages/MoviePage.js",
+        "MoviePages/RottenPage.js",
+        "MoviePages/MoviePageFactory.js",
+        "ContentScript.js",
+        "ContentScriptRotten.js"
       ]
     }
   ]

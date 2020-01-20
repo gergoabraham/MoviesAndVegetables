@@ -1,6 +1,7 @@
 {
     "env": {
         "browser": true,
+        "node": true,
         "webextensions": true,
         "es6": true
     },
@@ -16,6 +17,18 @@
         "no-const-assign": "error",
         "no-use-before-define": ["error", {"functions":false}],
         "no-undef": "error",
-        "require-jsdoc": "off"
+        "require-jsdoc": "off",
+        "max-len": ["error", {
+            "ignoreTemplateLiterals": true,
+            "ignoreStrings": true
+             }]
+    },
+    "globals": {
+        "MoviePageFactory": "writable",
+        "ImdbPage": "writable",
+        "RottenPage": "writable",
+        "MoviePage": "writable",
+        "MovieData": "writable",
+        "ContentScript": "writable"
     }
 }
