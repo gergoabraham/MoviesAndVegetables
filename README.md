@@ -18,17 +18,21 @@ Look no further then! This extension can <b>spare your time</b> by searching for
 
 <b>Current features</b>
 - Shows a movie's Tomatometer and AudienceScore on its IMDb page,
-- Clicking on the Tomatometer or AudienceScore forwards you to the movie's RottenTomatoes page.
+- Shows a movie's Metascore and User score on RottenTomatoes,
+- and also the TOP250 position.
+- You can navigate to the other page via the inserted movie scores.
 
 <b>Coming soon!</b>
-- Shows a movie's Metascore and User score on RottenTomatoes,
-- Switches between the movie's IMDb and RottenTomatoes page with a hotkey.
+- Improvements, bugfixes,
+- Option to switch between the movie's IMDb and RottenTomatoes page with a hotkey.
+- Maybe showing scores on list views.
 
 <b>Release log</b>
 - v0.1.0: First release, showing RottenTomatoes scores on IMDb.
 - v0.1.1: Icon is updated.
 - v0.1.2: Number formatting is based on the browser's preferred language, just like on IMDb.
 - v0.1.3: Bugfix to make the extension working again.
+- v0.2.0: <b>RottenTomatoes now shows the IMDb scores!</b> Even the <b>TOP250</b> position is displayed!
 
 <b>Why does this extension need access for my data on IMDb, RottenTomatoes and especially on Google?</b>
 First, the extension modifies the currently viewed IMDb (and in the next release the RottenTomatoes) page by adding the score.
