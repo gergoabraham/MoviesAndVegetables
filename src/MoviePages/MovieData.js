@@ -16,10 +16,12 @@ class MovieData {
    * @param  {number} numberOfUserVotes
    * @param  {number} criticsRating
    * @param  {number} numberOfCriticsVotes
+   * @param  {number} toplistPosition
    */
   constructor(title, year, url,
       userRating, numberOfUserVotes,
-      criticsRating, numberOfCriticsVotes) {
+      criticsRating, numberOfCriticsVotes,
+      toplistPosition) {
     this.title = title;
     this.year = year;
     this.url = url;
@@ -27,6 +29,7 @@ class MovieData {
     this.numberOfUserVotes = numberOfUserVotes;
     this.criticsRating = criticsRating;
     this.numberOfCriticsVotes = numberOfCriticsVotes;
+    this.toplistPosition = toplistPosition;
   }
 }
 

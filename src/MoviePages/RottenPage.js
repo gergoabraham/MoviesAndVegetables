@@ -42,6 +42,7 @@ class RottenPage extends MoviePage {
         title, Number(year), this.url,
         Number(audienceScore), Number(numberOfUserRatings),
         Number(tomatoMeter), Number(numberOfCriticRatings),
+        -1,
     );
   }
 
@@ -86,7 +87,7 @@ class RottenPage extends MoviePage {
       `</h2>` +
       `<div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released"` +
       `style="margin-top:0px">` +
-      `<h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
+      `<h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating${this.generateToplistPositionString(movieData)}</h3>` +
       `<strong class="mop-ratings-wrap__text--small">Number of votes: ${movieData.numberOfUserVotes.toLocaleString('en')}</strong>` +
       `</div>` +
     `</div>` +
@@ -96,6 +97,10 @@ class RottenPage extends MoviePage {
     const tomatoMeterElement = parser.parseFromString(innerHTML, 'text/html');
 
     return tomatoMeterElement.body.children[0];
+  }
+
+  generateToplistPositionString(movieData) {
+    return movieData.toplistPosition > 0 ? ` #${movieData.toplistPosition}/250` : ``;
   }
 }
 

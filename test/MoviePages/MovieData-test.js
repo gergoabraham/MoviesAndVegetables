@@ -15,6 +15,7 @@ describe('MovieData', function() {
         'url of movie',
         9.0, 2160000,
         84, 0,
+        4,
     );
 
     movieData.title.should.equal('The Dark Knight');
@@ -24,5 +25,6 @@ describe('MovieData', function() {
     movieData.numberOfUserVotes.should.equal(2160000);
     movieData.criticsRating.should.equal(84);
     movieData.numberOfCriticsVotes.should.equal(0);
+    movieData.toplistPosition.should.equal(4);
   });
 });

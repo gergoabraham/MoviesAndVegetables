@@ -68,52 +68,57 @@ describe('rottenPage', function() {
     it(`should read the number of critics' votes`, function() {
       movieData.should.contain({numberOfCriticsVotes: 71});
     });
+
+    it('should not read toplistPosition', function() {
+      movieData.should.contain({toplistPosition: -1});
+    });
   });
 
   describe('injectRatings', function() {
     let document;
     let rottenPage;
+    context('no toplist position', function() {
+      before(async function() {
+        const dom = await JSDOM.fromFile('./test/html/testRottenTomatoesPage.html');
+        document = dom.window.document;
 
-    before(async function() {
-      const dom = await JSDOM.fromFile('./test/html/testRottenTomatoesPage.html');
-      document = dom.window.document;
+        rottenPage = new RottenPage(document,
+            'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews');
 
-      rottenPage = new RottenPage(document,
-          'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews');
+        rottenPage.injectRatings(new MovieData(
+            'The Shawshank Redemption', 1994,
+            'https://www.imdb.com/title/tt0111161/',
+            9, 2181618,
+            80, 20,
+            -1),
+        );
+      });
 
-      rottenPage.injectRatings(new MovieData(
-          'The Shawshank Redemption', 1994,
-          'https://www.imdb.com/title/tt0111161/',
-          9, 2181618,
-          80, 20),
-      );
-    });
+      it('should fix Tomatometer and Audience score alignment (via width)', function() {
+        const ratingsContainers = document
+            .querySelectorAll('div.mop-ratings-wrap__half');
 
-    it('should fix Tomatometer and Audience score alignment (via width)', function() {
-      const ratingsContainers = document
-          .querySelectorAll('div.mop-ratings-wrap__half');
+        ratingsContainers[0].getAttribute('style')
+            .should.equal('min-width:240px');
+        ratingsContainers[1].getAttribute('style')
+            .should.equal('min-width:240px');
+      });
 
-      ratingsContainers[0].getAttribute('style')
-          .should.equal('min-width:240px');
-      ratingsContainers[1].getAttribute('style')
-          .should.equal('min-width:240px');
-    });
+      it('should add IMDb scoreboard container', function() {
+        const scoreboardContainers = document
+            .querySelectorAll(
+                'section.mop-ratings-wrap__row.js-scoreboard-container');
 
-    it('should add IMDb scoreboard container', function() {
-      const scoreboardContainers = document
-          .querySelectorAll(
-              'section.mop-ratings-wrap__row.js-scoreboard-container');
+        scoreboardContainers.length.should.equal(2);
+        scoreboardContainers[1].getAttribute('id')
+            .should.equal('IMDb scores');
+      });
 
-      scoreboardContainers.length.should.equal(2);
-      scoreboardContainers[1].getAttribute('id')
-          .should.equal('IMDb scores');
-    });
+      it('should insert the scores with correct data and format', function() {
+        const IMDbScores = document.getElementById('IMDb scores');
 
-    it('should insert the scores with correct data and format', function() {
-      const IMDbScores = document.getElementById('IMDb scores');
-
-      IMDbScores.outerHTML.should.equal(
-          `<section id="IMDb scores" class="mop-ratings-wrap__row js-scoreboard-container" ` +
+        IMDbScores.outerHTML.should.equal(
+            `<section id="IMDb scores" class="mop-ratings-wrap__row js-scoreboard-container" ` +
             `style="border-top:2px solid #2a2c32;margin-top:20px">` +
             `<div class="mop-ratings-wrap__half" style="min-width:240px">` +
               `<h2 class="mop-ratings-wrap__score">` +
@@ -138,7 +143,33 @@ describe('rottenPage', function() {
               `</div>` +
             `</div>` +
           `</section>`,
-      );
+        );
+      });
+    });
+
+    context('toplist position', function() {
+      before(async function() {
+        const dom = await JSDOM.fromFile('./test/html/testRottenTomatoesPage.html');
+        document = dom.window.document;
+
+        rottenPage = new RottenPage(document,
+            'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews');
+
+        rottenPage.injectRatings(new MovieData(
+            'The Shawshank Redemption', 1994,
+            'https://www.imdb.com/title/tt0111161/',
+            9, 2181618,
+            80, 20,
+            33),
+        );
+      });
+
+      it('should insert toplist position', function() {
+        document.getElementById('IMDb scores')
+            .querySelectorAll(`h3.mop-ratings-wrap__title.audience-score__title.mop-ratings-wrap__title--small`)[0]
+            .textContent
+            .should.equal('IMDb rating #33/250');
+      });
     });
   });
 });

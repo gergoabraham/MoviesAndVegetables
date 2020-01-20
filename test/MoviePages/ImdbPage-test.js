@@ -81,6 +81,27 @@ describe('ImdbPage', function() {
         movieData.should
             .contain({numberOfCriticsVotes: 'fetched number of critics votes'});
       });
+
+      it('should read toplistPosition', function() {
+        movieData.should.contain({toplistPosition: 1});
+      });
+    });
+
+    context(`on a not top250 movie's imdb page`, function() {
+      before(async function() {
+        document = await getTestDocument(`testImdbPage-NoTop250.html`);
+        imdbPage = new ImdbPage(document,
+            `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`);
+
+        sinon.replace(imdbPage, 'fetchNumberOfCriticVotes',
+            sinon.fake.resolves('fetched number of critics votes'));
+
+        movieData = await imdbPage.getMovieData();
+      });
+
+      it('should not read toplistPosition', function() {
+        movieData.should.contain({toplistPosition: -1});
+      });
     });
 
     context(`fetchNumberOfCriticVotes`, function() {

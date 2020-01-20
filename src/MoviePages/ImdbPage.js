@@ -36,11 +36,27 @@ class ImdbPage extends MoviePage {
 
     const numberOfCriticVotes = await this.fetchNumberOfCriticVotes(this.url);
 
+    const toplistPosition = this.getToplistPosition();
+
     return new MovieData(
         title, year, this.url,
         userRating, numberOfUserVotes,
         criticsRating, numberOfCriticVotes,
+        toplistPosition,
     );
+  }
+
+  getToplistPosition() {
+    let toplistPosition;
+    try {
+      toplistPosition = Number(this.document.getElementById('titleAwardsRanks')
+          .textContent
+          .match(/Top Rated Movies #\d{1,3}/g)[0]
+          .replace(/[^0-9]/g, ``));
+    } catch (e) {
+      toplistPosition = -1;
+    }
+    return toplistPosition;
   }
 
   getMovieDataJSON() {

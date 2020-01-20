@@ -139,7 +139,8 @@ describe('Background script', function() {
                   new MovieData(
                       'The Shawshank Redemption', 1994, 'https://imdb.com/movie',
                       98, 885688,
-                      90, 71),
+                      90, 71,
+                      -1),
 
               );
 
