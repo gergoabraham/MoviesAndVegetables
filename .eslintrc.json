@@ -17,7 +17,11 @@
         "no-const-assign": "error",
         "no-use-before-define": ["error", {"functions":false}],
         "no-undef": "error",
-        "require-jsdoc": "off"
+        "require-jsdoc": "off",
+        "max-len": ["error", {
+            "ignoreTemplateLiterals": true,
+            "ignoreStrings": true
+             }]
     },
     "globals": {
         "MoviePageFactory": "writable",

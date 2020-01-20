@@ -44,6 +44,59 @@ class RottenPage extends MoviePage {
         Number(tomatoMeter), Number(numberOfCriticRatings),
     );
   }
+
+  /**
+   * @param  {MovieData} movieData
+   */
+  injectRatings(movieData) {
+    this.fixAlignmentOfTomatoMeterAndAudienceScore();
+
+    const imdbScoreElement = this.createImdbScoreHtmlElement(movieData);
+    const scoreboardContainers = this.document
+        .querySelectorAll('section.mop-ratings-wrap__row.js-scoreboard-container');
+    scoreboardContainers[0].after(imdbScoreElement);
+  }
+
+  fixAlignmentOfTomatoMeterAndAudienceScore() {
+    const ratingsContainers = this.document
+        .querySelectorAll('div.mop-ratings-wrap__half');
+    ratingsContainers
+        .forEach((x) => x.setAttribute('style', 'min-width:240px'));
+  }
+
+  createImdbScoreHtmlElement(movieData) {
+    const innerHTML =
+    `<section id="IMDb scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
+    `style="border-top:2px solid #2a2c32;margin-top:20px">` +
+    `<div class="mop-ratings-wrap__half" style="min-width:240px">` +
+      `<h2 class="mop-ratings-wrap__score">` +
+      `<a href="${movieData.url}criticreviews" class="unstyled articleLink">` +
+        `<span class="mop-ratings-wrap__percentage" title="Open Critic Reviews on IMDb">${movieData.criticsRating}</span></a></h2>` +
+      `<div class="mop-ratings-wrap__review-totals" style="margin-top:0px">` +
+      `<h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
+      `<strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
+      `<small class="mop-ratings-wrap__text--small">${movieData.numberOfCriticsVotes}</small>` +
+      `</div>` +
+    `</div>` +
+    `<div class="mop-ratings-wrap__half audience-score" style="min-width:240px">` +
+      `<h2 class="mop-ratings-wrap__score">` +
+      `<a href="${movieData.url}" class="unstyled articleLink">` +
+        `<span class="mop-ratings-wrap__percentage" title="Open ${movieData.title} on IMDb">${movieData.userRating.toLocaleString('en', {minimumFractionDigits: 1, maximumFractionDigits: 1})}</span>` +
+      `</a>` +
+      `</h2>` +
+      `<div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released"` +
+      `style="margin-top:0px">` +
+      `<h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
+      `<strong class="mop-ratings-wrap__text--small">Number of votes: ${movieData.numberOfUserVotes.toLocaleString('en')}</strong>` +
+      `</div>` +
+    `</div>` +
+    `</section>`;
+
+    const parser = new DOMParser();
+    const tomatoMeterElement = parser.parseFromString(innerHTML, 'text/html');
+
+    return tomatoMeterElement.body.children[0];
+  }
 }
 
 if (typeof module !== 'undefined') {
