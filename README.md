@@ -1,6 +1,5 @@
-Master/release: [![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/master.svg?style=svg&circle-token=deac9a2ced9ed3937ff44eb0f9cf3f63aa6bff08)](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/master)  [![codecov](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/master/graph/badge.svg?token=nUY2twqHRv)](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/master)
-Develop: [![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/develop.svg?style=svg&circle-token=deac9a2ced9ed3937ff44eb0f9cf3f63aa6bff08)](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/develop)  [![codecov](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/develop/graph/badge.svg?token=nUY2twqHRv)](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/develop)
-Latest commit: [![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables.svg?style=svg&circle-token=deac9a2ced9ed3937ff44eb0f9cf3f63aa6bff08)](https://circleci.com/gh/gergooo/MoviesAndVegetables)
+Master/release: [![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/master.svg?style=svg&circle-token=deac9a2ced9ed3937ff44eb0f9cf3f63aa6bff08)](https://circleci.com/gh/gergooo/workflows/MoviesAndVegetables/tree/master)  [![codecov](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/master/graph/badge.svg?token=nUY2twqHRv)](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/master)
+Develop: [![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/develop.svg?style=svg&circle-token=deac9a2ced9ed3937ff44eb0f9cf3f63aa6bff08)](https://circleci.com/gh/gergooo/workflows/MoviesAndVegetables/tree/develop)  [![codecov](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/develop/graph/badge.svg?token=nUY2twqHRv)](https://codecov.io/gh/gergooo/MoviesAndVegetables/branch/develop)
 
 # Movies and Vegetables ![Icon](src/icons/icon-48.png)
 [![Version](https://img.shields.io/amo/v/movies-and-vegetables)](https://addons.mozilla.org/hu/firefox/addon/movies-and-vegetables/)
@@ -19,17 +18,21 @@ Look no further then! This extension can <b>spare your time</b> by searching for
 
 <b>Current features</b>
 - Shows a movie's Tomatometer and AudienceScore on its IMDb page,
-- Clicking on the Tomatometer or AudienceScore forwards you to the movie's RottenTomatoes page.
+- Shows a movie's Metascore and User score on RottenTomatoes,
+- and also the TOP250 position.
+- You can navigate to the other page via the inserted movie scores.
 
 <b>Coming soon!</b>
-- Shows a movie's Metascore and User score on RottenTomatoes,
-- Switches between the movie's IMDb and RottenTomatoes page with a hotkey.
+- Improvements, bugfixes,
+- Option to switch between the movie's IMDb and RottenTomatoes page with a hotkey.
+- Maybe showing scores on list views.
 
 <b>Release log</b>
 - v0.1.0: First release, showing RottenTomatoes scores on IMDb.
 - v0.1.1: Icon is updated.
 - v0.1.2: Number formatting is based on the browser's preferred language, just like on IMDb.
 - v0.1.3: Bugfix to make the extension working again.
+- v0.2.0: <b>RottenTomatoes now shows the IMDb scores!</b> Even the <b>TOP250</b> position is displayed!
 
 <b>Why does this extension need access for my data on IMDb, RottenTomatoes and especially on Google?</b>
 First, the extension modifies the currently viewed IMDb (and in the next release the RottenTomatoes) page by adding the score.

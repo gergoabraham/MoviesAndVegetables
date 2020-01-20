@@ -18,6 +18,7 @@ const sinonChai = require('sinon-chai');
 chai.use(sinonChai);
 const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
+fs = require('fs');
 
 // Window globals
 global.window = {};

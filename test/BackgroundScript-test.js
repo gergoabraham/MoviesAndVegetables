@@ -9,27 +9,27 @@
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
 
-// Functions under test
-let getRottenData;
-let fetchRottenResponse;
-let constructSearchUrlForRotten;
-let getRottenPage;
-let removeForwardWarning;
+const {MovieData} = require('../src/MoviePages/MovieData');
+global.MovieData = MovieData;
+const {MoviePage} = require('../src/MoviePages/MoviePage');
+global.MoviePage = MoviePage;
+const {RottenPage} = require('../src/MoviePages/RottenPage');
+global.RottenPage = RottenPage;
+const {MoviePageFactory} = require('../src/MoviePages/MoviePageFactory');
+global.MoviePageFactory = MoviePageFactory;
+
+let BackgroundScript;
 
 describe('Background script', function() {
   before('reading in script under test', function() {
     global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};
-    require('../src/backgroundScript');
-    ({constructSearchUrlForRotten,
-      getRottenData,
-      getRottenPage,
-      fetchRottenResponse,
-      removeForwardWarning} = window);
+    ({BackgroundScript} = require('../src/BackgroundScript'));
   });
 
   it('should register message listener on startup', function() {
     global.browser.runtime.onMessage.addListener
-        .should.have.been.calledOnceWithExactly(getRottenData);
+        .should.have.been
+        .calledOnceWithExactly(BackgroundScript.getRemotePageData);
   });
 
   describe('search-url constructor', function() {
@@ -39,7 +39,7 @@ describe('Background script', function() {
         year: '1994',
       };
 
-      constructSearchUrlForRotten(movieData, `Rotten Tomatoes`)
+      BackgroundScript.constructSearchUrl(movieData, `Rotten Tomatoes`)
           .should.equal('https://www.google.com/search?btnI=true' +
               '&q=The+Shawshank+Redemption+1994+movie' +
               '+Rotten+Tomatoes');
@@ -51,14 +51,14 @@ describe('Background script', function() {
         year: '2018',
       };
 
-      constructSearchUrlForRotten(movieData, `Rotten Tomatoes`)
+      BackgroundScript.constructSearchUrl(movieData, `Rotten Tomatoes`)
           .should.equal('https://www.google.com/search?btnI=true' +
               '&q=The+Old+Man++The+Gun+2018+movie' +
               '+Rotten+Tomatoes');
     });
   });
 
-  describe('getRottenPage', function() {
+  describe('getRemotePage', function() {
     it('should parse the Response object for the webpage', async function() {
       const response = {
         text: sinon.fake.resolves('Text content from Response'),
@@ -66,23 +66,24 @@ describe('Background script', function() {
       const parseFromString = sinon.fake.resolves('HTML document');
       global.DOMParser = sinon.fake.returns({parseFromString});
 
-      await getRottenPage(response).should.eventually.equal('HTML document');
+      await BackgroundScript.getRemotePage(response)
+          .should.eventually.equal('HTML document');
 
       parseFromString.should.have.been
           .calledOnceWithExactly('Text content from Response', 'text/html');
     });
   });
 
-  describe('fetchRottenResponse', function() {
+  describe('fetchResponse', function() {
     it('should fetch Response object of movie data search', async function() {
-      sinon.replace(window, 'constructSearchUrlForRotten',
+      sinon.replace(BackgroundScript, 'constructSearchUrl',
           sinon.fake.returns('the search URL'));
       global.fetch = sinon.fake.resolves('the response object');
 
-      await fetchRottenResponse('movieData', 'Rotten Tomatoes')
+      await BackgroundScript.fetchResponse('movieData', 'Rotten Tomatoes')
           .should.eventually.equal('the response object');
 
-      window.constructSearchUrlForRotten.should.have.been
+      BackgroundScript.constructSearchUrl.should.have.been
           .calledOnceWithExactly('movieData', 'Rotten Tomatoes');
       global.fetch.should.have.been.calledOnceWithExactly('the search URL');
 
@@ -92,35 +93,39 @@ describe('Background script', function() {
 
   describe('skipForwardWarning', function() {
     it('should get movie url in order to skip forward warning', function() {
-      removeForwardWarning(`https://www.google.com/url?q=https://www.rottentomatoes.com/m/the_dark_knight`)
+      BackgroundScript
+          .removeForwardWarning(
+              `https://www.google.com/url?` +
+              `q=https://www.rottentomatoes.com/m/the_dark_knight`)
           .should.equal(`https://www.rottentomatoes.com/m/the_dark_knight`);
     });
   });
 
-  describe('getRottenData', function() {
+  describe('getRemotePageData', function() {
     let document;
 
     before(async function() {
-      const dom = await JSDOM.fromFile('./test/testRottenTomatoesPage.html',
+      const dom = await JSDOM.fromFile(
+          './test/html/testRottenTomatoesPage.html',
           {url: `https://www.rottentomatoes.com/m/shawshank_redemption`});
       document = dom.window.document;
     });
 
     it(`should search Rotten page and return with the scores`,
         async function() {
-          // Todo: this test works only because readRottenData is visible,
+          // todo: this test works only because RottenPage is visible,
           // it shall be mocked.
 
           // Input -> searchURL
           const movieData = {
             title: 'The Shawshank Redemption',
-            year: '1994',
+            year: 1994,
           };
 
           // Fetch(searchURL) -> response -> 'responseURL'
           //                              -> 'textContent'
           global.fetch = sinon.fake.resolves({
-            url: 'responseURL',
+            url: 'https://imdb.com/movie',
             text: sinon.fake.resolves('Text content from Response'),
           });
 
@@ -128,15 +133,15 @@ describe('Background script', function() {
           const parseFromString = sinon.fake.resolves(document);
           global.DOMParser = sinon.fake.returns({parseFromString});
 
-          await getRottenData(movieData)
+          await BackgroundScript
+              .getRemotePageData({movieData, remotePageName: 'RottenTomatoes'})
               .should.eventually.deep.equal(
-                  {
-                    tomatoMeter: '91',
-                    audienceScore: '98',
-                    url: `responseURL`,
-                    tomatoMeterCount: '68',
-                    audienceScoreCount: '885203',
-                  }
+                  new MovieData(
+                      'The Shawshank Redemption', 1994, 'https://imdb.com/movie',
+                      98, 885688,
+                      90, 71,
+                      -1),
+
               );
 
           // Todo: fetch and removeForwardWarning is not tested correctly
