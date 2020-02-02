@@ -13,6 +13,7 @@ describe('Functional tests', async function() {
 
   before(async function() {
     driver = new Builder().forBrowser('firefox').build();
+    await driver.manage().setTimeouts({pageLoad: 5000});
     await driver.installAddon('web-ext-artifacts/movies_and_vegetables-0.2.0.zip', true);
   });
 
@@ -37,6 +38,20 @@ describe('Functional tests', async function() {
           .findElement(By.className('titleReviewBarItem TomatoMeter'));
 
       tomatoMeter.should.exist;
+    });
+  });
+
+  context('on RottenTomatoes', function() {
+    before(async function() {
+      driver.get('https://www.rottentomatoes.com/m/the_dark_knight')
+          .catch((err) => {}); // it is loaded more than the 5 seconds timeout
+    });
+
+    it('should inject IMDb scores', async function() {
+      await driver.wait(until.elementLocated(By.id('IMDb scores')), 10000);
+      const imdbScores = await driver.findElement(By.id('IMDb scores'));
+
+      imdbScores.should.exist;
     });
   });
 
