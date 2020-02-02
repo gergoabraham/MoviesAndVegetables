@@ -6,7 +6,7 @@
 
 'use strict';
 
-const {MovieData} = require('../../src/MoviePages/MovieData');
+const {MovieData} = require('../../../src/MoviePages/MovieData');
 
 describe('MovieData', function() {
   it('should contain stuff', function() {

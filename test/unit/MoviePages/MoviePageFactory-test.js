@@ -6,18 +6,18 @@
 
 'use strict';
 
-const {MoviePage} = require('../../src/MoviePages/MoviePage');
+const {MoviePage} = require('../../../src/MoviePages/MoviePage');
 global.MoviePage = MoviePage;
-const {RottenPage} = require('../../src/MoviePages/RottenPage');
+const {RottenPage} = require('../../../src/MoviePages/RottenPage');
 global.RottenPage = RottenPage;
-const {MoviePageFactory} = require('../../src/MoviePages/MoviePageFactory');
+const {MoviePageFactory} = require('../../../src/MoviePages/MoviePageFactory');
 
 let ImdbPage;
 
 describe('MoviePageFactory', function() {
   before(function() {
     // todo: all require should be in before functions
-    ({ImdbPage} = require('../../src/MoviePages/ImdbPage'));
+    ({ImdbPage} = require('../../../src/MoviePages/ImdbPage'));
     global.ImdbPage = ImdbPage;
   });
 

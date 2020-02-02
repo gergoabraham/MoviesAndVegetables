@@ -11,16 +11,16 @@ const {JSDOM} = jsdom;
 
 let document;
 
-const {MoviePage} = require('../../src/MoviePages/MoviePage');
+const {MoviePage} = require('../../../src/MoviePages/MoviePage');
 global.MoviePage = MoviePage;
-const {MovieData} = require('../../src/MoviePages/MovieData');
-const {ImdbPage} = require('../../src/MoviePages/ImdbPage');
+const {MovieData} = require('../../../src/MoviePages/MovieData');
+const {ImdbPage} = require('../../../src/MoviePages/ImdbPage');
 
 describe('ImdbPage', function() {
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
 
   async function getTestDocument(filename = 'testImdbPage.html') {
-    const dom = await JSDOM.fromFile(`./test/html/${filename}`);
+    const dom = await JSDOM.fromFile(`./test/unit/html/${filename}`);
     return dom.window.document;
   }
 
@@ -123,7 +123,7 @@ describe('ImdbPage', function() {
 
       it('should fetch CriticPage and get number of votes', async function() {
         const criticPageText = fs
-            .readFileSync('./test/html/testImdbPage-CriticReviews.html');
+            .readFileSync('./test/unit/html/testImdbPage-CriticReviews.html');
 
         global.fetch = sinon.fake.resolves({
           text: sinon.fake.resolves(criticPageText),
