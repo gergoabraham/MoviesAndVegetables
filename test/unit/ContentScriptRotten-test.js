@@ -8,7 +8,7 @@
 
 let injectImdbScoresOnRotten;
 
-const {ContentScript} = require('../src/ContentScript');
+const {ContentScript} = require('../../src/ContentScript');
 global.ContentScript = ContentScript;
 
 describe('Content script on RottenTomatoes', function() {
@@ -17,7 +17,7 @@ describe('Content script on RottenTomatoes', function() {
     global.browser = {runtime: {sendMessage: sinon.fake.resolves({})}};
     sinon.replace(ContentScript, 'injectScores', sinon.fake());
 
-    ({injectImdbScoresOnRotten} = require('../src/ContentScriptRotten'));
+    ({injectImdbScoresOnRotten} = require('../../src/ContentScriptRotten'));
   });
 
   it('should immediately run its function', function() {

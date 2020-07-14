@@ -8,7 +8,7 @@
 
 let ContentScript;
 
-const {MovieData} = require('../src/MoviePages/MovieData');
+const {MovieData} = require('../../src/MoviePages/MovieData');
 
 describe('Content script', function() {
   before(function() {
@@ -16,7 +16,7 @@ describe('Content script', function() {
       body: {onload: {}},
       baseURI: 'page url',
     };
-    ({ContentScript} = require('../src/ContentScript'));
+    ({ContentScript} = require('../../src/ContentScript'));
   });
 
   describe('injectScores', function() {

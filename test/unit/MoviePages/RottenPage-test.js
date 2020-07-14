@@ -9,15 +9,15 @@
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
 
-const {MoviePage} = require('../../src/MoviePages/MoviePage');
+const {MoviePage} = require('../../../src/MoviePages/MoviePage');
 global.MoviePage = MoviePage;
-const {RottenPage} = require('../../src/MoviePages/RottenPage');
+const {RottenPage} = require('../../../src/MoviePages/RottenPage');
 
 describe('rottenPage', function() {
   let document;
 
   before(async function() {
-    const dom = await JSDOM.fromFile('./test/html/testRottenTomatoesPage.html');
+    const dom = await JSDOM.fromFile('./test/unit/html/testRottenTomatoesPage.html');
     document = dom.window.document;
   });
 
@@ -79,7 +79,7 @@ describe('rottenPage', function() {
     let rottenPage;
     context('no toplist position', function() {
       before(async function() {
-        const dom = await JSDOM.fromFile('./test/html/testRottenTomatoesPage.html');
+        const dom = await JSDOM.fromFile('./test/unit/html/testRottenTomatoesPage.html');
         document = dom.window.document;
 
         rottenPage = new RottenPage(document,
@@ -149,7 +149,7 @@ describe('rottenPage', function() {
 
     context('toplist position', function() {
       before(async function() {
-        const dom = await JSDOM.fromFile('./test/html/testRottenTomatoesPage.html');
+        const dom = await JSDOM.fromFile('./test/unit/html/testRottenTomatoesPage.html');
         document = dom.window.document;
 
         rottenPage = new RottenPage(document,

@@ -6,7 +6,7 @@
 
 'use strict';
 
-const {MoviePage} = require('../../src/MoviePages/MoviePage');
+const {MoviePage} = require('../../../src/MoviePages/MoviePage');
 
 describe('MoviePage', function() {
   context('abstract class', function() {

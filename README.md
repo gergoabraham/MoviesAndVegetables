@@ -42,13 +42,6 @@ Second, it does the same what you would do: searches for the movie's pages in Go
 Please write a mail to the following address if you find any issue, or have a feature request: sw.gergo.abraham@gmail.com
 
 ## Development notes
-### Scripts
-- `npm run tdd` - for TDD. :-)
-- `npm test` - to use before commit. Runs unit tests, eslint, web-ext lint and coverage.
-- `npm run firefox` - for testing the extension in Firefox.
-- `npm run fix-eslint`- runs ESLint, and also fixes errors that ESLint can fix automatically.
-- `npm run build` - builds extension for publishing on AMO.
-
 ### Branching
 - `master` - production-ready state,
 - `develop` - integration branch,
