@@ -84,11 +84,11 @@ workflows:
   daily:
     triggers:
       - schedule:
-          cron: "45 15 * * *"
+          cron: "16 16 * * *"
           filters:
             branches:
               only:
-                - high-level-tests
+                - master
     jobs:
       - checkout_and_install_npm
       - end-to-end-test:
