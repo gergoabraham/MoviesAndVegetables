@@ -7,15 +7,38 @@
 'use strict';
 
 const {Builder, By, until} = require('selenium-webdriver');
+const fs = require('fs');
+const cmd = require('node-cmd');
 
 describe('Functional tests', async function() {
+  const addonFolder = 'web-ext-artifacts';
   let driver;
 
   before(async function() {
+    cleanupArtifacts();
+    await buildAddon();
+
     driver = new Builder().forBrowser('firefox').build();
     await driver.manage().setTimeouts({pageLoad: 5000});
-    await driver.installAddon('web-ext-artifacts/movies_and_vegetables-0.2.0.zip', true);
+    await installAddon(driver);
   });
+
+  function cleanupArtifacts() {
+    if (fs.existsSync(addonFolder)) {
+      const folderContent = fs.readdirSync(addonFolder);
+      folderContent.forEach((x) => fs.unlinkSync(`${addonFolder}/${x}`));
+    }
+  }
+
+  async function buildAddon() {
+    return new Promise((resolve) => cmd.get('npm run build', resolve));
+  }
+
+  async function installAddon(driver) {
+    const artifacts = fs.readdirSync(addonFolder);
+    const addonFileName = artifacts[artifacts.length - 1];
+    await driver.installAddon(`${addonFolder}/${addonFileName}`, true);
+  }
 
   context('on IMDb', function() {
     before(async function() {
@@ -32,7 +55,7 @@ describe('Functional tests', async function() {
     it('should inject Tomatometer', async function() {
       await driver.wait(
           until.elementLocated(By.className('titleReviewBarItem TomatoMeter')),
-          10000);
+          1000);
 
       const tomatoMeter = await driver
           .findElement(By.className('titleReviewBarItem TomatoMeter'));
@@ -59,3 +82,5 @@ describe('Functional tests', async function() {
     driver.quit();
   });
 });
+
+
