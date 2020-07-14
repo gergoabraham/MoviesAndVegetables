@@ -16,19 +16,17 @@ describe('End-to-end tests', async function() {
   let driver;
 
   before(async function() {
-    process.env.path = process.env.path + ';node_modules/geckodriver/';
-
     const isAddonBuilt = rebuildAddon();
-
-    const options = new firefox.Options();
-    options.addArguments('-headless');
-
-    driver = new Builder().forBrowser('firefox').setFirefoxOptions(options).build();
-    const isBrowserReady = driver.manage().setTimeouts({pageLoad: 5000});
+    const isBrowserReady = startBrowserDriver();
 
     await Promise.all([isAddonBuilt, isBrowserReady]);
-    await installAddon(driver);
+    await installAddon();
   });
+
+  function rebuildAddon() {
+    cleanupArtifacts();
+    return new Promise((resolve) => cmd.get('npm run build', resolve));
+  }
 
   function cleanupArtifacts() {
     if (fs.existsSync(addonFolder)) {
@@ -37,15 +35,25 @@ describe('End-to-end tests', async function() {
     }
   }
 
-  async function rebuildAddon() {
-    cleanupArtifacts();
-    return new Promise((resolve) => cmd.get('npm run build', resolve));
+  function startBrowserDriver() {
+    process.env.path = process.env.path + ';node_modules/geckodriver/';
+
+    const options = new firefox.Options();
+    options.addArguments('-headless');
+
+    driver = new Builder()
+        .forBrowser('firefox')
+        .setFirefoxOptions(options)
+        .build();
+
+    return driver.manage().setTimeouts({pageLoad: 5000});
   }
 
-  async function installAddon(driver) {
+  function installAddon() {
     const artifacts = fs.readdirSync(addonFolder);
     const addonFileName = artifacts[artifacts.length - 1];
-    await driver.installAddon(`${addonFolder}/${addonFileName}`, true);
+
+    return driver.installAddon(`${addonFolder}/${addonFileName}`, true);
   }
 
   context('on IMDb', function() {
@@ -90,5 +98,4 @@ describe('End-to-end tests', async function() {
     driver.quit();
   });
 });
-
 
