@@ -1,6 +1,8 @@
 version: 2.1
-jobs:
+orbs:
+  browser-tools: circleci/browser-tools@1.0.1
 
+jobs:
   checkout_and_install_npm:
     docker:
       - image: circleci/node:latest
@@ -56,6 +58,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
+      - browser-tools/install-firefox
       - run: npm run test:end-to-end
 
 workflows:
