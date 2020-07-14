@@ -8,7 +8,7 @@
     "unit-test": "mocha --forbid-only test/unit/",
     "tdd": "mocha --watch test/unit/",
     "end-to-end-test": "PATH %PATH%;node_modules/geckodriver/&& mocha test/end-to-end --timeout 120000",
-    "test": "npm run eslint && npm run webext-lint && npm run unit-test && npm run coverage",
+    "test": "echo ### COMMIT SUITE ### && npm run eslint && npm run webext-lint && npm run unit-test && npm run coverage && npm run end-to-end-test",
     "coverage": "nyc --reporter=lcov --reporter=text-summary --reporter=text --all mocha test/unit/ --timeout 60000",
     "coverageCI": "npm run coverage && codecov",
     "fix-eslint": "eslint --ignore-path .gitignore . --fix",
