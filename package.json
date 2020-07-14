@@ -11,7 +11,7 @@
     "test:end-to-end": "PATH %PATH%;node_modules/geckodriver/&& mocha test/end-to-end --timeout 120000",
     "test:unit": "mocha --forbid-only test/unit/",
     "test:coverage": "nyc --reporter=lcov --reporter=text-summary --reporter=text --all mocha test/unit/ --timeout 60000",
-    "ci:coverage": "npm run coverage && codecov",
+    "ci:coverage": "npm run test:coverage && codecov",
     "build": "web-ext -s src build -i icons/icon.psd"
   },
   "author": "gergooo <abrahamgergo@gmail.com>",
