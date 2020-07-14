@@ -9,13 +9,13 @@
 const jsdom = require('jsdom');
 const {JSDOM} = jsdom;
 
-const {MovieData} = require('../src/MoviePages/MovieData');
+const {MovieData} = require('../../src/MoviePages/MovieData');
 global.MovieData = MovieData;
-const {MoviePage} = require('../src/MoviePages/MoviePage');
+const {MoviePage} = require('../../src/MoviePages/MoviePage');
 global.MoviePage = MoviePage;
-const {RottenPage} = require('../src/MoviePages/RottenPage');
+const {RottenPage} = require('../../src/MoviePages/RottenPage');
 global.RottenPage = RottenPage;
-const {MoviePageFactory} = require('../src/MoviePages/MoviePageFactory');
+const {MoviePageFactory} = require('../../src/MoviePages/MoviePageFactory');
 global.MoviePageFactory = MoviePageFactory;
 
 let BackgroundScript;
@@ -23,7 +23,7 @@ let BackgroundScript;
 describe('Background script', function() {
   before('reading in script under test', function() {
     global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};
-    ({BackgroundScript} = require('../src/BackgroundScript'));
+    ({BackgroundScript} = require('../../src/BackgroundScript'));
   });
 
   it('should register message listener on startup', function() {
@@ -106,7 +106,7 @@ describe('Background script', function() {
 
     before(async function() {
       const dom = await JSDOM.fromFile(
-          './test/html/testRottenTomatoesPage.html',
+          './test/unit/html/testRottenTomatoesPage.html',
           {url: `https://www.rottentomatoes.com/m/shawshank_redemption`});
       document = dom.window.document;
     });

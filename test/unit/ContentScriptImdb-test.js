@@ -8,13 +8,13 @@
 
 let injectRottenScoresOnImdb;
 
-const {ContentScript} = require('../src/ContentScript');
+const {ContentScript} = require('../../src/ContentScript');
 global.ContentScript = ContentScript;
 
 describe('Content script on IMDb', function() {
   before(function() {
     global.document = {body: {onload: {}}};
-    ({injectRottenScoresOnImdb} = require('../src/ContentScriptImdb'));
+    ({injectRottenScoresOnImdb} = require('../../src/ContentScriptImdb'));
   });
 
   it('should register its function on page loaded event', function() {
