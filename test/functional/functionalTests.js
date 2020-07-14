@@ -15,11 +15,12 @@ describe('Functional tests', async function() {
   let driver;
 
   before(async function() {
-    cleanupArtifacts();
-    await buildAddon();
+    const isAddonBuilt = rebuildAddon();
 
     driver = new Builder().forBrowser('firefox').build();
-    await driver.manage().setTimeouts({pageLoad: 5000});
+    const isBrowserReady = driver.manage().setTimeouts({pageLoad: 5000});
+
+    await Promise.all([isAddonBuilt, isBrowserReady]);
     await installAddon(driver);
   });
 
@@ -30,7 +31,8 @@ describe('Functional tests', async function() {
     }
   }
 
-  async function buildAddon() {
+  async function rebuildAddon() {
+    cleanupArtifacts();
     return new Promise((resolve) => cmd.get('npm run build', resolve));
   }
 
