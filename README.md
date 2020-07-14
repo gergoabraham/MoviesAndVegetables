@@ -38,8 +38,11 @@ Look no further then! This extension can <b>spare your time</b> by searching for
 First, the extension modifies the currently viewed IMDb (and in the next release the RottenTomatoes) page by adding the score.
 Second, it does the same what you would do: searches for the movie's pages in Google and opens its RottenTomatoes page in the background to get the scores. The given permissions are needed to make the extension be able to do this. (In the future, this may be changed to use some movie database API.)
 
-<b> Support</b>
+<b>Support</b> 
 Please write a mail to the following address if you find any issue, or have a feature request: sw.gergo.abraham@gmail.com
+
+<b>Donation</b> 
+If you like this extension, please <a href="https://www.buymeacoffee.com/gergoabraham">buy me a coffee</a> or <a href="https://www.patreon.com/gergoabraham">become my patron</a>. ◕ ◡ ◕
 
 ## Development notes
 ### Branching
