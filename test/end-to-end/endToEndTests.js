@@ -15,6 +15,8 @@ describe('End-to-end tests', async function() {
   let driver;
 
   before(async function() {
+    process.env.path = process.env.path + ';node_modules/geckodriver/';
+
     const isAddonBuilt = rebuildAddon();
 
     driver = new Builder().forBrowser('firefox').build();

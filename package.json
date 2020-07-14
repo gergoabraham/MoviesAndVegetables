@@ -8,7 +8,7 @@
     "lint:eslint:fix": "eslint --ignore-path .gitignore . --fix",
     "lint:webext": "web-ext -s src lint",
     "test": "echo ### COMMIT SUITE ### && npm-run-all --aggregate-output -p lint:* test:*",
-    "test:end-to-end": "PATH %PATH%;node_modules/geckodriver/&& mocha test/end-to-end --timeout 120000",
+    "test:end-to-end": "mocha test/end-to-end --timeout 120000",
     "test:unit": "mocha --forbid-only test/unit/",
     "test:coverage": "nyc --reporter=lcov --reporter=text-summary --reporter=text --all mocha test/unit/ --timeout 60000",
     "ci:coverage": "npm run test:coverage && codecov",
