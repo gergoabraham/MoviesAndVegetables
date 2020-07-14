@@ -10,7 +10,7 @@ const {Builder, By, until} = require('selenium-webdriver');
 const fs = require('fs');
 const cmd = require('node-cmd');
 
-describe('Functional tests', async function() {
+describe('End-to-end tests', async function() {
   const addonFolder = 'web-ext-artifacts';
   let driver;
 
