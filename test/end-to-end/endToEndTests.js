@@ -7,6 +7,7 @@
 'use strict';
 
 const {Builder, By, until} = require('selenium-webdriver');
+const firefox = require('selenium-webdriver/firefox');
 const fs = require('fs');
 const cmd = require('node-cmd');
 
@@ -19,7 +20,10 @@ describe('End-to-end tests', async function() {
 
     const isAddonBuilt = rebuildAddon();
 
-    driver = new Builder().forBrowser('firefox').build();
+    const options = new firefox.Options();
+    options.addArguments('-headless');
+
+    driver = new Builder().forBrowser('firefox').setFirefoxOptions(options).build();
     const isBrowserReady = driver.manage().setTimeouts({pageLoad: 5000});
 
     await Promise.all([isAddonBuilt, isBrowserReady]);
