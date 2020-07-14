@@ -18,14 +18,6 @@ jobs:
           paths:
             - ./
 
-  unit_test:
-    docker:
-      - image: circleci/node:latest
-    steps:
-      - attach_workspace:
-          at: ./
-      - run: npm run test:unit
-
   eslint:
     docker:
       - image: circleci/node:latest
@@ -42,7 +34,15 @@ jobs:
           at: ./
       - run: npm run lint:webext
 
-  coverage:
+  unit-test:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npm run test:unit
+
+  unit-test-coverage:
     docker:
       - image: circleci/node:latest
     steps:
@@ -50,21 +50,31 @@ jobs:
           at: ./
       - run: npm run ci:coverage
 
+  end-to-end-test:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npm run test:end-to-end
 
 workflows:
   version: 2
   build_and_test:
     jobs:
       - checkout_and_install_npm
-      - unit_test:
-          requires:
-            - checkout_and_install_npm
       - eslint:
           requires:
             - checkout_and_install_npm
       - webext-lint:
           requires:
             - checkout_and_install_npm
-      - coverage:
+      - unit-test:
+          requires:
+            - checkout_and_install_npm
+      - unit-test-coverage:
+          requires:
+            - checkout_and_install_npm
+      - end-to-end-test:
           requires:
             - checkout_and_install_npm
