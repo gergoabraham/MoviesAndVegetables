@@ -24,7 +24,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npm run unit-test
+      - run: npm run test:unit
 
   eslint:
     docker:
@@ -32,7 +32,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npm run eslint
+      - run: npm run lint:eslint
 
   webext-lint:
     docker:
@@ -40,7 +40,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npm run webext-lint
+      - run: npm run lint:webext
 
   coverage:
     docker:
@@ -50,7 +50,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npm run coverageCI
+      - run: npm run ci:coverage
 
 
 workflows:
