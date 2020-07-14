@@ -81,3 +81,16 @@ workflows:
       - end-to-end-test:
           requires:
             - checkout_and_install_npm
+  daily:
+    triggers:
+      - schedule:
+        cron: "45 15 * * *"
+        filters:
+          branches:
+            only:
+              - high-level-tests
+    jobs:
+      - checkout_and_install_npm
+      - end-to-end-test:
+          requires:
+            - checkout_and_install_npm
