@@ -15,6 +15,7 @@ const {MoviePage} = require('../../../src/MoviePages/MoviePage');
 global.MoviePage = MoviePage;
 const {MovieData} = require('../../../src/MoviePages/MovieData');
 const {ImdbPage} = require('../../../src/MoviePages/ImdbPage');
+const fakeFetch = require('../fakes/fetchFake');
 
 describe('ImdbPage', function() {
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
@@ -46,9 +47,7 @@ describe('ImdbPage', function() {
         document = await getTestDocument();
         imdbPage = new ImdbPage(document,
             `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`);
-
-        sinon.replace(imdbPage, 'fetchNumberOfCriticVotes',
-            sinon.fake.resolves('fetched number of critics votes'));
+        fakeFetch.activateFetchFake();
 
         movieData = await imdbPage.getMovieData();
       });
@@ -78,8 +77,7 @@ describe('ImdbPage', function() {
       });
 
       it(`should read the number of critics' votes`, function() {
-        movieData.should
-            .contain({numberOfCriticsVotes: 'fetched number of critics votes'});
+        movieData.should.contain({numberOfCriticsVotes: 20});
       });
 
       it('should read toplistPosition', function() {
@@ -92,49 +90,13 @@ describe('ImdbPage', function() {
         document = await getTestDocument(`testImdbPage-NoTop250.html`);
         imdbPage = new ImdbPage(document,
             `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`);
-
-        sinon.replace(imdbPage, 'fetchNumberOfCriticVotes',
-            sinon.fake.resolves('fetched number of critics votes'));
+        fakeFetch.activateFetchFake();
 
         movieData = await imdbPage.getMovieData();
       });
 
       it('should not read toplistPosition', function() {
         movieData.should.contain({toplistPosition: -1});
-      });
-    });
-
-    context(`fetchNumberOfCriticVotes`, function() {
-      before(async function() {
-        document = await getTestDocument();
-        imdbPage = new ImdbPage(document,
-            `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`);
-      });
-
-      it('should be called by getMovieData', async function() {
-        sinon.replace(imdbPage, 'fetchNumberOfCriticVotes',
-            sinon.fake.resolves(6));
-
-        movieData = await imdbPage.getMovieData();
-
-        imdbPage.fetchNumberOfCriticVotes.should.have.been
-            .calledOnceWithExactly(`https://www.imdb.com/title/tt0111161/`);
-      });
-
-      it('should fetch CriticPage and get number of votes', async function() {
-        const criticPageText = fs
-            .readFileSync('./test/unit/html/testImdbPage-CriticReviews.html');
-
-        global.fetch = sinon.fake.resolves({
-          text: sinon.fake.resolves(criticPageText),
-        });
-
-        await imdbPage
-            .fetchNumberOfCriticVotes(`https://www.imdb.com/title/tt0111161/`)
-            .should.eventually.equal(20);
-
-        global.fetch.should.have.been
-            .calledOnceWithExactly(`https://www.imdb.com/title/tt0111161/criticreviews`);
       });
     });
 
