@@ -19,7 +19,7 @@ const {ImdbPage} = require('../../../src/MoviePages/ImdbPage');
 describe('ImdbPage', function() {
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
 
-  async function getTestDocument(filename = 'testImdbPage.html') {
+  async function getTestDocument(filename = 'imdb.title.tt0111161.html') {
     const dom = await JSDOM.fromFile(`./test/unit/html/${filename}`);
     return dom.window.document;
   }
@@ -80,7 +80,7 @@ describe('ImdbPage', function() {
 
     context(`on a not top250 movie's imdb page`, function() {
       before(async function() {
-        document = await getTestDocument(`testImdbPage-NoTop250.html`);
+        document = await getTestDocument(`imdb.title.tt7984734.html`);
         imdbPage = new ImdbPage(document,
             `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`);
 
@@ -94,7 +94,7 @@ describe('ImdbPage', function() {
 
     context(`on a series' imdb page`, function() {
       before(async function() {
-        document = await getTestDocument('testImdbPage-Series.html');
+        document = await getTestDocument('imdb.title.tt0149460.html');
         imdbPage = new ImdbPage(document, 'https://url');
       });
 
