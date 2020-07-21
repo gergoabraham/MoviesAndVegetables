@@ -10,10 +10,10 @@ function activateFetchFake() {
 }
 
 async function fetchFake(url) {
-  const fileName = convertToFileName(url);
-  const filePath = `./test/unit/html/${fileName}`;
+  const urlToFilenameTable = generateUrlTableFromFiles();
 
-  if (fs.existsSync(filePath)) {
+  if (urlToFilenameTable[url]) {
+    const filePath = `./test/unit/html/${urlToFilenameTable[url]}`;
     const fileContent = fs.readFileSync(filePath).toString();
 
     return {
@@ -23,8 +23,26 @@ async function fetchFake(url) {
   } else {
     throw new Error(`fetch() fake: no file matches the url.\n\n`+
                     `url: ${url}\n\n` +
-                    `filename: ${fileName}`);
+                    `filename: ${convertToFileName(url)}`);
   }
+}
+
+function generateUrlTableFromFiles() {
+  const urlToFilenameTable = {};
+
+  const fileList = fs.readdirSync('./test/unit/html/');
+
+  fileList.forEach((fileName) => {
+    const url = fileName
+        .replace(/\.\.\./, '?')
+        .replace(/\.html/g, '')
+        .replace(/\./g, '/')
+        .replace(/^([^\/]+)\//, `https://www.$1.com/`)
+        .replace(/ .+$/, '');
+
+    urlToFilenameTable[url] = fileName;
+  });
+  return urlToFilenameTable;
 }
 
 function convertToFileName(url) {
