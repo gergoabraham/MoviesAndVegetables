@@ -6,9 +6,6 @@
 
 'use strict';
 
-const jsdom = require('jsdom');
-const {JSDOM} = jsdom;
-
 const {MovieData} = require('../../src/MoviePages/MovieData');
 global.MovieData = MovieData;
 const {MoviePage} = require('../../src/MoviePages/MoviePage');
@@ -102,55 +99,23 @@ describe('Background script', function() {
   });
 
   describe('getRemotePageData', function() {
-    let document;
-
-    before(async function() {
-      const dom = await JSDOM.fromFile(
-          './test/unit/html/testRottenTomatoesPage.html',
-          {url: `https://www.rottentomatoes.com/m/shawshank_redemption`});
-      document = dom.window.document;
-    });
-
     it(`should search Rotten page and return with the scores`,
         async function() {
-          // todo: this test works only because RottenPage is visible,
-          // it shall be mocked.
-
-          // Input -> searchURL
           const movieData = {
             title: 'The Shawshank Redemption',
             year: 1994,
           };
 
-          // Fetch(searchURL) -> response -> 'responseURL'
-          //                              -> 'textContent'
-          global.fetch = sinon.fake.resolves({
-            url: 'https://imdb.com/movie',
-            text: sinon.fake.resolves('Text content from Response'),
-          });
-
-          // DOMParser() -> parser.parseFromString(textContent) -> testHTML file
-          const parseFromString = sinon.fake.resolves(document);
-          global.DOMParser = sinon.fake.returns({parseFromString});
-
           await BackgroundScript
               .getRemotePageData({movieData, remotePageName: 'RottenTomatoes'})
               .should.eventually.deep.equal(
                   new MovieData(
-                      'The Shawshank Redemption', 1994, 'https://imdb.com/movie',
+                      'The Shawshank Redemption', 1994,
+                      'https://www.rottentomatoes.com/m/shawshank_redemption',
                       98, 885688,
                       90, 71,
                       -1),
-
               );
-
-          // Todo: fetch and removeForwardWarning is not tested correctly
-          global.fetch
-              .should.have.been.calledTwice;
-
-          parseFromString
-              .should.have.been.calledOnceWithExactly(
-                  'Text content from Response', 'text/html');
         });
   });
 });

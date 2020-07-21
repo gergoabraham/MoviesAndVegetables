@@ -20,8 +20,19 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 fs = require('fs');
 
-// Window globals
-global.window = {};
+const jsdom = require('jsdom');
+const {JSDOM} = jsdom;
+
+const fakeFetch = require('./unit/fakes/fetchFake');
+
+beforeEach(() => {
+  global.DOMParser = new JSDOM().window.DOMParser;
+
+  global.window = {};
+  window.navigator = {language: 'en'};
+
+  fakeFetch.activateFetchFake();
+});
 
 afterEach(() => {
   // Restore the default sandbox

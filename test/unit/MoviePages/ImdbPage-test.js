@@ -15,7 +15,6 @@ const {MoviePage} = require('../../../src/MoviePages/MoviePage');
 global.MoviePage = MoviePage;
 const {MovieData} = require('../../../src/MoviePages/MovieData');
 const {ImdbPage} = require('../../../src/MoviePages/ImdbPage');
-const fakeFetch = require('../fakes/fetchFake');
 
 describe('ImdbPage', function() {
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
@@ -24,11 +23,6 @@ describe('ImdbPage', function() {
     const dom = await JSDOM.fromFile(`./test/unit/html/${filename}`);
     return dom.window.document;
   }
-
-  before(function() {
-    global.DOMParser = new JSDOM().window.DOMParser;
-    window.navigator = {language: 'en'};
-  });
 
   it('can be instantiated', function() {
     const imdbPage = new ImdbPage('input doc',
@@ -47,7 +41,6 @@ describe('ImdbPage', function() {
         document = await getTestDocument();
         imdbPage = new ImdbPage(document,
             `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`);
-        fakeFetch.activateFetchFake();
 
         movieData = await imdbPage.getMovieData();
       });
@@ -90,7 +83,6 @@ describe('ImdbPage', function() {
         document = await getTestDocument(`testImdbPage-NoTop250.html`);
         imdbPage = new ImdbPage(document,
             `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`);
-        fakeFetch.activateFetchFake();
 
         movieData = await imdbPage.getMovieData();
       });
