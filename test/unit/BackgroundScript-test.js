@@ -29,20 +29,32 @@ describe('Background script', function() {
         .calledOnceWithExactly(BackgroundScript.getRemotePageData);
   });
 
-  describe('search-url constructor', function() {
-    it('should construct search url for movie', function() {
+  describe('main search algorithm', function() {
+    it(`should search remote page and return with the scores`, async function() {
+      // Uses the html files:
+      // - google.search...btnI=true&q=The+Shawshank+Redemption+|
+      //      1994+movie+RottenTomatoes.html
+      // - rottentomatoes.m.shawshank_redemption.html
       const movieData = {
         title: 'The Shawshank Redemption',
-        year: '1994',
+        year: 1994,
       };
 
-      BackgroundScript.constructSearchUrl(movieData, `Rotten Tomatoes`)
-          .should.equal('https://www.google.com/search?btnI=true' +
-              '&q=The+Shawshank+Redemption+1994+movie' +
-              '+Rotten+Tomatoes');
+      await BackgroundScript
+          .getRemotePageData({movieData, remotePageName: 'RottenTomatoes'})
+          .should.eventually.deep.equal(
+              new MovieData(
+                  'The Shawshank Redemption', 1994,
+                  'https://www.rottentomatoes.com/m/shawshank_redemption',
+                  98, 885688,
+                  90, 71,
+                  -1),
+          );
     });
+  });
 
-    it('should remove "&" character from movie title', function() {
+  describe('special cases', function() {
+    it('should remove "&" character from movie title in search url', function() {
       const movieData = {
         title: 'The Old Man & The Gun',
         year: '2018',
@@ -53,69 +65,5 @@ describe('Background script', function() {
               '&q=The+Old+Man++The+Gun+2018+movie' +
               '+Rotten+Tomatoes');
     });
-  });
-
-  describe('getRemotePage', function() {
-    it('should parse the Response object for the webpage', async function() {
-      const response = {
-        text: sinon.fake.resolves('Text content from Response'),
-      };
-      const parseFromString = sinon.fake.resolves('HTML document');
-      global.DOMParser = sinon.fake.returns({parseFromString});
-
-      await BackgroundScript.getRemotePage(response)
-          .should.eventually.equal('HTML document');
-
-      parseFromString.should.have.been
-          .calledOnceWithExactly('Text content from Response', 'text/html');
-    });
-  });
-
-  describe('fetchResponse', function() {
-    it('should fetch Response object of movie data search', async function() {
-      sinon.replace(BackgroundScript, 'constructSearchUrl',
-          sinon.fake.returns('the search URL'));
-      global.fetch = sinon.fake.resolves('the response object');
-
-      await BackgroundScript.fetchResponse('movieData', 'Rotten Tomatoes')
-          .should.eventually.equal('the response object');
-
-      BackgroundScript.constructSearchUrl.should.have.been
-          .calledOnceWithExactly('movieData', 'Rotten Tomatoes');
-      global.fetch.should.have.been.calledOnceWithExactly('the search URL');
-
-      sinon.restore();
-    });
-  });
-
-  describe('skipForwardWarning', function() {
-    it('should get movie url in order to skip forward warning', function() {
-      BackgroundScript
-          .removeForwardWarning(
-              `https://www.google.com/url?` +
-              `q=https://www.rottentomatoes.com/m/the_dark_knight`)
-          .should.equal(`https://www.rottentomatoes.com/m/the_dark_knight`);
-    });
-  });
-
-  describe('getRemotePageData', function() {
-    it(`should search Rotten page and return with the scores`,
-        async function() {
-          const movieData = {
-            title: 'The Shawshank Redemption',
-            year: 1994,
-          };
-
-          await BackgroundScript
-              .getRemotePageData({movieData, remotePageName: 'RottenTomatoes'})
-              .should.eventually.deep.equal(
-                  new MovieData(
-                      'The Shawshank Redemption', 1994,
-                      'https://www.rottentomatoes.com/m/shawshank_redemption',
-                      98, 885688,
-                      90, 71,
-                      -1),
-              );
-        });
   });
 });
