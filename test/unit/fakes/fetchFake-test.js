@@ -64,7 +64,9 @@ describe('fetch fake', function() {
 
     it('should throw error to fail test if file is not found', async function() {
       await fetch('www.no-such-file.com').should.be
-          .rejectedWith('fetch() fake: no file matches this url: www.no-such-file.com');
+          .rejectedWith('fetch() fake: no file matches the url.\n\n' +
+           'url: www.no-such-file.com\n\n' +
+           'filename: no-such-file.html');
     });
   });
 });

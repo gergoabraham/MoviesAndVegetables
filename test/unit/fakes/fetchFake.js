@@ -10,12 +10,15 @@ function activateFetchFake(url) {
 }
 
 async function fetchFake(url) {
-  const filePath = `./test/unit/html/${convertToFileName(url)}.html`;
+  const fileName = `${convertToFileName(url)}.html`;
+  const filePath = `./test/unit/html/${fileName}`;
 
   if (fs.existsSync(filePath)) {
     return {text: async () => fs.readFileSync(filePath).toString()};
   } else {
-    throw new Error(`fetch() fake: no file matches this url: ${url}`);
+    throw new Error(`fetch() fake: no file matches the url.\n\n`+
+    `url: ${url}\n\n` +
+    `filename: ${fileName}`);
   }
 }
 
