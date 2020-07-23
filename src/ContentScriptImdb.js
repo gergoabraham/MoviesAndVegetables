@@ -6,8 +6,8 @@
 
 'use strict';
 
-function injectRottenScoresOnImdb() {
-  ContentScript.injectScores('RottenTomatoes', 'Imdb');
+async function injectRottenScoresOnImdb() {
+  await ContentScript.injectScores('RottenTomatoes', 'Imdb');
 };
 
 document.body.onload = injectRottenScoresOnImdb;

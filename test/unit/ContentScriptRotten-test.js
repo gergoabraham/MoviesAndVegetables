@@ -11,10 +11,11 @@ let injectImdbScoresOnRotten;
 const {ContentScript} = require('../../src/ContentScript');
 global.ContentScript = ContentScript;
 
+const jsdom = require('jsdom');
+const {JSDOM} = jsdom;
+
 describe('Content script on RottenTomatoes', function() {
   before(function() {
-    global.document = {};
-    global.browser = {runtime: {sendMessage: sinon.fake.resolves({})}};
     sinon.replace(ContentScript, 'injectScores', sinon.fake());
 
     ({injectImdbScoresOnRotten} = require('../../src/ContentScriptRotten'));
@@ -25,13 +26,20 @@ describe('Content script on RottenTomatoes', function() {
   });
 
   describe('injectImdbScoresOnRotten', function() {
-    it('should call the common "injectScores" function', async function() {
-      sinon.replace(ContentScript, 'injectScores', sinon.fake());
+    it('should inject IMDb scores into the document', async function() {
+      const dom = await JSDOM
+          .fromFile('./test/unit/html/rottentomatoes.m.shawshank_redemption.html',
+              {url: 'https://www.rottentomatoes.com/m/shawshank_redemption'});
+      global.document = dom.window.document;
 
-      injectImdbScoresOnRotten();
+      // todo: move this into setup, when "require" won't execute scripts
+      global.browser = {runtime:
+        {sendMessage: global.BackgroundScript.getRemotePageData},
+      };
 
-      ContentScript.injectScores
-          .should.have.been.calledOnceWithExactly('Imdb', 'RottenTomatoes');
+      await injectImdbScoresOnRotten();
+
+      document.getElementById('IMDb scores').should.exist;
     });
   });
 });
