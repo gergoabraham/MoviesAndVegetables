@@ -27,14 +27,14 @@ const fakeFetch = require('./unit/fakes/fetchFake');
 
 beforeEach(() => {
   global.DOMParser = new JSDOM().window.DOMParser;
-
-  global.window = {};
-  window.navigator = {language: 'en'};
-
   fakeFetch.activateFetchFake();
 });
 
 afterEach(() => {
   // Restore the default sandbox
   sinon.restore();
+
+  global.window = {};
+  window.navigator = {};
+  global.browser = {};
 });

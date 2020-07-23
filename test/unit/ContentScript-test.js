@@ -8,59 +8,36 @@
 
 let ContentScript;
 
-const {MovieData} = require('../../src/MoviePages/MovieData');
+const jsdom = require('jsdom');
+const {JSDOM} = jsdom;
 
 describe('Content script', function() {
   before(function() {
-    global.document = {
-      body: {onload: {}},
-      baseURI: 'page url',
-    };
+    const {ImdbPage} = require('../../src/MoviePages/ImdbPage');
+    global.ImdbPage = ImdbPage;
+
+    global.browser = {runtime: {onMessage: {addListener: () => {}}}};
+    const {BackgroundScript} = require('../../src/BackgroundScript');
+    global.BackgroundScript = BackgroundScript;
+
     ({ContentScript} = require('../../src/ContentScript'));
   });
 
   describe('injectScores', function() {
     it('should send message to background with movie data', async function() {
-      const movieData = new MovieData(
-          'title', 2007, 'rottenURL',
-          85, 885203,
-          90, 68,
-      );
-
-      const fakeImdbPageGetMovieData = sinon.fake.returns('movieData');
-      const fakeImdbPageInjectRatings = sinon.fake();
-      let imdbPageConstructorParameterDoc;
-      let imdbPageConstructorParameterUrl;
-      global.ImdbPage = class {
-        constructor(doc, url) {
-          imdbPageConstructorParameterDoc = doc;
-          imdbPageConstructorParameterUrl = url;
-          return {
-            getMovieData: fakeImdbPageGetMovieData,
-            injectRatings: fakeImdbPageInjectRatings,
-          };
-        }
-      };
+      const dom = await JSDOM
+          .fromFile('./test/unit/html/imdb.title.tt0111161 - listed in top250.html',
+              {url: 'https://www.imdb.com/title/tt0111161/'});
+      global.document = dom.window.document;
 
       global.browser = {runtime:
-          {sendMessage: sinon.fake.resolves(movieData)},
+        {sendMessage: global.BackgroundScript.getRemotePageData},
       };
 
       await ContentScript.injectScores('RottenTomatoes', 'Imdb');
 
-      imdbPageConstructorParameterDoc.should.equal(global.document);
-      imdbPageConstructorParameterUrl.should.equal('page url');
-
-      fakeImdbPageGetMovieData.should.have.been.calledOnce;
-
-      global.browser.runtime.sendMessage
-          .should.have.been.calledOnceWithExactly(
-              {movieData: 'movieData', remotePageName: 'RottenTomatoes'},
-          );
-
-      fakeImdbPageInjectRatings.should.have.been.calledOnceWithExactly(
-          movieData,
-      );
+      document.getElementById('audience-score').should.exist;
+      document.getElementsByClassName('TomatoMeter')[0].should.exist;
     });
   });
 });

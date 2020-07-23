@@ -17,10 +17,9 @@ class ContentScript {
 
     const movieData = await currentPage.getMovieData();
 
-    browser.runtime.sendMessage({movieData, remotePageName})
-        .then((response) => {
-          currentPage.injectRatings(response);
-        });
+    const response = await browser.runtime.
+        sendMessage({movieData, remotePageName});
+    currentPage.injectRatings(response);
   }
 }
 
