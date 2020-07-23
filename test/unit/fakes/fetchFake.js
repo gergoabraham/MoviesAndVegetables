@@ -11,9 +11,10 @@ function activateFetchFake() {
 
 async function fetchFake(url) {
   const urlToFilenameTable = generateUrlTableFromFiles();
+  const urlWithoutSlashAtEnd = url.replace(/\/$/, '');
 
-  if (urlToFilenameTable[url]) {
-    const filePath = `./test/unit/html/${urlToFilenameTable[url]}`;
+  if (urlToFilenameTable[urlWithoutSlashAtEnd]) {
+    const filePath = `./test/unit/html/${urlToFilenameTable[urlWithoutSlashAtEnd]}`;
     const fileContent = fs.readFileSync(filePath).toString();
 
     return {

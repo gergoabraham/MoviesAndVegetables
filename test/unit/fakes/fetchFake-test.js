@@ -71,6 +71,13 @@ describe('fetch fake', function() {
       text.should.equal('You found the second one!');
     });
 
+    it('should fetch url with closing slash', async function() {
+      const response = await fetch('https://www.fetch-fake.com/test-file-to-load/another-one/');
+      const text = await response.text();
+
+      text.should.equal('You found the second one!');
+    });
+
     it('should handle query parameters (x.com/y/z?a=2&b=3)', async function() {
       const response = await fetch(
           'https://www.fetch-fake.com/test-file-to-load/another-one?a=2&b=3');
