@@ -48,11 +48,11 @@ describe('End-to-end tests', async function() {
   });
 
   context('on RottenTomatoes', function() {
-    before(async function() {
-      await driver.get('https://www.rottentomatoes.com/m/the_dark_knight');
-    });
+    // eslint-disable-next-line no-invalid-this
+    this.retries(3);
 
     it('should inject IMDb scores', async function() {
+      await driver.get('https://www.rottentomatoes.com/m/the_dark_knight');
       await driver.wait(until.elementLocated(By.id('mv-imdb-scores')), 10000);
       const imdbScores = await driver.findElement(By.id('mv-imdb-scores'));
 
