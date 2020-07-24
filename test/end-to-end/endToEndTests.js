@@ -29,19 +29,19 @@ describe('End-to-end tests', async function() {
     });
 
     it('should inject audience score', async function() {
-      await driver.wait(until.elementLocated(By.id('audience-score')), 10000);
-      const audienceScore = (await driver).findElement(By.id('audience-score'));
+      await driver.wait(until.elementLocated(By.id('mv-audience-score')), 10000);
+      const audienceScore = (await driver).findElement(By.id('mv-audience-score'));
 
       audienceScore.should.exist;
     });
 
     it('should inject Tomatometer', async function() {
       await driver.wait(
-          until.elementLocated(By.className('titleReviewBarItem TomatoMeter')),
+          until.elementLocated(By.id('mv-tomatometer')),
           1000);
 
       const tomatoMeter = await driver
-          .findElement(By.className('titleReviewBarItem TomatoMeter'));
+          .findElement(By.id('mv-tomatometer'));
 
       tomatoMeter.should.exist;
     });
@@ -53,8 +53,8 @@ describe('End-to-end tests', async function() {
     });
 
     it('should inject IMDb scores', async function() {
-      await driver.wait(until.elementLocated(By.id('IMDb scores')), 10000);
-      const imdbScores = await driver.findElement(By.id('IMDb scores'));
+      await driver.wait(until.elementLocated(By.id('mv-imdb-scores')), 10000);
+      const imdbScores = await driver.findElement(By.id('mv-imdb-scores'));
 
       imdbScores.should.exist;
     });

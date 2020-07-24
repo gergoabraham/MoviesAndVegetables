@@ -131,8 +131,9 @@ describe('ImdbPage', function() {
                 .should.equal('divider');
 
             titleReviewBar.children[2].getAttribute('class')
-                .should.contain('titleReviewBarItem')
-                .and.contain('TomatoMeter');
+                .should.equal('titleReviewBarItem');
+            titleReviewBar.children[2].getAttribute('id')
+                .should.equal('mv-tomatometer');
 
             titleReviewBar.children[3].getAttribute('class')
                 .should.equal('divider');
@@ -142,7 +143,7 @@ describe('ImdbPage', function() {
         const tomatoMeter = titleReviewBar.children[2];
 
         tomatoMeter.outerHTML.should.equal(
-            `<div class="titleReviewBarItem TomatoMeter">\n` +
+            `<div class="titleReviewBarItem" id="mv-tomatometer">\n` +
               `<a href="${rottenURL}">\n` +
                 `<div class="metacriticScore score_favorable\n` +
                   `titleReviewBarSubItem" style="width: 40px">\n` +
@@ -177,15 +178,17 @@ describe('ImdbPage', function() {
       });
 
       it('should add AudienceScore before star-rating-widget', function() {
-        ratingsWrapper.children[1].id.should.equal('audience-score');
+        ratingsWrapper.children[1].id
+            .should.equal('mv-audience-score');
         ratingsWrapper.children[2].id.should.equal('star-rating-widget');
       });
 
       it('should add AudienceScore with correct data and format', function() {
-        const audienceScore = document.getElementById('audience-score');
+        const audienceScore = document
+            .getElementById('mv-audience-score');
 
         audienceScore.outerHTML.should.equal(
-            `<div class="imdbRating" id="audience-score" ` +
+            `<div class="imdbRating" id="mv-audience-score" ` +
               `style="background:none; text-align:center;`+
                                       ` padding:2px 0 0 2px;\n`+
               `width:90px;border-left:1px solid #6b6b6b;">\n` +

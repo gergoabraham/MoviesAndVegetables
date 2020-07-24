@@ -111,14 +111,14 @@ describe('rottenPage', function() {
 
         scoreboardContainers.length.should.equal(2);
         scoreboardContainers[1].getAttribute('id')
-            .should.equal('IMDb scores');
+            .should.equal('mv-imdb-scores');
       });
 
       it('should insert the scores with correct data and format', function() {
-        const IMDbScores = document.getElementById('IMDb scores');
+        const IMDbScores = document.getElementById('mv-imdb-scores');
 
         IMDbScores.outerHTML.should.equal(
-            `<section id="IMDb scores" class="mop-ratings-wrap__row js-scoreboard-container" ` +
+            `<section id="mv-imdb-scores" class="mop-ratings-wrap__row js-scoreboard-container" ` +
             `style="border-top:2px solid #2a2c32;margin-top:20px">` +
             `<div class="mop-ratings-wrap__half" style="min-width:240px">` +
               `<h2 class="mop-ratings-wrap__score">` +
@@ -165,7 +165,7 @@ describe('rottenPage', function() {
       });
 
       it('should insert toplist position', function() {
-        document.getElementById('IMDb scores')
+        document.getElementById('mv-imdb-scores')
             .querySelectorAll(`h3.mop-ratings-wrap__title.audience-score__title.mop-ratings-wrap__title--small`)[0]
             .textContent
             .should.equal('IMDb rating #33/250');

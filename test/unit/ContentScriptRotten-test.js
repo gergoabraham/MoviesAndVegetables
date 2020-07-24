@@ -39,7 +39,7 @@ describe('Content script on RottenTomatoes', function() {
 
       await injectImdbScoresOnRotten();
 
-      document.getElementById('IMDb scores').should.exist;
+      document.getElementById('mv-imdb-scores').should.exist;
     });
   });
 });

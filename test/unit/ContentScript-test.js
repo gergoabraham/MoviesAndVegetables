@@ -36,8 +36,8 @@ describe('Content script', function() {
 
       await ContentScript.injectScores('RottenTomatoes', 'Imdb');
 
-      document.getElementById('audience-score').should.exist;
-      document.getElementsByClassName('TomatoMeter')[0].should.exist;
+      document.getElementById('mv-audience-score').should.exist;
+      document.getElementById('mv-tomatometer').should.exist;
     });
   });
 });
