@@ -24,5 +24,5 @@ class ContentScript {
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = {ContentScript};
+  module.exports = ContentScript;
 }

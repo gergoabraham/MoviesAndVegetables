@@ -6,23 +6,7 @@
 
 'use strict';
 
-let ContentScript;
-
-const jsdom = require('jsdom');
-const {JSDOM} = jsdom;
-
 describe('Content script', function() {
-  before(function() {
-    const {ImdbPage} = require('../../src/MoviePages/ImdbPage');
-    global.ImdbPage = ImdbPage;
-
-    global.browser = {runtime: {onMessage: {addListener: () => {}}}};
-    const {BackgroundScript} = require('../../src/BackgroundScript');
-    global.BackgroundScript = BackgroundScript;
-
-    ({ContentScript} = require('../../src/ContentScript'));
-  });
-
   describe('injectScores', function() {
     it('inject scores into the document', async function() {
       const dom = await JSDOM

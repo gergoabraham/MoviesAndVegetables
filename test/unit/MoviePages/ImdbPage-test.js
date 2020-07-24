@@ -6,17 +6,9 @@
 
 'use strict';
 
-const jsdom = require('jsdom');
-const {JSDOM} = jsdom;
-
-let document;
-
-const {MoviePage} = require('../../../src/MoviePages/MoviePage');
-global.MoviePage = MoviePage;
-const {MovieData} = require('../../../src/MoviePages/MovieData');
-const {ImdbPage} = require('../../../src/MoviePages/ImdbPage');
 
 describe('ImdbPage', function() {
+  let document;
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
 
   async function getTestDocument(filename = 'imdb.title.tt0111161 - listed in top250.html') {

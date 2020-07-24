@@ -13,7 +13,7 @@ class ContentScriptRottenTomatoes {
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = {ContentScriptRottenTomatoes};
+  module.exports = ContentScriptRottenTomatoes;
 } else {
   ContentScriptRottenTomatoes.injectImdbScores();
 }

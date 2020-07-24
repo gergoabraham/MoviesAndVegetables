@@ -191,5 +191,5 @@ class ImdbPage extends MoviePage {
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = {ImdbPage};
+  module.exports = ImdbPage;
 }

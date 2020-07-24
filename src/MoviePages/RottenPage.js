@@ -105,5 +105,5 @@ class RottenPage extends MoviePage {
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = {RottenPage};
+  module.exports = RottenPage;
 }

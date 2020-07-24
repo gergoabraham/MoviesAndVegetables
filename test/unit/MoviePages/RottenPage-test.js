@@ -6,13 +6,6 @@
 
 'use strict';
 
-const jsdom = require('jsdom');
-const {JSDOM} = jsdom;
-
-const {MoviePage} = require('../../../src/MoviePages/MoviePage');
-global.MoviePage = MoviePage;
-const {RottenPage} = require('../../../src/MoviePages/RottenPage');
-
 describe('rottenPage', function() {
   let document;
 

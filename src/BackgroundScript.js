@@ -57,7 +57,7 @@ class BackgroundScript {
 
 
 if (typeof module !== 'undefined') {
-  module.exports = {BackgroundScript};
+  module.exports = BackgroundScript;
 } else {
   BackgroundScript.init();
 }

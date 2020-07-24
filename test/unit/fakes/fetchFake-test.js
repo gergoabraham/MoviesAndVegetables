@@ -6,19 +6,12 @@
 
 'use strict';
 
-const fakeFetch = require('./fetchFake');
-
-
 describe('fetch fake', function() {
-  before(function() {
-    fakeFetch.activateFetchFake();
-  });
-
   context('setup', function() {
     it('register global fetch() fake', function() {
       global.fetch = undefined;
 
-      fakeFetch.activateFetchFake();
+      fetchFake.activateFetchFake();
 
       (typeof global.fetch).should.equal('function');
     });

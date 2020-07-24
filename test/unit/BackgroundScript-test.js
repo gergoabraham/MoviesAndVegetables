@@ -6,25 +6,12 @@
 
 'use strict';
 
-const {MovieData} = require('../../src/MoviePages/MovieData');
-global.MovieData = MovieData;
-const {MoviePage} = require('../../src/MoviePages/MoviePage');
-global.MoviePage = MoviePage;
-const {RottenPage} = require('../../src/MoviePages/RottenPage');
-global.RottenPage = RottenPage;
-const {MoviePageFactory} = require('../../src/MoviePages/MoviePageFactory');
-global.MoviePageFactory = MoviePageFactory;
-
-let BackgroundScript;
-
 describe('Background script', function() {
-  before('reading in script under test', function() {
-    global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};
-    ({BackgroundScript} = require('../../src/BackgroundScript'));
-  });
-
   it('register message listener on startup', function() {
+    global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};
+
     BackgroundScript.init();
+
     global.browser.runtime.onMessage.addListener
         .should.have.been
         .calledOnceWithExactly(BackgroundScript.getRemotePageData);

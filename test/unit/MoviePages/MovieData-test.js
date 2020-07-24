@@ -6,8 +6,6 @@
 
 'use strict';
 
-const {MovieData} = require('../../../src/MoviePages/MovieData');
-
 describe('MovieData', function() {
   it('contain stuff', function() {
     const movieData = new MovieData(

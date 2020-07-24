@@ -13,7 +13,7 @@ class ContentScriptImdb {
 }
 
 if (typeof module !== 'undefined') {
-  module.exports = {ContentScriptImdb};
+  module.exports = ContentScriptImdb;
 } else {
   ContentScriptImdb.injectRottenTomatoesScores();
 }
