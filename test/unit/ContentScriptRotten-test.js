@@ -6,7 +6,7 @@
 
 'use strict';
 
-let injectImdbScoresOnRotten;
+let ContentScriptRottenTomatoes;
 
 const {ContentScript} = require('../../src/ContentScript');
 global.ContentScript = ContentScript;
@@ -16,7 +16,7 @@ const {JSDOM} = jsdom;
 
 describe('Content script on RottenTomatoes', function() {
   before(function() {
-    ({injectImdbScoresOnRotten} = require('../../src/ContentScriptRotten'));
+    ({ContentScriptRottenTomatoes} = require('../../src/ContentScriptRotten'));
   });
 
   describe('injectImdbScoresOnRotten', function() {
@@ -31,7 +31,7 @@ describe('Content script on RottenTomatoes', function() {
         {sendMessage: global.BackgroundScript.getRemotePageData},
       };
 
-      await injectImdbScoresOnRotten();
+      await ContentScriptRottenTomatoes.injectImdbScores();
 
       document.getElementById('mv-imdb-scores').should.exist;
     });

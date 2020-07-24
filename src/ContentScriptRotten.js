@@ -6,12 +6,14 @@
 
 'use strict';
 
-async function injectImdbScoresOnRotten() {
-  await ContentScript.injectScores('Imdb', 'RottenTomatoes');
-};
+class ContentScriptRottenTomatoes {
+  static async injectImdbScores() {
+    await ContentScript.injectScores('Imdb', 'RottenTomatoes');
+  };
+}
 
 if (typeof module !== 'undefined') {
-  module.exports = {injectImdbScoresOnRotten};
+  module.exports = {ContentScriptRottenTomatoes};
 } else {
-  injectImdbScoresOnRotten();
+  ContentScriptRottenTomatoes.injectImdbScores();
 }
