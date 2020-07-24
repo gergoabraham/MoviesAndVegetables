@@ -67,9 +67,6 @@ workflows:
       - unit-test:
           requires:
             - checkout_and_install_npm
-      - unit-test-coverage:
-          requires:
-            - checkout_and_install_npm
       - end-to-end-test:
           requires:
             - checkout_and_install_npm
