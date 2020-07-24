@@ -42,15 +42,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npm run test:unit
-
-  unit-test-coverage:
-    docker:
-      - image: circleci/node:latest
-    steps:
-      - attach_workspace:
-          at: ./
-      - run: npm run ci:coverage
+      - run: npm run ci:unit-test
 
   end-to-end-test:
     docker:
