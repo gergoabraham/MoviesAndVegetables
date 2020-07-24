@@ -20,12 +20,12 @@ describe('Content script on IMDb', function() {
     ({injectRottenScoresOnImdb} = require('../../src/ContentScriptImdb'));
   });
 
-  it('should register its function on page loaded event', function() {
+  it('register its function on page loaded event', function() {
     global.document.body.onload.should.contain(injectRottenScoresOnImdb);
   });
 
   describe('injectRottenScoresOnImdb', function() {
-    it('should inject RottenTomatoes scores into the document', async function() {
+    it('inject RottenTomatoes scores into the document', async function() {
       const dom = await JSDOM
           .fromFile('./test/unit/html/imdb.title.tt0111161 - listed in top250.html',
               {url: 'https://www.imdb.com/title/tt0111161/'});

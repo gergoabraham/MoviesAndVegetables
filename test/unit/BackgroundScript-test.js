@@ -23,14 +23,14 @@ describe('Background script', function() {
     ({BackgroundScript} = require('../../src/BackgroundScript'));
   });
 
-  it('should register message listener on startup', function() {
+  it('register message listener on startup', function() {
     global.browser.runtime.onMessage.addListener
         .should.have.been
         .calledOnceWithExactly(BackgroundScript.getRemotePageData);
   });
 
   describe('main search algorithm', function() {
-    it(`should search remote page and return with the scores`, async function() {
+    it(`search remote page and return with the scores`, async function() {
       // Uses the html files:
       // - google.search...btnI=true&q=The+Shawshank+Redemption+|
       //      1994+movie+RottenTomatoes.html
@@ -54,7 +54,7 @@ describe('Background script', function() {
   });
 
   describe('special cases', function() {
-    it('should remove "&" character from movie title in search url', function() {
+    it('remove "&" character from movie title in search url', function() {
       const movieData = {
         title: 'The Old Man & The Gun',
         year: '2018',

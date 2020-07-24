@@ -28,13 +28,13 @@ describe('MoviePageFactory', function() {
   });
 
   context('create', function() {
-    it('should throw error on unexpected type', function() {
+    it('throw error on unexpected type', function() {
       (function() {
         MoviePageFactory.create('Cheese');
       }).should.throw(`MoviePagesFactory cannot instantiate "Cheese"`);
     });
 
-    it('should create ImdbPage', function() {
+    it('create ImdbPage', function() {
       const imdbPage = MoviePageFactory.create('Imdb', 'doc', 'https://url');
 
       (imdbPage instanceof ImdbPage).should.be.true;
@@ -46,7 +46,7 @@ describe('MoviePageFactory', function() {
       imdbPage.url.should.equal('https://url/');
     });
 
-    it('should create RottenPage', function() {
+    it('create RottenPage', function() {
       const rottenPage = MoviePageFactory
           .create('RottenTomatoes', 'doc', 'https://url.two');
 

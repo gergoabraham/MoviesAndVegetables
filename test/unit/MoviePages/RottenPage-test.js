@@ -40,36 +40,36 @@ describe('rottenPage', function() {
       movieData = await rottenPage.getMovieData();
     });
 
-    it(`should read the title`, function() {
+    it(`read the title`, function() {
       movieData.should.contain({title: 'The Shawshank Redemption'});
     });
 
-    it(`should read the release year`, function() {
+    it(`read the release year`, function() {
       movieData.should.contain({year: 1994});
     });
 
-    it(`should read the url of the page`, function() {
+    it(`read the url of the page`, function() {
       movieData.should.contain(
           {url: 'https://www.rottentomatoes.com/m/shawshank_redemption'});
     });
 
-    it('should read the user rating', function() {
+    it('read the user rating', function() {
       movieData.should.contain({userRating: 98});
     });
 
-    it(`should read the number of users' votes`, function() {
+    it(`read the number of users' votes`, function() {
       movieData.should.contain({numberOfUserVotes: 885688});
     });
 
-    it('should read the critics rating', function() {
+    it('read the critics rating', function() {
       movieData.should.contain({criticsRating: 90});
     });
 
-    it(`should read the number of critics' votes`, function() {
+    it(`read the number of critics' votes`, function() {
       movieData.should.contain({numberOfCriticsVotes: 71});
     });
 
-    it('should not read toplistPosition', function() {
+    it('not read toplistPosition', function() {
       movieData.should.contain({toplistPosition: -1});
     });
   });
@@ -94,7 +94,7 @@ describe('rottenPage', function() {
         );
       });
 
-      it('should fix Tomatometer and Audience score alignment (via width)', function() {
+      it('fix Tomatometer and Audience score alignment (via width)', function() {
         const ratingsContainers = document
             .querySelectorAll('div.mop-ratings-wrap__half');
 
@@ -104,7 +104,7 @@ describe('rottenPage', function() {
             .should.equal('min-width:240px');
       });
 
-      it('should add IMDb scoreboard container', function() {
+      it('add IMDb scoreboard container', function() {
         const scoreboardContainers = document
             .querySelectorAll(
                 'section.mop-ratings-wrap__row.js-scoreboard-container');
@@ -114,7 +114,7 @@ describe('rottenPage', function() {
             .should.equal('mv-imdb-scores');
       });
 
-      it('should insert the scores with correct data and format', function() {
+      it('insert the scores with correct data and format', function() {
         const IMDbScores = document.getElementById('mv-imdb-scores');
 
         IMDbScores.outerHTML.should.equal(
@@ -164,7 +164,7 @@ describe('rottenPage', function() {
         );
       });
 
-      it('should insert toplist position', function() {
+      it('insert toplist position', function() {
         document.getElementById('mv-imdb-scores')
             .querySelectorAll(`h3.mop-ratings-wrap__title.audience-score__title.mop-ratings-wrap__title--small`)[0]
             .textContent

@@ -24,7 +24,7 @@ describe('Content script', function() {
   });
 
   describe('injectScores', function() {
-    it('should inject scores into the document', async function() {
+    it('inject scores into the document', async function() {
       const dom = await JSDOM
           .fromFile('./test/unit/html/imdb.title.tt0111161 - listed in top250.html',
               {url: 'https://www.imdb.com/title/tt0111161/'});

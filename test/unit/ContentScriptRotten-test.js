@@ -21,12 +21,12 @@ describe('Content script on RottenTomatoes', function() {
     ({injectImdbScoresOnRotten} = require('../../src/ContentScriptRotten'));
   });
 
-  it('should immediately run its function', function() {
+  it('immediately run its function', function() {
     ContentScript.injectScores.should.have.been.calledOnce;
   });
 
   describe('injectImdbScoresOnRotten', function() {
-    it('should inject IMDb scores into the document', async function() {
+    it('inject IMDb scores into the document', async function() {
       const dom = await JSDOM
           .fromFile('./test/unit/html/rottentomatoes.m.shawshank_redemption.html',
               {url: 'https://www.rottentomatoes.com/m/shawshank_redemption'});

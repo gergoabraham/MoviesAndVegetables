@@ -45,35 +45,35 @@ describe('ImdbPage', function() {
         movieData = await imdbPage.getMovieData();
       });
 
-      it(`should read the title`, function() {
+      it(`read the title`, function() {
         movieData.should.contain({title: 'The Shawshank Redemption'});
       });
 
-      it(`should read the release year`, function() {
+      it(`read the release year`, function() {
         movieData.should.contain({year: 1994});
       });
 
-      it(`should add the url received on instantiating`, function() {
+      it(`add the url received on instantiating`, function() {
         movieData.should.contain({url: `https://www.imdb.com/title/tt0111161/`});
       });
 
-      it(`should read the user rating`, function() {
+      it(`read the user rating`, function() {
         movieData.should.contain({userRating: 9.3});
       });
 
-      it(`should read the number of users' votes`, function() {
+      it(`read the number of users' votes`, function() {
         movieData.should.contain({numberOfUserVotes: 2181187});
       });
 
-      it(`should read the critics rating`, function() {
+      it(`read the critics rating`, function() {
         movieData.should.contain({criticsRating: 80});
       });
 
-      it(`should read the number of critics' votes`, function() {
+      it(`read the number of critics' votes`, function() {
         movieData.should.contain({numberOfCriticsVotes: 20});
       });
 
-      it('should read toplistPosition', function() {
+      it('read toplistPosition', function() {
         movieData.should.contain({toplistPosition: 1});
       });
     });
@@ -87,7 +87,7 @@ describe('ImdbPage', function() {
         movieData = await imdbPage.getMovieData();
       });
 
-      it('should not read toplistPosition', function() {
+      it('not read toplistPosition', function() {
         movieData.should.contain({toplistPosition: -1});
       });
     });
@@ -98,7 +98,7 @@ describe('ImdbPage', function() {
         imdbPage = new ImdbPage(document, 'https://url');
       });
 
-      it('should reject (for now, TODO)', async function() {
+      it('reject (for now, TODO)', async function() {
         await imdbPage.getMovieData()
             .should.be.rejectedWith(Error);
       });
@@ -123,7 +123,7 @@ describe('ImdbPage', function() {
           document.getElementsByClassName('titleReviewBar')[0];
       });
 
-      it('should add TomatoMeter inside dividers next to MetaScore',
+      it('add TomatoMeter inside dividers next to MetaScore',
           function() {
             titleReviewBar.children[0].getAttribute('class')
                 .should.equal('titleReviewBarItem');
@@ -139,7 +139,7 @@ describe('ImdbPage', function() {
                 .should.equal('divider');
           });
 
-      it('should add TomatoMeter with correct data and format', function() {
+      it('add TomatoMeter with correct data and format', function() {
         const tomatoMeter = titleReviewBar.children[2];
 
         tomatoMeter.outerHTML.should.equal(
@@ -177,13 +177,13 @@ describe('ImdbPage', function() {
         ratingsWrapper = document.getElementsByClassName('ratings_wrapper')[0];
       });
 
-      it('should add AudienceScore before star-rating-widget', function() {
+      it('add AudienceScore before star-rating-widget', function() {
         ratingsWrapper.children[1].id
             .should.equal('mv-audience-score');
         ratingsWrapper.children[2].id.should.equal('star-rating-widget');
       });
 
-      it('should add AudienceScore with correct data and format', function() {
+      it('add AudienceScore with correct data and format', function() {
         const audienceScore = document
             .getElementById('mv-audience-score');
 
@@ -204,12 +204,12 @@ describe('ImdbPage', function() {
         );
       });
 
-      it('should increase the width of the User Score', function() {
+      it('increase the width of the User Score', function() {
         ratingsWrapper.children[0].getAttribute('style')
             .should.contain('width:95px');
       });
 
-      it('should remove border from Rating button', function() {
+      it('remove border from Rating button', function() {
         const starRatingWidget = document.getElementById('star-rating-widget');
         const button = starRatingWidget.children[0].children[0];
 
@@ -227,7 +227,7 @@ describe('ImdbPage', function() {
         imdbPage = new ImdbPage(document, 'https://url');
       });
 
-      it('should change favorableness based on TomatoMeter', function() {
+      it('change favorableness based on TomatoMeter', function() {
         sinon.replace(imdbPage, 'getFavorableness',
             sinon.fake.returns('fakeFavorableness'));
 
@@ -242,28 +242,28 @@ describe('ImdbPage', function() {
             .but.not.contain('score_favorable');
       });
 
-      it('should give unfavorable style for Tomatometer 0...40', function() {
+      it('give unfavorable style for Tomatometer 0...40', function() {
         const unfavorable = 'score_unfavorable';
         imdbPage.getFavorableness(0).should.equal(unfavorable);
         imdbPage.getFavorableness(33).should.equal(unfavorable);
         imdbPage.getFavorableness(40).should.equal(unfavorable);
       });
 
-      it('should give mixed style for Tomatometer 41...60', function() {
+      it('give mixed style for Tomatometer 41...60', function() {
         const mixed = 'score_mixed';
         imdbPage.getFavorableness(41).should.equal(mixed);
         imdbPage.getFavorableness(50).should.equal(mixed);
         imdbPage.getFavorableness(60).should.equal(mixed);
       });
 
-      it('should give favorable style for Tomatometer 61...100', function() {
+      it('give favorable style for Tomatometer 61...100', function() {
         const favorable = 'score_favorable';
         imdbPage.getFavorableness(61).should.equal(favorable);
         imdbPage.getFavorableness(80).should.equal(favorable);
         imdbPage.getFavorableness(100).should.equal(favorable);
       });
 
-      it('should give TBD style if TBD');
+      it('give TBD style if TBD');
     });
   });
 
@@ -274,11 +274,11 @@ describe('ImdbPage', function() {
       imdbPage = new ImdbPage('doc', 'https://url');
     });
 
-    it('should write number of votes with thousand grouping', function() {
+    it('write number of votes with thousand grouping', function() {
       imdbPage.groupThousands(3333333).should.equal('3,333,333');
     });
 
-    it(`should be based on browser's preferred language`, function() {
+    it(`be based on browser's preferred language`, function() {
       window.navigator = {language: 'hu'};
       const fakeFormat = sinon.fake.returns('formatted number');
       sinon.replace(Intl, 'NumberFormat',
