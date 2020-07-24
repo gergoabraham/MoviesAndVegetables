@@ -24,6 +24,7 @@ describe('Background script', function() {
   });
 
   it('register message listener on startup', function() {
+    BackgroundScript.init();
     global.browser.runtime.onMessage.addListener
         .should.have.been
         .calledOnceWithExactly(BackgroundScript.getRemotePageData);

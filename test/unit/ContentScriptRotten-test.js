@@ -16,13 +16,7 @@ const {JSDOM} = jsdom;
 
 describe('Content script on RottenTomatoes', function() {
   before(function() {
-    sinon.replace(ContentScript, 'injectScores', sinon.fake());
-
     ({injectImdbScoresOnRotten} = require('../../src/ContentScriptRotten'));
-  });
-
-  it('immediately run its function', function() {
-    ContentScript.injectScores.should.have.been.calledOnce;
   });
 
   describe('injectImdbScoresOnRotten', function() {

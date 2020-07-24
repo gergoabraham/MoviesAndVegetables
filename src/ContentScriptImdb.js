@@ -10,8 +10,8 @@ async function injectRottenScoresOnImdb() {
   await ContentScript.injectScores('RottenTomatoes', 'Imdb');
 };
 
-document.body.onload = injectRottenScoresOnImdb;
-
 if (typeof module !== 'undefined') {
   module.exports = {injectRottenScoresOnImdb};
+} else {
+  injectRottenScoresOnImdb();
 }

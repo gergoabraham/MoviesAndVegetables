@@ -10,8 +10,8 @@ async function injectImdbScoresOnRotten() {
   await ContentScript.injectScores('Imdb', 'RottenTomatoes');
 };
 
-injectImdbScoresOnRotten();
-
 if (typeof module !== 'undefined') {
   module.exports = {injectImdbScoresOnRotten};
+} else {
+  injectImdbScoresOnRotten();
 }

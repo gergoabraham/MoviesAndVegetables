@@ -49,11 +49,15 @@ class BackgroundScript {
     const parser = new DOMParser();
     return parser.parseFromString(remotePage, 'text/html');
   };
+
+  static init() {
+    browser.runtime.onMessage.addListener(BackgroundScript.getRemotePageData);
+  }
 }
 
-browser.runtime.onMessage.addListener(BackgroundScript.getRemotePageData);
 
 if (typeof module !== 'undefined') {
   module.exports = {BackgroundScript};
+} else {
+  BackgroundScript.init();
 }
-

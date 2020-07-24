@@ -16,12 +16,7 @@ const {JSDOM} = jsdom;
 
 describe('Content script on IMDb', function() {
   before(function() {
-    global.document = {body: {onload: {}}};
     ({injectRottenScoresOnImdb} = require('../../src/ContentScriptImdb'));
-  });
-
-  it('register its function on page loaded event', function() {
-    global.document.body.onload.should.contain(injectRottenScoresOnImdb);
   });
 
   describe('injectRottenScoresOnImdb', function() {
