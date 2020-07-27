@@ -12,7 +12,7 @@ describe('ImdbPage', function() {
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
 
   async function getTestDocument(filename = 'imdb.title.tt0111161 - listed in top250.html') {
-    const dom = await JSDOM.fromFile(`./test/unit/html/${filename}`);
+    const dom = await JSDOM.fromFile(FakeHtmlPath + filename);
     return dom.window.document;
   }
 

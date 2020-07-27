@@ -10,7 +10,7 @@ describe('rottenPage', function() {
   let document;
 
   before(async function() {
-    const dom = await JSDOM.fromFile('./test/unit/html/rottentomatoes.m.shawshank_redemption.html');
+    const dom = await JSDOM.fromFile(FakeHtmlPath + 'rottentomatoes.m.shawshank_redemption.html');
     document = dom.window.document;
   });
 
@@ -72,7 +72,7 @@ describe('rottenPage', function() {
     let rottenPage;
     context('no toplist position', function() {
       before(async function() {
-        const dom = await JSDOM.fromFile('./test/unit/html/rottentomatoes.m.shawshank_redemption.html');
+        const dom = await JSDOM.fromFile(FakeHtmlPath + 'rottentomatoes.m.shawshank_redemption.html');
         document = dom.window.document;
 
         rottenPage = new RottenPage(document,
@@ -142,7 +142,7 @@ describe('rottenPage', function() {
 
     context('toplist position', function() {
       before(async function() {
-        const dom = await JSDOM.fromFile('./test/unit/html/rottentomatoes.m.shawshank_redemption.html');
+        const dom = await JSDOM.fromFile(FakeHtmlPath + 'rottentomatoes.m.shawshank_redemption.html');
         document = dom.window.document;
 
         rottenPage = new RottenPage(document,

@@ -10,7 +10,7 @@ describe('Content script', function() {
   describe('injectScores', function() {
     it('inject scores into the document', async function() {
       const dom = await JSDOM
-          .fromFile('./test/unit/html/imdb.title.tt0111161 - listed in top250.html',
+          .fromFile(FakeHtmlPath + 'imdb.title.tt0111161 - listed in top250.html',
               {url: 'https://www.imdb.com/title/tt0111161/'});
       global.document = dom.window.document;
 

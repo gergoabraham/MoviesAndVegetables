@@ -17,8 +17,11 @@ chai.use(chaiAsPromised);
 global.fs = require('fs');
 global.JSDOM = require('jsdom')['JSDOM'];
 
+/* Global constants */
+global.FakeHtmlPath = './test/html-contracts/fake-htmls/';
+
 /* In-house tools */
-global.fetchFake = require('./unit/fakes/fetchFake');
+global.FakeHtmlFetcher = require('./html-contracts/FakeHtmlFetcher');
 
 /* Production code */
 global.ContentScriptImdb = require('../src/ContentScriptImdb');
@@ -45,7 +48,7 @@ before(function() {
 
 beforeEach(() => {
   global.DOMParser = new JSDOM().window.DOMParser;
-  fetchFake.activateFetchFake();
+  FakeHtmlFetcher.activateAsGlobalFetch();
 });
 
 afterEach(() => {

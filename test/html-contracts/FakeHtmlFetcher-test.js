@@ -6,12 +6,12 @@
 
 'use strict';
 
-describe('fetch fake', function() {
+describe('FakeHtmlFetcher', function() {
   context('setup', function() {
     it('register global fetch() fake', function() {
       global.fetch = undefined;
 
-      fetchFake.activateFetchFake();
+      FakeHtmlFetcher.activateAsGlobalFetch();
 
       (typeof global.fetch).should.equal('function');
     });
