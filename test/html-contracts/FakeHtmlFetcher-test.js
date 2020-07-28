@@ -20,17 +20,26 @@ describe('FakeHtmlFetcher', function() {
 
   context('fetch(): response object', function() {
     it('contain text()', async function() {
-      const returnValue = await fetch('https://www.fetch-fake.com/test-file-to-load');
+      const response = await fetch('https://www.fetch-fake.com/test-file-to-load');
 
-      returnValue.should.contain.key('text');
-      (typeof returnValue.text).should.equal('function');
+      response.should.contain.key('text');
+      (typeof response.text).should.equal('function');
     });
 
     it('contain url', async function() {
-      const returnValue = await fetch('https://www.fetch-fake.com/test-file-to-load');
+      const response = await fetch('https://www.fetch-fake.com/test-file-to-load');
 
-      returnValue.should.contain.key('url');
-      returnValue.url.should.equal('https://www.fetch-fake.com/test-file-to-load');
+      response.should.contain.key('url');
+      response.url.should.equal('https://www.fetch-fake.com/test-file-to-load');
+    });
+  });
+
+  context('text() behaviour', function() {
+    it('second call to text() throws error', async function() {
+      const response = await fetch('https://www.fetch-fake.com/test-file-to-load');
+      await response.text();
+      await response.text()
+          .should.be.rejectedWith(TypeError, 'body used already');
     });
   });
 
@@ -83,10 +92,10 @@ describe('FakeHtmlFetcher', function() {
 
   context('url redirection', function() {
     it('url is changed if fetched file contains "---> [new url]"', async function() {
-      const returnValue = await fetch('https://www.fetch-fake.com/redirected-page');
+      const response = await fetch('https://www.fetch-fake.com/redirected-page');
 
-      returnValue.should.contain.key('url');
-      returnValue.url.should.equal('https://redirected.com/here-we-are');
+      response.should.contain.key('url');
+      response.url.should.equal('https://redirected.com/here-we-are');
     });
   });
 });

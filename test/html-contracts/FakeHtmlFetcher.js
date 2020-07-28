@@ -11,6 +11,7 @@ class FakeHtmlFetcher {
   }
 
   static async fetch(url) {
+    let isBodyAlreadyUsed = false;
     const urlToFilenameTable = FakeHtmlFetcher.generateUrlTableFromFiles();
     const urlWithoutSlashAtEnd = url.replace(/\/$/, '');
 
@@ -20,7 +21,14 @@ class FakeHtmlFetcher {
 
       return {
         url: FakeHtmlFetcher.getDocumentUrl(fileContent, url),
-        text: async () => fileContent,
+        text: async () => {
+          if (isBodyAlreadyUsed) {
+            throw new TypeError('body used already');
+          } else {
+            isBodyAlreadyUsed = true;
+            return fileContent;
+          }
+        },
       };
     } else {
       throw new Error(`fetch() fake: no file matches the url.\n\n`+
