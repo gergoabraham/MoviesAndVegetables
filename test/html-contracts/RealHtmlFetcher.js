@@ -17,8 +17,14 @@ class RealHtmlFetcher {
 
     if (fs.existsSync(CachePath + fileName)) {
       return {
-        text: async () => {
-          return fs.readFileSync(CachePath + fileName).toString();
+        isBodyAlreadyUsed: false,
+        async text() {
+          if (this.isBodyAlreadyUsed) {
+            throw new TypeError('body used already');
+          } else {
+            this.isBodyAlreadyUsed = true;
+            return fs.readFileSync(CachePath + fileName).toString();
+          }
         },
       };
     } else {

@@ -62,6 +62,11 @@ describe('RealHtmlFetcher', function() {
 
         html.should.equal('>>> cached file content <<<');
       });
+
+      it('second call of text() throws error', async function() {
+        await response.text()
+            .should.be.rejectedWith(TypeError, 'body used already');
+      });
     });
   });
 
