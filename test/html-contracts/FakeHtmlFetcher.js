@@ -11,7 +11,6 @@ class FakeHtmlFetcher {
   }
 
   static async fetch(url) {
-    let isBodyAlreadyUsed = false;
     const urlToFilenameTable = FakeHtmlFetcher.generateUrlTableFromFiles();
     const urlWithoutSlashAtEnd = url.replace(/\/$/, '');
 
@@ -20,12 +19,13 @@ class FakeHtmlFetcher {
       const fileContent = fs.readFileSync(filePath).toString();
 
       return {
+        isBodyAlreadyUsed: false,
         url: FakeHtmlFetcher.getDocumentUrl(fileContent, url),
-        text: async () => {
-          if (isBodyAlreadyUsed) {
+        async text() {
+          if (this.isBodyAlreadyUsed) {
             throw new TypeError('body used already');
           } else {
-            isBodyAlreadyUsed = true;
+            this.isBodyAlreadyUsed = true;
             return fileContent;
           }
         },

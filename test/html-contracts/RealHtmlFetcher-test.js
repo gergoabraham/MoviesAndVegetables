@@ -54,13 +54,14 @@ describe('RealHtmlFetcher', function() {
 
     context('second call of fetch() for the same url', function() {
       it('text() returns with cached file', async function() {
-        fs.writeFileSync(RealHtmlFetcher.CachePath + 'google.html',
+        fs.appendFileSync(RealHtmlFetcher.CachePath + 'google.html',
             '>>> cached file content <<<');
 
         response = await RealHtmlFetcher.fetch('https://www.google.com');
         const html = await response.text();
 
-        html.should.equal('>>> cached file content <<<');
+        html.should.contain('<!doctype html>');
+        html.should.contain('>>> cached file content <<<');
       });
 
       it('second call of text() throws error', async function() {
@@ -79,14 +80,15 @@ describe('RealHtmlFetcher', function() {
     });
 
     it('load url with subpage/query parameter from cache', async function() {
-      fs.writeFileSync(RealHtmlFetcher.CachePath +
+      fs.appendFileSync(RealHtmlFetcher.CachePath +
             'google.search...q=dark+knight+2008.html',
       '>>> cached file content for url with query parameter <<<');
 
       const response = await RealHtmlFetcher.fetch('https://www.google.com/search?q=dark+knight+2008');
       const html = await response.text();
 
-      html.should.be.equal('>>> cached file content for url with query parameter <<<');
+      html.should.contain('Dark Knight');
+      html.should.contain('>>> cached file content for url with query parameter <<<');
     });
   });
 });
