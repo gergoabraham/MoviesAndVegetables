@@ -9,11 +9,12 @@
 describe('FakeHtmlFetcher', function() {
   context('setup', function() {
     it('register global fetch() fake', function() {
-      global.fetch = undefined;
+      fetch = undefined;
 
       FakeHtmlFetcher.activateAsGlobalFetch();
 
-      (typeof global.fetch).should.equal('function');
+      (typeof fetch).should.equal('function');
+      fetch.should.equal(FakeHtmlFetcher.fetch);
     });
   });
 
