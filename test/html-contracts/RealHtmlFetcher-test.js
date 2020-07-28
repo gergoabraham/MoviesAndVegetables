@@ -65,9 +65,25 @@ describe('RealHtmlFetcher', function() {
     });
   });
 
-  // urls
+  context('url handling', function() {
+    it('fetch subpages and query parameters', async function() {
+      const response = await RealHtmlFetcher.fetch('https://www.google.com/search?q=dark+knight+2008');
+      const html = await response.text();
 
-  // not found
+      html.should.contain('Dark Knight');
+    });
+
+    it('load url with subpage/query parameter from cache', async function() {
+      fs.writeFileSync(RealHtmlFetcher.CachePath +
+            'google.search...q=dark+knight+2008.html',
+      '>>> cached file content for url with query parameter <<<');
+
+      const response = await RealHtmlFetcher.fetch('https://www.google.com/search?q=dark+knight+2008');
+      const html = await response.text();
+
+      html.should.be.equal('>>> cached file content for url with query parameter <<<');
+    });
+  });
 });
 
 

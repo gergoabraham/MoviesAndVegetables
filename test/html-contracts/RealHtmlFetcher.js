@@ -13,11 +13,12 @@ const CachePath = './test/html-contracts/real-htmls-cache/';
 class RealHtmlFetcher {
   static async fetch(url) {
     let response;
+    const fileName = FakeHtmlFetcher.convertToFileName(url);
 
-    if (fs.existsSync(CachePath + 'google.html')) {
+    if (fs.existsSync(CachePath + fileName)) {
       return {
         text: async () => {
-          return fs.readFileSync(CachePath + 'google.html').toString();
+          return fs.readFileSync(CachePath + fileName).toString();
         },
       };
     } else {
@@ -30,7 +31,7 @@ class RealHtmlFetcher {
           fs.mkdirSync(CachePath);
         }
 
-        fs.writeFileSync(CachePath + 'google.html',
+        fs.writeFileSync(CachePath + fileName,
             text);
 
         return text;
