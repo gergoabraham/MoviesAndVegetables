@@ -18,10 +18,10 @@ global.fs = require('fs');
 global.JSDOM = require('jsdom')['JSDOM'];
 
 /* Global constants */
-global.FakeHtmlPath = './test/html-contracts/fake-htmls/';
+global.FakeHtmlPath = './test/tools/fake-htmls/';
 
 /* In-house tools */
-global.FakeHtmlFetcher = require('./html-contracts/FakeHtmlFetcher');
+global.FakeHtmlFetcher = require('./tools/FakeHtmlFetcher');
 
 /* Production code */
 global.ContentScriptImdb = require('../src/ContentScriptImdb');

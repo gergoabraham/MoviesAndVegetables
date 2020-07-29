@@ -8,7 +8,7 @@
 const nodeFetch = require('node-fetch');
 
 
-const CachePath = './test/html-contracts/real-htmls-cache/';
+const CachePath = './test/tools/real-htmls-cache/';
 
 class RealHtmlFetcher {
   static async fetch(url) {

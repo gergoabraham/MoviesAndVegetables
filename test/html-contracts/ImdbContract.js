@@ -6,7 +6,7 @@
 
 'use strict';
 
-const RealHtmlFetcher = require('./RealHtmlFetcher');
+const RealHtmlFetcher = require('../tools/RealHtmlFetcher');
 
 // test runner /////////////////////////////////////////////////////////////////
 const types = ['Fake', 'Real'];

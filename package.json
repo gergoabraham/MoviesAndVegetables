@@ -13,6 +13,7 @@
     "test:end-to-end": "mocha test/end-to-end --timeout 120000 --color",
     "test:html-contracts": "mocha test/html-contracts -R=progress --forbid-only --color --timeout 5000",
     "test:unit": "nyc --reporter=text-summary --all --check-coverage mocha -R=progress --forbid-only --color test/unit/",
+    "test:tools": "mocha test/tools --color --timeout 5000",
     "ci:unit-test": "nyc --reporter=lcov --all mocha --forbid-only test/unit/ && codecov",
     "build": "web-ext -s src build -i icons/icon.psd"
   },
