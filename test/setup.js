@@ -22,6 +22,7 @@ global.FakeHtmlPath = './test/tools/fake-htmls/';
 
 /* In-house tools */
 global.FakeHtmlFetcher = require('./tools/FakeHtmlFetcher');
+global.contract = require('./tools/ContractTestDescription');
 
 /* Production code */
 global.ContentScriptImdb = require('../src/ContentScriptImdb');
