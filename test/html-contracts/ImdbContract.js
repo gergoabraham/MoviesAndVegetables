@@ -19,11 +19,13 @@ async function test(type, url, action) {
   action(fakeDoc);
 }
 
+const realHtmlFetcher = new RealHtmlFetcher();
+
 function getFetcher(type) {
   if (type == 'Fake') {
     return FakeHtmlFetcher;
   } else {
-    return RealHtmlFetcher;
+    return realHtmlFetcher;
   }
 }
 // test runner /////////////////////////////////////////////////////////////////
