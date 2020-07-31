@@ -6,6 +6,9 @@
 
 'use strict';
 
+const contract = require('../tools/ContractTestDescription');
+
+
 contract('ImdbContract', function(fetchDOM) {
   context('reading data', function() {
     context('user rating', function() {

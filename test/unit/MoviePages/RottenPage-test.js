@@ -6,6 +6,9 @@
 
 'use strict';
 
+const {JSDOM} = require('jsdom');
+
+
 describe('rottenPage', function() {
   let document;
 

@@ -23,6 +23,6 @@ class ContentScript {
   }
 }
 
-if (typeof module !== 'undefined') {
-  module.exports = ContentScript;
+if (typeof exportToTestEnvironment !== 'undefined') {
+  exportToTestEnvironment(ContentScript);
 }

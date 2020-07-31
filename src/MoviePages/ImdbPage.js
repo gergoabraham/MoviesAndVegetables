@@ -190,6 +190,6 @@ class ImdbPage extends MoviePage {
   }
 }
 
-if (typeof module !== 'undefined') {
-  module.exports = ImdbPage;
+if (typeof exportToTestEnvironment !== 'undefined') {
+  exportToTestEnvironment(ImdbPage);
 }

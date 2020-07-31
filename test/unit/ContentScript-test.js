@@ -6,6 +6,9 @@
 
 'use strict';
 
+const {JSDOM} = require('jsdom'); ;
+
+
 describe('Content script', function() {
   describe('injectScores', function() {
     it('inject scores into the document', async function() {
@@ -13,10 +16,6 @@ describe('Content script', function() {
           .fromFile(FakeHtmlPath + 'imdb.title.tt0111161 - listed in top250.html',
               {url: 'https://www.imdb.com/title/tt0111161/'});
       global.document = dom.window.document;
-
-      global.browser = {runtime:
-        {sendMessage: global.BackgroundScript.getRemotePageData},
-      };
 
       await ContentScript.injectScores('RottenTomatoes', 'Imdb');
 

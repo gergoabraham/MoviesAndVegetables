@@ -6,6 +6,9 @@
 'use strict';
 
 const nodeFetch = require('node-fetch');
+const fs = require('fs');
+const FakeHtmlFetcher = require('./FakeHtmlFetcher');
+
 
 class RealHtmlFetcher {
   constructor(cacheFolder = 'real-htmls-cache') {

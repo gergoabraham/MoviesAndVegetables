@@ -6,6 +6,7 @@
 
 'use strict';
 
+const {JSDOM} = require('jsdom');
 const RealHtmlFetcher = require('./RealHtmlFetcher');
 const FakeHtmlFetcher = require('./FakeHtmlFetcher');
 

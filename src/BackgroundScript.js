@@ -55,9 +55,8 @@ class BackgroundScript {
   }
 }
 
-
-if (typeof module !== 'undefined') {
-  module.exports = BackgroundScript;
+if (typeof exportToTestEnvironment !== 'undefined') {
+  exportToTestEnvironment(BackgroundScript);
 } else {
   BackgroundScript.init();
 }

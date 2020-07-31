@@ -6,7 +6,9 @@
 
 'use strict';
 
+const fs = require('fs');
 const RealHtmlFetcher = require('./RealHtmlFetcher');
+
 
 describe('RealHtmlFetcher', function() {
   let realHtmlFetcher;

@@ -6,6 +6,9 @@
 
 'use strict';
 
+const sinon = require('sinon');
+
+
 describe('Background script', function() {
   it('register message listener on startup', function() {
     global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};

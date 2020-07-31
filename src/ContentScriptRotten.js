@@ -12,8 +12,8 @@ class ContentScriptRottenTomatoes {
   };
 }
 
-if (typeof module !== 'undefined') {
-  module.exports = ContentScriptRottenTomatoes;
+if (typeof exportToTestEnvironment !== 'undefined') {
+  exportToTestEnvironment(ContentScriptRottenTomatoes);
 } else {
   ContentScriptRottenTomatoes.injectImdbScores();
 }

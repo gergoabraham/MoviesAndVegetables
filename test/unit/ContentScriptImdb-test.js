@@ -6,6 +6,9 @@
 
 'use strict';
 
+const {JSDOM} = require('jsdom');
+
+
 describe('Content script on IMDb', function() {
   describe('injectRottenScoresOnImdb', function() {
     it('inject RottenTomatoes scores into the document', async function() {

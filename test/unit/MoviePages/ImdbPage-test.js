@@ -6,6 +6,9 @@
 
 'use strict';
 
+const {JSDOM} = require('jsdom');
+const sinon = require('sinon');
+
 
 describe('ImdbPage', function() {
   let document;

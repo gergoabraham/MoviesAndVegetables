@@ -5,7 +5,13 @@
  */
 'use strict';
 
+const fs = require('fs');
+
+
 class FakeHtmlFetcher {
+  /**
+   * Register the fake `fetch()` function as the global `fetch()`.
+   */
   static activateAsGlobalFetch() {
     global.fetch = FakeHtmlFetcher.fetch;
   }
