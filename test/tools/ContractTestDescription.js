@@ -6,13 +6,9 @@
 
 'use strict';
 
-const RealHtmlFetcher = require('../tools/RealHtmlFetcher');
+const RealHtmlFetcher = require('./RealHtmlFetcher');
+const FakeHtmlFetcher = require('./FakeHtmlFetcher');
 
-/** Type definition for the contract body.
- * @callback contractCallback
- * @param {(url:string)=>Promise<document>} fetchDOM
- * @return {void}
- */
 
 /**
  * Describe an **html contract test** suite. It runs the tests **twice**, both
@@ -31,17 +27,50 @@ const RealHtmlFetcher = require('../tools/RealHtmlFetcher');
  */
 function contract(title, body) {
   describe(title, function() {
-    context('--- FAKE ---', () => body(getDOMFetcher(FakeHtmlFetcher)));
-    context('--- REAL ---', () => body(getDOMFetcher(new RealHtmlFetcher())));
+    context('--- REAL ---', () => body(getDOMFetcher('real')));
+    context('--- FAKE ---', () => body(getDOMFetcher('fake')));
   });
 }
 
-function getDOMFetcher(htmlFetcher) {
+
+global.DOMcache = global.DOMcache || {};
+/** Cache: saves its state between TDD cycles. */
+const DOMcache = global.DOMcache;
+
+
+function getDOMFetcher(type) {
+  const htmlFetcher = createHtmlFetcher(type);
+
   return async (url) => {
-    const response = await htmlFetcher.fetch(url);
-    const text = await response.text();
-    return new JSDOM(text).window.document;
+    const key = type + url;
+    if (DOMcache[key] === undefined) {
+      const upToDateDOM = await fetchUpToDateDOM(htmlFetcher, url);
+      DOMcache[key] = upToDateDOM;
+    }
+    return DOMcache[key];
   };
 }
 
+function createHtmlFetcher(type) {
+  if (type == 'real') {
+    return new RealHtmlFetcher();
+  } else if (type =='fake') {
+    return FakeHtmlFetcher;
+  }
+}
+
+async function fetchUpToDateDOM(htmlFetcher, url) {
+  const response = await htmlFetcher.fetch(url);
+  const text = await response.text();
+  const dom = new JSDOM(text).window.document;
+
+  return dom;
+}
+
 module.exports = contract;
+
+/** Type definition for the contract body.
+ * @callback contractCallback
+ * @param {(url:string)=>Promise<document>} fetchDOM
+ * @return {void}
+ */
