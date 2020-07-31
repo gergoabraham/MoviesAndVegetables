@@ -34,10 +34,7 @@ function contract(title, body) {
 }
 
 
-global.DOMcache = global.DOMcache || {};
-/** Cache: saves its state between TDD cycles. */
-const DOMcache = global.DOMcache;
-
+const DOMcache = {};
 
 function getDOMFetcher(type) {
   const htmlFetcher = createHtmlFetcher(type);
