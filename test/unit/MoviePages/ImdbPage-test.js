@@ -57,7 +57,7 @@ describe('ImdbPage', function() {
       });
 
       it(`read the number of users' votes`, function() {
-        movieData.should.contain({numberOfUserVotes: 2181187});
+        movieData.should.contain({numberOfUserVotes: 2260000});
       });
 
       it(`read the critics rating`, function() {
