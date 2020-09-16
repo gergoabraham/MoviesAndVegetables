@@ -24,7 +24,7 @@ describe('MoviePage', function() {
 
       it('throw error on unimplemented getMovieData', async function() {
         await unimplementedMoviePage.getMovieData()
-            .should.be.rejectedWith(Error);
+            .should.be.rejectedWith(Error, 'Function not implemented');
       });
 
       it('throw error on unimplemented injectRatings', function() {
