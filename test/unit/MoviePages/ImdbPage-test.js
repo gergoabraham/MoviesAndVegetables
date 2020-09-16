@@ -95,7 +95,7 @@ describe('ImdbPage', function() {
 
       it('reject (for now, TODO)', async function() {
         await imdbPage.getMovieData()
-            .should.be.rejectedWith(Error);
+            .should.be.rejectedWith(Error, 'Not a movie');
       });
     });
   });

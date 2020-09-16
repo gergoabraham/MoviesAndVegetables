@@ -104,6 +104,16 @@ contract('ImdbContract', function(fetchDOM) {
       });
     });
 
+    context('series metadata', function() {
+      it('type is "TVSeries"', async function() {
+        const document = await fetchDOM('https://www.imdb.com/title/tt0149460/');
+        const metadataRaw = document.head.querySelector('script[type="application/ld+json"]').textContent;
+        const metadata = JSON.parse(metadataRaw);
+
+        metadata['@type'].should.equal('TVSeries');
+      });
+    });
+
     context('user rating', function() {
       let document;
       before(async function() {
