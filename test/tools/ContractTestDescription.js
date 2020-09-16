@@ -27,14 +27,40 @@ const FakeHtmlFetcher = require('./FakeHtmlFetcher');
  * `function(fetchDOM) {...const document = await fetchDOM(url);...}`
  */
 function contract(title, body) {
-  describe(title, function() {
-    context('--- REAL ---', () => body(getDOMFetcher('real')));
-    context('--- FAKE ---', () => body(getDOMFetcher('fake')));
-  });
+  describe(title, contractTestPerformer(body));
 }
+
+/**
+ * Exclusive testing: only contract tests with '.only' will be performed.
+ *
+ * @param {string} title Contract test title.
+ * @param {contractCallback} body The test body. Use it like this:
+ * `function(fetchDOM) {...const document = await fetchDOM(url);...}`
+ */
+contract.only = function(title, body) {
+  describe.only(title, contractTestPerformer(body));
+};
+
+/**
+ * Ignore this contract test.
+ *
+ * @param {string} title Contract test title.
+ * @param {contractCallback} body The test body. Use it like this:
+ * `function(fetchDOM) {...const document = await fetchDOM(url);...}`
+ */
+contract.skip = function(title, body) {
+  describe.skip(title, contractTestPerformer(body));
+};
 
 
 const DOMcache = {};
+
+function contractTestPerformer(body) {
+  return () => {
+    context('--- REAL ---', () => body(getDOMFetcher('real')));
+    context('--- FAKE ---', () => body(getDOMFetcher('fake')));
+  };
+}
 
 function getDOMFetcher(type) {
   const htmlFetcher = createHtmlFetcher(type);
