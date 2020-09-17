@@ -5,6 +5,7 @@
     "tdd:unit": "mocha --watch test/unit/",
     "tdd:html-contracts": "mocha test/html-contracts --watch --timeout 5000",
     "tdd:tools": "mocha test/tools --watch --color --timeout 5000",
+    "clear-html-cache": "rm test/tools/real-htmls-cache -r",
     "firefox": "web-ext -s src run",
     "coverage": "nyc --reporter=lcov --all mocha -R=progress --forbid-only test/unit/ && start coverage/lcov-report/index.html",
     "lint:eslint": "eslint --ignore-path .gitignore .",
