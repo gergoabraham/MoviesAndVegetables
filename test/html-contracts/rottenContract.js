@@ -65,15 +65,6 @@ contract('RottenContract', function(fetchDOM) {
           .should.equal('The Shawshank Redemption');
     });
 
-    it.skip('release year - "old" version, todo', async function() {
-      document.body
-          .querySelectorAll('ul.content-meta.info')[0]
-          .querySelectorAll('time')[0]
-          .getAttribute('datetime')
-          .substring(0, 4)
-          .should.equal('1994');
-    });
-
     it('release year', async function() {
       document.head
           .querySelector('meta[property="og:title"')

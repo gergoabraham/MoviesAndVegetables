@@ -32,11 +32,10 @@ class RottenPage extends MoviePage {
             'h1.mop-ratings-wrap__title.mop-ratings-wrap__title--top')[0]
         .innerHTML;
 
-    const year = this.document.body
-        .querySelectorAll('ul.content-meta.info')[0]
-        .querySelectorAll('time')[0]
-        .getAttribute('datetime')
-        .substring(0, 4);
+    const year = this.document.head
+        .querySelector('meta[property="og:title"')
+        .getAttribute('content')
+        .match(/\d{4}(?=\)$)/);
 
     return new MovieData(
         title, Number(year), this.url,
