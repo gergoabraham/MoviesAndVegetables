@@ -83,7 +83,10 @@ describe('End-to-end tests', async function() {
     process.env.path = process.env.path + ';node_modules/geckodriver/';
 
     const options = new firefox.Options();
-    options.addArguments('-headless');
+
+    if (process.env.endToEndWithHead != 1) {
+      options.addArguments('-headless');
+    }
 
     driver = new Builder()
         .forBrowser('firefox')
