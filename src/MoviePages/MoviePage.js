@@ -33,6 +33,7 @@ class MoviePage {
   /**
    * @param  {MovieData} movieData
    */
+  // eslint-disable-next-line no-unused-vars
   injectRatings(movieData) {
     throw new Error(`Function not implemented.`);
   }

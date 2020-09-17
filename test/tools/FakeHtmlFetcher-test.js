@@ -11,7 +11,7 @@ const FakeHtmlFetcher = require('./FakeHtmlFetcher');
 describe('FakeHtmlFetcher', function () {
   context('setup', function () {
     it('register global fetch() fake', function () {
-      fetch = undefined;
+      global.fetch = undefined;
 
       FakeHtmlFetcher.activateAsGlobalFetch();
 

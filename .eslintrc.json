@@ -3,26 +3,18 @@
     "browser": true,
     "node": true,
     "webextensions": true,
-    "es6": true
+    "es2021": true
   },
-  "extends": ["google"],
+  "extends": "eslint:recommended",
   "parserOptions": {
-    "ecmaVersion": 2018
+    "ecmaVersion": 12
   },
   "rules": {
-    "linebreak-style": 0,
     "strict": ["error", "global"],
-    "no-const-assign": "error",
+    "prefer-const": "error",
+    "no-var": "error",
     "no-use-before-define": ["error", { "functions": false }],
-    "no-undef": "error",
-    "require-jsdoc": "off",
-    "max-len": [
-      "error",
-      {
-        "ignoreTemplateLiterals": true,
-        "ignoreStrings": true
-      }
-    ]
+    "require-jsdoc": "off"
   },
   "globals": {
     "exportToTestEnvironment": "readonly",

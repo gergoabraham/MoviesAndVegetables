@@ -54,7 +54,7 @@ class FakeHtmlFetcher {
         .replace(/\.\.\./, '?')
         .replace(/\.html/g, '')
         .replace(/\./g, '/')
-        .replace(/^([^\/]+)\//, `https://www.$1.com/`)
+        .replace(/^([^/]+)\//, `https://www.$1.com/`)
         .replace(/ .+$/, '');
 
       urlToFilenameTable[url] = fileName;

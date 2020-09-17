@@ -113,7 +113,7 @@ describe('RealHtmlFetcher', function () {
       before(
         "let's have a page cached, and two new response objects",
         async function () {
-          /* Reason: first time the original fetch throws the error, and it is ok.
+          /* Reason: At first, the original fetch throws the error.
            * When working from cache, the error is thrown by RealHtmlFetcher.
            */
           await (await realHtmlFetcher.fetch('https://www.google.com')).text();
