@@ -44,5 +44,9 @@
   "mocha": {
     "recursive": true,
     "file": "./test/setup.js"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "htmlWhitespaceSensitivity": "strict"
   }
 }
