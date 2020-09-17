@@ -9,7 +9,7 @@
 class ContentScriptImdb {
   static async injectRottenTomatoesScores() {
     await ContentScript.injectScores('RottenTomatoes', 'Imdb');
-  };
+  }
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {

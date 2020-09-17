@@ -8,20 +8,19 @@
 
 const sinon = require('sinon');
 
-
-describe('Background script', function() {
-  it('register message listener on startup', function() {
-    global.browser = {runtime: {onMessage: {addListener: sinon.spy()}}};
+describe('Background script', function () {
+  it('register message listener on startup', function () {
+    global.browser = { runtime: { onMessage: { addListener: sinon.spy() } } };
 
     BackgroundScript.init();
 
-    global.browser.runtime.onMessage.addListener
-        .should.have.been
-        .calledOnceWithExactly(BackgroundScript.getRemotePageData);
+    global.browser.runtime.onMessage.addListener.should.have.been.calledOnceWithExactly(
+      BackgroundScript.getRemotePageData
+    );
   });
 
-  describe('main search algorithm', function() {
-    it(`search remote page and return with the scores`, async function() {
+  describe('main search algorithm', function () {
+    it(`search remote page and return with the scores`, async function () {
       // Uses the html files:
       // - google.search...btnI=true&q=The+Shawshank+Redemption+|
       //      1994+movie+RottenTomatoes.html
@@ -31,30 +30,39 @@ describe('Background script', function() {
         year: 1994,
       };
 
-      await BackgroundScript
-          .getRemotePageData({movieData, remotePageName: 'RottenTomatoes'})
-          .should.eventually.deep.equal(
-              new MovieData(
-                  'The Shawshank Redemption', 1994,
-                  'https://www.rottentomatoes.com/m/shawshank_redemption',
-                  98, 885688,
-                  90, 71,
-                  -1),
-          );
+      await BackgroundScript.getRemotePageData({
+        movieData,
+        remotePageName: 'RottenTomatoes',
+      }).should.eventually.deep.equal(
+        new MovieData(
+          'The Shawshank Redemption',
+          1994,
+          'https://www.rottentomatoes.com/m/shawshank_redemption',
+          98,
+          885688,
+          90,
+          71,
+          -1
+        )
+      );
     });
   });
 
-  describe('special cases', function() {
-    it('remove "&" character from movie title in search url', function() {
+  describe('special cases', function () {
+    it('remove "&" character from movie title in search url', function () {
       const movieData = {
         title: 'The Old Man & The Gun',
         year: '2018',
       };
 
-      BackgroundScript.constructSearchUrl(movieData, `Rotten Tomatoes`)
-          .should.equal('https://www.google.com/search?btnI=true' +
-              '&q=The+Old+Man++The+Gun+2018+movie' +
-              '+Rotten+Tomatoes');
+      BackgroundScript.constructSearchUrl(
+        movieData,
+        `Rotten Tomatoes`
+      ).should.equal(
+        'https://www.google.com/search?btnI=true' +
+          '&q=The+Old+Man++The+Gun+2018+movie' +
+          '+Rotten+Tomatoes'
+      );
     });
   });
 });

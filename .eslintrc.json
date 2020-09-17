@@ -1,35 +1,36 @@
 {
-    "env": {
-        "browser": true,
-        "node": true,
-        "webextensions": true,
-        "es6": true
-    },
-    "extends": [
-        "google"
-    ],
-    "parserOptions": {
-        "ecmaVersion": 2018
-    },
-    "rules": {
-        "linebreak-style": 0,
-        "strict": ["error", "global"],
-        "no-const-assign": "error",
-        "no-use-before-define": ["error", {"functions":false}],
-        "no-undef": "error",
-        "require-jsdoc": "off",
-        "max-len": ["error", {
-            "ignoreTemplateLiterals": true,
-            "ignoreStrings": true
-             }]
-    },
-    "globals": {
-        "exportToTestEnvironment": "readonly",
-        "MoviePageFactory": "writable",
-        "ImdbPage": "writable",
-        "RottenPage": "writable",
-        "MoviePage": "writable",
-        "MovieData": "writable",
-        "ContentScript": "writable"
-    }
+  "env": {
+    "browser": true,
+    "node": true,
+    "webextensions": true,
+    "es6": true
+  },
+  "extends": ["google"],
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "rules": {
+    "linebreak-style": 0,
+    "strict": ["error", "global"],
+    "no-const-assign": "error",
+    "no-use-before-define": ["error", { "functions": false }],
+    "no-undef": "error",
+    "require-jsdoc": "off",
+    "max-len": [
+      "error",
+      {
+        "ignoreTemplateLiterals": true,
+        "ignoreStrings": true
+      }
+    ]
+  },
+  "globals": {
+    "exportToTestEnvironment": "readonly",
+    "MoviePageFactory": "writable",
+    "ImdbPage": "writable",
+    "RottenPage": "writable",
+    "MoviePage": "writable",
+    "MovieData": "writable",
+    "ContentScript": "writable"
+  }
 }

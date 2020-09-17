@@ -12,13 +12,18 @@ class ContentScript {
    * @param {string} currentPageName
    */
   static async injectScores(remotePageName, currentPageName) {
-    const currentPage = MoviePageFactory
-        .create(currentPageName, document, document.baseURI);
+    const currentPage = MoviePageFactory.create(
+      currentPageName,
+      document,
+      document.baseURI
+    );
 
     const movieData = await currentPage.getMovieData();
 
-    const response = await browser.runtime.
-        sendMessage({movieData, remotePageName});
+    const response = await browser.runtime.sendMessage({
+      movieData,
+      remotePageName,
+    });
     currentPage.injectRatings(response);
   }
 }

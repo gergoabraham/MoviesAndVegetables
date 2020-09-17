@@ -6,14 +6,17 @@
 
 'use strict';
 
-describe('MovieData', function() {
-  it('contain stuff', function() {
+describe('MovieData', function () {
+  it('contain stuff', function () {
     const movieData = new MovieData(
-        'The Dark Knight', 2008,
-        'url of movie',
-        9.0, 2160000,
-        84, 0,
-        4,
+      'The Dark Knight',
+      2008,
+      'url of movie',
+      9.0,
+      2160000,
+      84,
+      0,
+      4
     );
 
     movieData.title.should.equal('The Dark Knight');

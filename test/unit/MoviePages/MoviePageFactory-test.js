@@ -6,22 +6,21 @@
 
 'use strict';
 
-
-describe('MoviePageFactory', function() {
-  it('cannot be instantiated', function() {
-    (function() {
+describe('MoviePageFactory', function () {
+  it('cannot be instantiated', function () {
+    (function () {
       new MoviePageFactory();
-    }).should.throw(`Class MoviePagesFactory shouldn't be instantiated.`);
+    }.should.throw(`Class MoviePagesFactory shouldn't be instantiated.`));
   });
 
-  context('create', function() {
-    it('throw error on unexpected type', function() {
-      (function() {
+  context('create', function () {
+    it('throw error on unexpected type', function () {
+      (function () {
         MoviePageFactory.create('Cheese');
-      }).should.throw(`MoviePagesFactory cannot instantiate "Cheese"`);
+      }.should.throw(`MoviePagesFactory cannot instantiate "Cheese"`));
     });
 
-    it('create ImdbPage', function() {
+    it('create ImdbPage', function () {
       const imdbPage = MoviePageFactory.create('Imdb', 'doc', 'https://url');
 
       (imdbPage instanceof ImdbPage).should.be.true;
@@ -33,9 +32,12 @@ describe('MoviePageFactory', function() {
       imdbPage.url.should.equal('https://url/');
     });
 
-    it('create RottenPage', function() {
-      const rottenPage = MoviePageFactory
-          .create('RottenTomatoes', 'doc', 'https://url.two');
+    it('create RottenPage', function () {
+      const rottenPage = MoviePageFactory.create(
+        'RottenTomatoes',
+        'doc',
+        'https://url.two'
+      );
 
       (rottenPage instanceof RottenPage).should.be.true;
       (rottenPage instanceof MoviePage).should.be.true;

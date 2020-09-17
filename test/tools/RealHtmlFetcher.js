@@ -9,7 +9,6 @@ const nodeFetch = require('node-fetch');
 const fs = require('fs');
 const FakeHtmlFetcher = require('./FakeHtmlFetcher');
 
-
 class RealHtmlFetcher {
   constructor(cacheFolder = 'real-htmls-cache') {
     this.CachePath = `./test/tools/${cacheFolder}/`;
@@ -25,11 +24,12 @@ class RealHtmlFetcher {
       response = await nodeFetch(url);
 
       return {
-        text: async ()=> {
+        text: async () => {
           const text = await response.text();
           this.writeToCache(fileName, text);
           return text;
-        }};
+        },
+      };
     }
   }
 

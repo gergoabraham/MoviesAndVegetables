@@ -6,16 +6,16 @@
 
 'use strict';
 
-const {Builder, By, until} = require('selenium-webdriver');
+const { Builder, By, until } = require('selenium-webdriver');
 const firefox = require('selenium-webdriver/firefox');
 const fs = require('fs');
 const cmd = require('node-cmd');
 
-describe('End-to-end tests', async function() {
+describe('End-to-end tests', async function () {
   const addonFolder = 'web-ext-artifacts';
   let driver;
 
-  before(async function() {
+  before(async function () {
     const isAddonBuilt = rebuildAddon();
     const isBrowserReady = startBrowserDriver();
 
@@ -23,35 +23,37 @@ describe('End-to-end tests', async function() {
     await installAddon();
   });
 
-  context('on IMDb', function() {
-    before(async function() {
+  context('on IMDb', function () {
+    before(async function () {
       await driver.get('https://www.imdb.com/title/tt6751668/');
     });
 
-    it('should inject audience score', async function() {
-      await driver.wait(until.elementLocated(By.id('mv-audience-score')), 10000);
-      const audienceScore = (await driver).findElement(By.id('mv-audience-score'));
+    it('should inject audience score', async function () {
+      await driver.wait(
+        until.elementLocated(By.id('mv-audience-score')),
+        10000
+      );
+      const audienceScore = (await driver).findElement(
+        By.id('mv-audience-score')
+      );
 
       audienceScore.should.exist;
     });
 
-    it('should inject Tomatometer', async function() {
-      await driver.wait(
-          until.elementLocated(By.id('mv-tomatometer')),
-          1000);
+    it('should inject Tomatometer', async function () {
+      await driver.wait(until.elementLocated(By.id('mv-tomatometer')), 1000);
 
-      const tomatoMeter = await driver
-          .findElement(By.id('mv-tomatometer'));
+      const tomatoMeter = await driver.findElement(By.id('mv-tomatometer'));
 
       tomatoMeter.should.exist;
     });
   });
 
-  context('on RottenTomatoes', function() {
+  context('on RottenTomatoes', function () {
     // eslint-disable-next-line no-invalid-this
     this.retries(3);
 
-    it('should inject IMDb scores', async function() {
+    it('should inject IMDb scores', async function () {
       await driver.get('https://www.rottentomatoes.com/m/the_dark_knight');
       await driver.wait(until.elementLocated(By.id('mv-imdb-scores')), 10000);
       const imdbScores = await driver.findElement(By.id('mv-imdb-scores'));
@@ -60,10 +62,9 @@ describe('End-to-end tests', async function() {
     });
   });
 
-  after(async function() {
+  after(async function () {
     driver.quit();
   });
-
 
   /* --- Helpers --- */
 
@@ -89,11 +90,11 @@ describe('End-to-end tests', async function() {
     }
 
     driver = new Builder()
-        .forBrowser('firefox')
-        .setFirefoxOptions(options)
-        .build();
+      .forBrowser('firefox')
+      .setFirefoxOptions(options)
+      .build();
 
-    return driver.manage().setTimeouts({pageLoad: 10000});
+    return driver.manage().setTimeouts({ pageLoad: 10000 });
   }
 
   function installAddon() {
@@ -103,4 +104,3 @@ describe('End-to-end tests', async function() {
     return driver.installAddon(`${addonFolder}/${addonFileName}`, true);
   }
 });
-

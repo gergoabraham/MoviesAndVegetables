@@ -6,10 +6,9 @@
 
 'use strict';
 
-const {JSDOM} = require('jsdom');
+const { JSDOM } = require('jsdom');
 const RealHtmlFetcher = require('./RealHtmlFetcher');
 const FakeHtmlFetcher = require('./FakeHtmlFetcher');
-
 
 /**
  * Describe an **html contract test** suite. It runs the tests **twice**, both
@@ -37,7 +36,7 @@ function contract(title, body) {
  * @param {contractCallback} body The test body. Use it like this:
  * `function(fetchDOM) {...const document = await fetchDOM(url);...}`
  */
-contract.only = function(title, body) {
+contract.only = function (title, body) {
   describe.only(title, contractTestPerformer(body));
 };
 
@@ -48,10 +47,9 @@ contract.only = function(title, body) {
  * @param {contractCallback} body The test body. Use it like this:
  * `function(fetchDOM) {...const document = await fetchDOM(url);...}`
  */
-contract.skip = function(title, body) {
+contract.skip = function (title, body) {
   describe.skip(title, contractTestPerformer(body));
 };
-
 
 const DOMcache = {};
 
@@ -78,7 +76,7 @@ function getDOMFetcher(type) {
 function createHtmlFetcher(type) {
   if (type == 'real') {
     return new RealHtmlFetcher();
-  } else if (type =='fake') {
+  } else if (type == 'fake') {
     return FakeHtmlFetcher;
   }
 }

@@ -7,7 +7,6 @@
 
 const fs = require('fs');
 
-
 class FakeHtmlFetcher {
   /**
    * Register the fake `fetch()` function as the global `fetch()`.
@@ -37,9 +36,11 @@ class FakeHtmlFetcher {
         },
       };
     } else {
-      throw new Error(`fetch() fake: no file matches the url.\n\n`+
-                    `url: ${url}\n\n` +
-                    `filename: ${FakeHtmlFetcher.convertToFileName(url)}`);
+      throw new Error(
+        `fetch() fake: no file matches the url.\n\n` +
+          `url: ${url}\n\n` +
+          `filename: ${FakeHtmlFetcher.convertToFileName(url)}`
+      );
     }
   }
 
@@ -50,11 +51,11 @@ class FakeHtmlFetcher {
 
     fileList.forEach((fileName) => {
       const url = fileName
-          .replace(/\.\.\./, '?')
-          .replace(/\.html/g, '')
-          .replace(/\./g, '/')
-          .replace(/^([^\/]+)\//, `https://www.$1.com/`)
-          .replace(/ .+$/, '');
+        .replace(/\.\.\./, '?')
+        .replace(/\.html/g, '')
+        .replace(/\./g, '/')
+        .replace(/^([^\/]+)\//, `https://www.$1.com/`)
+        .replace(/ .+$/, '');
 
       urlToFilenameTable[url] = fileName;
     });
@@ -62,13 +63,14 @@ class FakeHtmlFetcher {
   }
 
   static convertToFileName(url) {
-    return url.replace(/^https:\/\//, '')
+    return (
+      url
+        .replace(/^https:\/\//, '')
         .replace(/^www\./, '')
         .replace(/\.com/, '')
         .replace(/\//g, '.')
-        .replace(/\?/, '...') +
-
-      '.html';
+        .replace(/\?/, '...') + '.html'
+    );
   }
 
   static getDocumentUrl(fileContent, originalUrl) {

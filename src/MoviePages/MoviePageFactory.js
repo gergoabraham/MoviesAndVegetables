@@ -23,11 +23,12 @@ class MoviePageFactory {
     } else if (moviePageType == 'RottenTomatoes') {
       return new RottenPage(document, url);
     } else {
-      throw new Error(`MoviePagesFactory cannot instantiate ` +
-                      `"${moviePageType}"`);
+      throw new Error(
+        `MoviePagesFactory cannot instantiate ` + `"${moviePageType}"`
+      );
     }
   }
-};
+}
 
 if (typeof exportToTestEnvironment !== 'undefined') {
   exportToTestEnvironment(MoviePageFactory);

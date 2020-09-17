@@ -36,7 +36,7 @@ class MoviePage {
   injectRatings(movieData) {
     throw new Error(`Function not implemented.`);
   }
-};
+}
 
 if (typeof exportToTestEnvironment !== 'undefined') {
   exportToTestEnvironment(MoviePage);
