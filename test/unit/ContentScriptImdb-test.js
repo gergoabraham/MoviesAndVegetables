@@ -6,29 +6,21 @@
 
 'use strict';
 
-let injectRottenScoresOnImdb;
+const {JSDOM} = require('jsdom');
 
-const {ContentScript} = require('../../src/ContentScript');
-global.ContentScript = ContentScript;
 
 describe('Content script on IMDb', function() {
-  before(function() {
-    global.document = {body: {onload: {}}};
-    ({injectRottenScoresOnImdb} = require('../../src/ContentScriptImdb'));
-  });
-
-  it('should register its function on page loaded event', function() {
-    global.document.body.onload.should.contain(injectRottenScoresOnImdb);
-  });
-
   describe('injectRottenScoresOnImdb', function() {
-    it('should call the common "injectScores" function', function() {
-      sinon.replace(ContentScript, 'injectScores', sinon.fake());
+    it('inject RottenTomatoes scores into the document', async function() {
+      const dom = await JSDOM
+          .fromFile(FakeHtmlPath + 'imdb.title.tt0111161 - listed in top250.html',
+              {url: 'https://www.imdb.com/title/tt0111161/'});
+      global.document = dom.window.document;
 
-      injectRottenScoresOnImdb();
+      await ContentScriptImdb.injectRottenTomatoesScores();
 
-      ContentScript.injectScores
-          .should.have.been.calledOnceWithExactly('RottenTomatoes', 'Imdb');
+      document.getElementById('mv-audience-score').should.exist;
+      document.getElementById('mv-tomatometer').should.exist;
     });
   });
 });

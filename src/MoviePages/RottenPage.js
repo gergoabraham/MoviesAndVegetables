@@ -67,7 +67,7 @@ class RottenPage extends MoviePage {
 
   createImdbScoreHtmlElement(movieData) {
     const innerHTML =
-    `<section id="IMDb scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
+    `<section id="mv-imdb-scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
     `style="border-top:2px solid #2a2c32;margin-top:20px">` +
     `<div class="mop-ratings-wrap__half" style="min-width:240px">` +
       `<h2 class="mop-ratings-wrap__score">` +
@@ -104,6 +104,6 @@ class RottenPage extends MoviePage {
   }
 }
 
-if (typeof module !== 'undefined') {
-  module.exports = {RottenPage};
+if (typeof exportToTestEnvironment !== 'undefined') {
+  exportToTestEnvironment(RottenPage);
 }

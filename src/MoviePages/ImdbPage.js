@@ -112,7 +112,7 @@ class ImdbPage extends MoviePage {
 
   createTomatoMeterElement(url, percent, votes) {
     const innerHTML =
-      `<div class="titleReviewBarItem TomatoMeter">\n` +
+      `<div class="titleReviewBarItem" id="mv-tomatometer">\n` +
         `<a href="${url}">\n` +
           `<div class="metacriticScore ${this.getFavorableness(percent)}\n` +
             `titleReviewBarSubItem" style="width: 40px">\n` +
@@ -165,7 +165,7 @@ class ImdbPage extends MoviePage {
 
   createAudienceScoreElement(percent, url, votes) {
     const innerHTML =
-      `<div class="imdbRating" id="audience-score"` +
+      `<div class="imdbRating" id="mv-audience-score"` +
         `style="background:none; text-align:center; padding:2px 0 0 2px;\n`+
         `width:90px;border-left:1px solid #6b6b6b;">\n` +
         `<div class="ratingValue">\n` +
@@ -190,6 +190,6 @@ class ImdbPage extends MoviePage {
   }
 }
 
-if (typeof module !== 'undefined') {
-  module.exports = {ImdbPage};
+if (typeof exportToTestEnvironment !== 'undefined') {
+  exportToTestEnvironment(ImdbPage);
 }

@@ -23,6 +23,50 @@ describe('End-to-end tests', async function() {
     await installAddon();
   });
 
+  context('on IMDb', function() {
+    before(async function() {
+      await driver.get('https://www.imdb.com/title/tt6751668/');
+    });
+
+    it('should inject audience score', async function() {
+      await driver.wait(until.elementLocated(By.id('mv-audience-score')), 10000);
+      const audienceScore = (await driver).findElement(By.id('mv-audience-score'));
+
+      audienceScore.should.exist;
+    });
+
+    it('should inject Tomatometer', async function() {
+      await driver.wait(
+          until.elementLocated(By.id('mv-tomatometer')),
+          1000);
+
+      const tomatoMeter = await driver
+          .findElement(By.id('mv-tomatometer'));
+
+      tomatoMeter.should.exist;
+    });
+  });
+
+  context('on RottenTomatoes', function() {
+    // eslint-disable-next-line no-invalid-this
+    this.retries(3);
+
+    it('should inject IMDb scores', async function() {
+      await driver.get('https://www.rottentomatoes.com/m/the_dark_knight');
+      await driver.wait(until.elementLocated(By.id('mv-imdb-scores')), 10000);
+      const imdbScores = await driver.findElement(By.id('mv-imdb-scores'));
+
+      imdbScores.should.exist;
+    });
+  });
+
+  after(async function() {
+    driver.quit();
+  });
+
+
+  /* --- Helpers --- */
+
   function rebuildAddon() {
     cleanupArtifacts();
     return new Promise((resolve) => cmd.get('npm run build', resolve));
@@ -39,14 +83,17 @@ describe('End-to-end tests', async function() {
     process.env.path = process.env.path + ';node_modules/geckodriver/';
 
     const options = new firefox.Options();
-    options.addArguments('-headless');
+
+    if (process.env.endToEndWithHead != 1) {
+      options.addArguments('-headless');
+    }
 
     driver = new Builder()
         .forBrowser('firefox')
         .setFirefoxOptions(options)
         .build();
 
-    return driver.manage().setTimeouts({pageLoad: 5000});
+    return driver.manage().setTimeouts({pageLoad: 10000});
   }
 
   function installAddon() {
@@ -55,47 +102,5 @@ describe('End-to-end tests', async function() {
 
     return driver.installAddon(`${addonFolder}/${addonFileName}`, true);
   }
-
-  context('on IMDb', function() {
-    before(async function() {
-      await driver.get('https://www.imdb.com/title/tt6751668/');
-    });
-
-    it('should inject audience score', async function() {
-      await driver.wait(until.elementLocated(By.id('audience-score')), 10000);
-      const audienceScore = (await driver).findElement(By.id('audience-score'));
-
-      audienceScore.should.exist;
-    });
-
-    it('should inject Tomatometer', async function() {
-      await driver.wait(
-          until.elementLocated(By.className('titleReviewBarItem TomatoMeter')),
-          1000);
-
-      const tomatoMeter = await driver
-          .findElement(By.className('titleReviewBarItem TomatoMeter'));
-
-      tomatoMeter.should.exist;
-    });
-  });
-
-  context('on RottenTomatoes', function() {
-    before(async function() {
-      driver.get('https://www.rottentomatoes.com/m/the_dark_knight')
-          .catch((err) => {}); // it is loaded more than the 5 seconds timeout
-    });
-
-    it('should inject IMDb scores', async function() {
-      await driver.wait(until.elementLocated(By.id('IMDb scores')), 10000);
-      const imdbScores = await driver.findElement(By.id('IMDb scores'));
-
-      imdbScores.should.exist;
-    });
-  });
-
-  after(async function() {
-    driver.quit();
-  });
 });
 

@@ -6,11 +6,9 @@
 
 'use strict';
 
-const {MoviePage} = require('../../../src/MoviePages/MoviePage');
-
 describe('MoviePage', function() {
   context('abstract class', function() {
-    it('should throw error on instantiating parent class', function() {
+    it('throw error on instantiating parent class', function() {
       (function() {
         new MoviePage();
       }).should.throw(`Class MoviePages shouldn't be instantiated.`);
@@ -24,12 +22,12 @@ describe('MoviePage', function() {
         unimplementedMoviePage = new UnimplementedMoviePage('doc', 'https://url');
       });
 
-      it('should throw error on unimplemented getMovieData', async function() {
+      it('throw error on unimplemented getMovieData', async function() {
         await unimplementedMoviePage.getMovieData()
-            .should.be.rejectedWith(Error);
+            .should.be.rejectedWith(Error, 'Function not implemented');
       });
 
-      it('should throw error on unimplemented injectRatings', function() {
+      it('throw error on unimplemented injectRatings', function() {
         (function() {
           unimplementedMoviePage.injectRatings();
         }).should.throw(`Function not implemented.`);
@@ -40,12 +38,12 @@ describe('MoviePage', function() {
   context('child classes', function() {
     class ChildMoviePage extends MoviePage {};
 
-    it('should store doc on instantiating', function() {
+    it('store doc on instantiating', function() {
       const childMoviePage = new ChildMoviePage('input document', 'https://url');
       childMoviePage.document.should.equal('input document');
     });
 
-    it('should shorten url on instantiating', function() {
+    it('shorten url on instantiating', function() {
       const childMoviePage = new ChildMoviePage('input document',
           'https://page.com/m/movie_title?stuff=toRemove&also=this');
 
@@ -63,11 +61,11 @@ describe('MoviePage', function() {
         implementedMoviePage = new ImplementedMoviePage('doc', 'https://url');
       });
 
-      it('should be OK on implemented getMovieData', function() {
+      it('be OK on implemented getMovieData', function() {
         implementedMoviePage.getMovieData();
       });
 
-      it('should be OK on implemented injectRatings', function() {
+      it('be OK on implemented injectRatings', function() {
         implementedMoviePage.injectRatings();
       });
     });

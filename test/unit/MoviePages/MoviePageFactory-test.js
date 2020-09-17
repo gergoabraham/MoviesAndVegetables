@@ -6,21 +6,8 @@
 
 'use strict';
 
-const {MoviePage} = require('../../../src/MoviePages/MoviePage');
-global.MoviePage = MoviePage;
-const {RottenPage} = require('../../../src/MoviePages/RottenPage');
-global.RottenPage = RottenPage;
-const {MoviePageFactory} = require('../../../src/MoviePages/MoviePageFactory');
-
-let ImdbPage;
 
 describe('MoviePageFactory', function() {
-  before(function() {
-    // todo: all require should be in before functions
-    ({ImdbPage} = require('../../../src/MoviePages/ImdbPage'));
-    global.ImdbPage = ImdbPage;
-  });
-
   it('cannot be instantiated', function() {
     (function() {
       new MoviePageFactory();
@@ -28,13 +15,13 @@ describe('MoviePageFactory', function() {
   });
 
   context('create', function() {
-    it('should throw error on unexpected type', function() {
+    it('throw error on unexpected type', function() {
       (function() {
         MoviePageFactory.create('Cheese');
       }).should.throw(`MoviePagesFactory cannot instantiate "Cheese"`);
     });
 
-    it('should create ImdbPage', function() {
+    it('create ImdbPage', function() {
       const imdbPage = MoviePageFactory.create('Imdb', 'doc', 'https://url');
 
       (imdbPage instanceof ImdbPage).should.be.true;
@@ -46,7 +33,7 @@ describe('MoviePageFactory', function() {
       imdbPage.url.should.equal('https://url/');
     });
 
-    it('should create RottenPage', function() {
+    it('create RottenPage', function() {
       const rottenPage = MoviePageFactory
           .create('RottenTomatoes', 'doc', 'https://url.two');
 

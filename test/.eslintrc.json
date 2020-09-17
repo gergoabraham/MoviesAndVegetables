@@ -1,11 +1,26 @@
 {
-    "env": {
-        "mocha": true,
-        "node": true
-    },
-    "globals": {
-        "sinon": "readonly",
-        "should": "readonly",
-        "fs": "readonly"
-    }
+  "env": {
+    "mocha": true,
+    "node": true
+  },
+  "globals": {
+    "sinon": "readonly",
+    "should": "readonly",
+    "fs": "readonly",
+    "JSDOM": "readonly",
+
+    "FakeHtmlFetcher": "readonly",
+    "FakeHtmlPath": "readonly",
+    "contract": "readonly",
+
+    "ContentScriptImdb": "readonly",
+    "ContentScriptRottenTomatoes": "readonly",
+    "ContentScript": "readonly",
+    "BackgroundScript": "readonly",
+    "MovieData": "readonly",
+    "MoviePage": "readonly",
+    "ImdbPage": "readonly",
+    "RottenPage": "readonly",
+    "MoviePageFactory": "readonly"
+  }
 }
