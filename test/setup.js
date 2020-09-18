@@ -30,6 +30,7 @@ global.exportToTestEnvironment = function (productionCode) {
   global[productionCode.name] = productionCode;
 };
 
+require('../src/Utilities/Logger');
 require('../src/ContentScriptImdb');
 require('../src/ContentScriptRotten');
 require('../src/ContentScript');
@@ -55,6 +56,9 @@ function setupGlobals() {
   window.navigator = {};
 
   global.browser = {
-    runtime: { sendMessage: BackgroundScript.getRemotePageData },
+    runtime: {
+      sendMessage: BackgroundScript.getRemotePageData,
+      id: 'addon-id',
+    },
   };
 }

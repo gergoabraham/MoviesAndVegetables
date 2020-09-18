@@ -24,6 +24,7 @@
 
   "background": {
     "scripts": [
+      "Utilities/Logger.js",
       "MoviePages/MovieData.js",
       "MoviePages/MoviePage.js",
       "MoviePages/RottenPage.js",

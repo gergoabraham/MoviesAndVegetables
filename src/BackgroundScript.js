@@ -9,6 +9,7 @@
 class BackgroundScript {
   static async getRemotePageData(input) {
     const { movieData, remotePageName } = input;
+    Logger.log('Actual page: ', movieData);
 
     const responseOfSearchUrl = await BackgroundScript.fetchResponse(
       movieData,
@@ -26,6 +27,7 @@ class BackgroundScript {
       moviePageResponse.url
     );
     const remoteMovieData = await remotePage.getMovieData();
+    Logger.log('Remote page: ', remoteMovieData);
 
     return remoteMovieData;
   }

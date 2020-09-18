@@ -23,6 +23,7 @@
     "RottenPage": "writable",
     "MoviePage": "writable",
     "MovieData": "writable",
-    "ContentScript": "writable"
+    "ContentScript": "writable",
+    "Logger": "writable"
   }
 }
