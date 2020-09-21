@@ -23,13 +23,13 @@ class MoviePageFactory {
     } else if (moviePageType == 'RottenTomatoes') {
       return new RottenPage(document, url);
     } else {
-      throw new Error(`MoviePagesFactory cannot instantiate ` +
-                      `"${moviePageType}"`);
+      throw new Error(
+        `MoviePagesFactory cannot instantiate ` + `"${moviePageType}"`
+      );
     }
   }
-};
+}
 
-// Exporting class for unit tests. No effect in browser.
-if (typeof module !== 'undefined') {
-  module.exports = {MoviePageFactory};
+if (typeof exportToTestEnvironment !== 'undefined') {
+  exportToTestEnvironment(MoviePageFactory);
 }

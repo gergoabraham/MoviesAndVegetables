@@ -6,7 +6,6 @@
 
 'use strict';
 
-
 class MovieData {
   /**
    * @param  {string} title
@@ -18,10 +17,16 @@ class MovieData {
    * @param  {number} numberOfCriticsVotes
    * @param  {number} toplistPosition
    */
-  constructor(title, year, url,
-      userRating, numberOfUserVotes,
-      criticsRating, numberOfCriticsVotes,
-      toplistPosition) {
+  constructor(
+    title,
+    year,
+    url,
+    userRating,
+    numberOfUserVotes,
+    criticsRating,
+    numberOfCriticsVotes,
+    toplistPosition
+  ) {
     this.title = title;
     this.year = year;
     this.url = url;
@@ -33,7 +38,6 @@ class MovieData {
   }
 }
 
-// Exporting class for unit tests. No effect in browser.
-if (typeof module !== 'undefined') {
-  module.exports = {MovieData};
+if (typeof exportToTestEnvironment !== 'undefined') {
+  exportToTestEnvironment(MovieData);
 }

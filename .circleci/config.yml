@@ -42,15 +42,15 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npm run test:unit
+      - run: npm run ci:unit-test
 
-  unit-test-coverage:
+  contract-test:
     docker:
       - image: circleci/node:latest
     steps:
       - attach_workspace:
           at: ./
-      - run: npm run ci:coverage
+      - run: npm run test:html-contracts
 
   end-to-end-test:
     docker:
@@ -60,6 +60,14 @@ jobs:
           at: ./
       - browser-tools/install-firefox
       - run: npm run test:end-to-end
+
+  tool-test:
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - attach_workspace:
+          at: ./
+      - run: npm run test:tools
 
 workflows:
   version: 2
@@ -75,10 +83,13 @@ workflows:
       - unit-test:
           requires:
             - checkout_and_install_npm
-      - unit-test-coverage:
+      - contract-test:
           requires:
             - checkout_and_install_npm
       - end-to-end-test:
+          requires:
+            - checkout_and_install_npm
+      - tool-test:
           requires:
             - checkout_and_install_npm
   daily:
@@ -91,6 +102,9 @@ workflows:
                 - master
     jobs:
       - checkout_and_install_npm
+      - contract-test:
+          requires:
+            - checkout_and_install_npm
       - end-to-end-test:
           requires:
             - checkout_and_install_npm

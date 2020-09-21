@@ -33,12 +33,12 @@ class MoviePage {
   /**
    * @param  {MovieData} movieData
    */
+  // eslint-disable-next-line no-unused-vars
   injectRatings(movieData) {
     throw new Error(`Function not implemented.`);
   }
-};
+}
 
-// Exporting class for unit tests. No effect in browser.
-if (typeof module !== 'undefined') {
-  module.exports = {MoviePage};
+if (typeof exportToTestEnvironment !== 'undefined') {
+  exportToTestEnvironment(MoviePage);
 }

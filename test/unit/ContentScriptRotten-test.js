@@ -6,32 +6,20 @@
 
 'use strict';
 
-let injectImdbScoresOnRotten;
+const { JSDOM } = require('jsdom');
 
-const {ContentScript} = require('../../src/ContentScript');
-global.ContentScript = ContentScript;
+describe('Content script on RottenTomatoes', function () {
+  describe('injectImdbScoresOnRotten', function () {
+    it('inject IMDb scores into the document', async function () {
+      const dom = await JSDOM.fromFile(
+        FakeHtmlPath + 'rottentomatoes.m.shawshank_redemption.html',
+        { url: 'https://www.rottentomatoes.com/m/shawshank_redemption' }
+      );
+      global.document = dom.window.document;
 
-describe('Content script on RottenTomatoes', function() {
-  before(function() {
-    global.document = {};
-    global.browser = {runtime: {sendMessage: sinon.fake.resolves({})}};
-    sinon.replace(ContentScript, 'injectScores', sinon.fake());
+      await ContentScriptRottenTomatoes.injectImdbScores();
 
-    ({injectImdbScoresOnRotten} = require('../../src/ContentScriptRotten'));
-  });
-
-  it('should immediately run its function', function() {
-    ContentScript.injectScores.should.have.been.calledOnce;
-  });
-
-  describe('injectImdbScoresOnRotten', function() {
-    it('should call the common "injectScores" function', async function() {
-      sinon.replace(ContentScript, 'injectScores', sinon.fake());
-
-      injectImdbScoresOnRotten();
-
-      ContentScript.injectScores
-          .should.have.been.calledOnceWithExactly('Imdb', 'RottenTomatoes');
+      document.getElementById('mv-imdb-scores').should.exist;
     });
   });
 });

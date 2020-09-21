@@ -21,38 +21,48 @@ class ImdbPage extends MoviePage {
 
     const year = Number(movieDataJSON.datePublished.substring(0, 4));
 
-    const userRating = Number(this.document
-        .querySelector('span[itemprop="ratingValue"').innerHTML
-        .replace(',', '.'));
+    const userRating = Number(
+      this.document
+        .querySelector('span[itemprop="ratingValue"')
+        .innerHTML.replace(',', '.')
+    );
 
-    const numberOfUserVotes = Number(this.document
-        .querySelector('span[itemprop="ratingCount"').textContent
-        .replace(/[^0-9]/g, ``));
+    const numberOfUserVotes = Number(
+      this.document
+        .querySelector('span[itemprop="ratingCount"')
+        .textContent.replace(/[^0-9]/g, ``)
+    );
 
-    const criticsRating = Number(this.document
-        .querySelector('div.metacriticScore')
-        .querySelector('span')
-        .innerHTML);
+    const criticsRating = Number(
+      this.document.querySelector('div.metacriticScore').querySelector('span')
+        .innerHTML
+    );
 
     const numberOfCriticVotes = await this.fetchNumberOfCriticVotes(this.url);
 
     const toplistPosition = this.getToplistPosition();
 
     return new MovieData(
-        title, year, this.url,
-        userRating, numberOfUserVotes,
-        criticsRating, numberOfCriticVotes,
-        toplistPosition,
+      title,
+      year,
+      this.url,
+      userRating,
+      numberOfUserVotes,
+      criticsRating,
+      numberOfCriticVotes,
+      toplistPosition
     );
   }
 
   getToplistPosition() {
     let toplistPosition;
     try {
-      toplistPosition = Number(this.document.getElementById('titleAwardsRanks')
-          .textContent
-          .match(/Top Rated Movies #\d{1,3}/g)[0]
-          .replace(/[^0-9]/g, ``));
+      toplistPosition = Number(
+        this.document
+          .getElementById('titleAwardsRanks')
+          .textContent.match(/Top Rated Movies #\d{1,3}/g)[0]
+          .replace(/[^0-9]/g, ``)
+      );
     } catch (e) {
       toplistPosition = -1;
     }
@@ -60,8 +70,9 @@ class ImdbPage extends MoviePage {
   }
 
   getMovieDataJSON() {
-    const rawJSONContainingMovieData = this.document
-        .head.querySelector('[type="application/ld+json"]').textContent;
+    const rawJSONContainingMovieData = this.document.head.querySelector(
+      '[type="application/ld+json"]'
+    ).textContent;
     return JSON.parse(rawJSONContainingMovieData);
   }
 
@@ -69,8 +80,9 @@ class ImdbPage extends MoviePage {
     const criticUrl = movieUrl + 'criticreviews';
     const criticsPage = await this.fetchPage(criticUrl);
 
-    const numberOfCriticVotes = criticsPage
-        .querySelector('span[itemprop="ratingCount"').textContent;
+    const numberOfCriticVotes = criticsPage.querySelector(
+      'span[itemprop="ratingCount"'
+    ).textContent;
 
     return Number(numberOfCriticVotes);
   }
@@ -79,23 +91,26 @@ class ImdbPage extends MoviePage {
     const response = await fetch(url);
     const pageText = await response.text();
 
-    return new DOMParser()
-        .parseFromString(pageText, 'text/html');
+    return new DOMParser().parseFromString(pageText, 'text/html');
   }
 
   /**
    * @param  {MovieData} movieData
    */
   injectRatings(movieData) {
-    this.injectTomatoMeter(this.document,
-        movieData.criticsRating,
-        movieData.url,
-        movieData.numberOfCriticsVotes);
+    this.injectTomatoMeter(
+      this.document,
+      movieData.criticsRating,
+      movieData.url,
+      movieData.numberOfCriticsVotes
+    );
 
-    this.injectAudienceScore(this.document,
-        movieData.userRating,
-        movieData.url,
-        movieData.numberOfUserVotes);
+    this.injectAudienceScore(
+      this.document,
+      movieData.userRating,
+      movieData.url,
+      movieData.numberOfUserVotes
+    );
   }
 
   injectTomatoMeter(doc, percent, url, votes) {
@@ -112,21 +127,21 @@ class ImdbPage extends MoviePage {
 
   createTomatoMeterElement(url, percent, votes) {
     const innerHTML =
-      `<div class="titleReviewBarItem TomatoMeter">\n` +
-        `<a href="${url}">\n` +
-          `<div class="metacriticScore ${this.getFavorableness(percent)}\n` +
-            `titleReviewBarSubItem" style="width: 40px">\n` +
-            `<span>${percent}%</span>\n` +
-        `</div></a>\n` +
-        `<div class="titleReviewBarSubItem">\n` +
-          `<div>\n` +
-            `<a href="${url}">Tomatometer</a>\n` +
-          `</div>\n` +
-          `<div>\n` +
-            `<span class="subText">` +
-              `Total Count: ${this.groupThousands(votes)}</span>\n` +
-          `</div>\n` +
-        `</div>\n` +
+      `<div class="titleReviewBarItem" id="mv-tomatometer">\n` +
+      `<a href="${url}">\n` +
+      `<div class="metacriticScore ${this.getFavorableness(percent)}\n` +
+      `titleReviewBarSubItem" style="width: 40px">\n` +
+      `<span>${percent}%</span>\n` +
+      `</div></a>\n` +
+      `<div class="titleReviewBarSubItem">\n` +
+      `<div>\n` +
+      `<a href="${url}">Tomatometer</a>\n` +
+      `</div>\n` +
+      `<div>\n` +
+      `<span class="subText">` +
+      `Total Count: ${this.groupThousands(votes)}</span>\n` +
+      `</div>\n` +
+      `</div>\n` +
       `</div>`;
 
     const parser = new DOMParser();
@@ -152,8 +167,11 @@ class ImdbPage extends MoviePage {
   injectAudienceScore(doc, percent, url, votes) {
     const starRatingWidget = doc.getElementById('star-rating-widget');
 
-    const audienceScoreElement =
-        this.createAudienceScoreElement(percent, url, votes);
+    const audienceScoreElement = this.createAudienceScoreElement(
+      percent,
+      url,
+      votes
+    );
     starRatingWidget.before(audienceScoreElement);
 
     const button = starRatingWidget.children[0].children[0];
@@ -165,18 +183,18 @@ class ImdbPage extends MoviePage {
 
   createAudienceScoreElement(percent, url, votes) {
     const innerHTML =
-      `<div class="imdbRating" id="audience-score"` +
-        `style="background:none; text-align:center; padding:2px 0 0 2px;\n`+
-        `width:90px;border-left:1px solid #6b6b6b;">\n` +
-        `<div class="ratingValue">\n` +
-          `<strong title="Audience score from RottenTomatoes">\n` +
-            `<span itemprop="ratingValue">${percent}%</span>\n` +
-          `</strong>\n` +
-        `</div>\n` +
-        `<a href="${url}">\n` +
-          `<span class="small" itemprop="ratingCount">` +
-            `${this.groupThousands(votes)}</span>\n` +
-        `</a>\n` +
+      `<div class="imdbRating" id="mv-audience-score"` +
+      `style="background:none; text-align:center; padding:2px 0 0 2px;\n` +
+      `width:90px;border-left:1px solid #6b6b6b;">\n` +
+      `<div class="ratingValue">\n` +
+      `<strong title="Audience score from RottenTomatoes">\n` +
+      `<span itemprop="ratingValue">${percent}%</span>\n` +
+      `</strong>\n` +
+      `</div>\n` +
+      `<a href="${url}">\n` +
+      `<span class="small" itemprop="ratingCount">` +
+      `${this.groupThousands(votes)}</span>\n` +
+      `</a>\n` +
       `</div>`;
 
     const parser = new DOMParser();
@@ -190,6 +208,6 @@ class ImdbPage extends MoviePage {
   }
 }
 
-if (typeof module !== 'undefined') {
-  module.exports = {ImdbPage};
+if (typeof exportToTestEnvironment !== 'undefined') {
+  exportToTestEnvironment(ImdbPage);
 }

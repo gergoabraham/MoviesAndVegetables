@@ -6,12 +6,14 @@
 
 'use strict';
 
-function injectImdbScoresOnRotten() {
-  ContentScript.injectScores('Imdb', 'RottenTomatoes');
-};
+class ContentScriptRottenTomatoes {
+  static async injectImdbScores() {
+    await ContentScript.injectScores('Imdb', 'RottenTomatoes');
+  }
+}
 
-injectImdbScoresOnRotten();
-
-if (typeof module !== 'undefined') {
-  module.exports = {injectImdbScoresOnRotten};
+if (typeof exportToTestEnvironment !== 'undefined') {
+  exportToTestEnvironment(ContentScriptRottenTomatoes);
+} else {
+  ContentScriptRottenTomatoes.injectImdbScores();
 }
