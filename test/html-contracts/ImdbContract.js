@@ -111,9 +111,19 @@ contract('ImdbContract', function (fetchDOM) {
       it('title is in the json', function () {
         metadata.name.should.equal('The Shawshank Redemption');
       });
+    });
 
-      it('release date is in the json', function () {
-        metadata.datePublished.should.equal('1994-09-23');
+    context('release year', function () {
+      it('is in a meta tag', async function () {
+        const document = await fetchDOM(
+          'https://www.imdb.com/title/tt0111161/'
+        );
+
+        document.head
+          .querySelector('meta[property="og:title"')
+          .getAttribute('content')
+          .match(/\d{4}/)[0]
+          .should.equal('1994');
       });
     });
 
@@ -220,7 +230,11 @@ contract('ImdbContract', function (fetchDOM) {
 
         metadata['@type'].should.equal('Movie');
         metadata.name.should.equal('Avatar 5');
-        metadata.datePublished.should.equal('2028-12-22');
+        document.head
+          .querySelector('meta[property="og:title"')
+          .getAttribute('content')
+          .match(/\d{4}/)[0]
+          .should.equal('2028');
       });
 
       it(`user score doesn't exist`, function () {

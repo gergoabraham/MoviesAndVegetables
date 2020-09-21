@@ -19,7 +19,12 @@ class ImdbPage extends MoviePage {
 
     const title = movieDataJSON.name;
 
-    const year = Number(movieDataJSON.datePublished.substring(0, 4));
+    const year = Number(
+      this.document.head
+        .querySelector('meta[property="og:title"')
+        .getAttribute('content')
+        .match(/(?<=\()\d{4}(?=\) - IMDb)/)[0]
+    );
 
     const userRatingElement = this.document.querySelector(
       'span[itemprop="ratingValue"'
