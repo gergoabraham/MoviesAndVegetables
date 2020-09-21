@@ -73,7 +73,7 @@ describe('rottenPage', function () {
     });
 
     it('not read toplistPosition', function () {
-      movieData.should.contain({ toplistPosition: -1 });
+      movieData.should.contain({ toplistPosition: null });
     });
   });
 
@@ -101,7 +101,7 @@ describe('rottenPage', function () {
             2181618,
             80,
             20,
-            -1
+            null
           )
         );
       });

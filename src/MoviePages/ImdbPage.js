@@ -21,24 +21,30 @@ class ImdbPage extends MoviePage {
 
     const year = Number(movieDataJSON.datePublished.substring(0, 4));
 
-    const userRating = Number(
-      this.document
-        .querySelector('span[itemprop="ratingValue"')
-        .innerHTML.replace(',', '.')
+    const userRatingElement = this.document.querySelector(
+      'span[itemprop="ratingValue"'
     );
+    const userRating = userRatingElement
+      ? Number(userRatingElement.innerHTML.replace(',', '.'))
+      : null;
 
-    const numberOfUserVotes = Number(
-      this.document
-        .querySelector('span[itemprop="ratingCount"')
-        .textContent.replace(/[^0-9]/g, ``)
+    const numberOfUserVotesElement = this.document.querySelector(
+      'span[itemprop="ratingCount"'
     );
+    const numberOfUserVotes = numberOfUserVotesElement
+      ? Number(numberOfUserVotesElement.textContent.replace(/[^0-9]/g, ``))
+      : null;
 
-    const criticsRating = Number(
-      this.document.querySelector('div.metacriticScore').querySelector('span')
-        .innerHTML
+    const criticsRatingElement = this.document.querySelector(
+      'div.metacriticScore'
     );
+    const criticsRating = criticsRatingElement
+      ? Number(criticsRatingElement.querySelector('span').innerHTML)
+      : null;
 
-    const numberOfCriticVotes = await this.fetchNumberOfCriticVotes(this.url);
+    const numberOfCriticVotes = criticsRatingElement
+      ? await this.fetchNumberOfCriticVotes(this.url)
+      : null;
 
     const toplistPosition = this.getToplistPosition();
 
@@ -55,17 +61,13 @@ class ImdbPage extends MoviePage {
   }
 
   getToplistPosition() {
-    let toplistPosition;
-    try {
-      toplistPosition = Number(
-        this.document
-          .getElementById('titleAwardsRanks')
-          .textContent.match(/Top Rated Movies #\d{1,3}/g)[0]
-          .replace(/[^0-9]/g, ``)
-      );
-    } catch (e) {
-      toplistPosition = -1;
-    }
+    const toplistPositionElement = this.document.querySelector(
+      'a[href="/chart/top?ref_=tt_awd"'
+    );
+    const toplistPosition = toplistPositionElement
+      ? Number(toplistPositionElement.textContent.match(/\d{1,3}/g)[0])
+      : null;
+
     return toplistPosition;
   }
 

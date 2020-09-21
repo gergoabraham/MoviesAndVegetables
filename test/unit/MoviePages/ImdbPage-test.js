@@ -34,7 +34,7 @@ describe('ImdbPage', function () {
     let imdbPage;
     let movieData;
 
-    context(`on a movie's imdb page`, function () {
+    context(`on a movie with ratings`, function () {
       before(async function () {
         document = await getTestDocument();
         imdbPage = new ImdbPage(
@@ -80,6 +80,42 @@ describe('ImdbPage', function () {
       });
     });
 
+    context(`on a movie without ratings`, function () {
+      before(`let's check some unimportant data`, async function () {
+        document = await getTestDocument(
+          'imdb.title.tt5637536 - no ratings yet.html'
+        );
+        imdbPage = new ImdbPage(
+          document,
+          `https://www.imdb.com/title/tt5637536/`
+        );
+
+        movieData = await imdbPage.getMovieData();
+        movieData.should.contain({ title: 'Avatar 5' });
+        movieData.should.contain({ year: 2028 });
+      });
+
+      it(`the user rating is null`, function () {
+        movieData.should.contain({ userRating: null });
+      });
+
+      it(`the number of users' votes is null`, function () {
+        movieData.should.contain({ numberOfUserVotes: null });
+      });
+
+      it(`the critics rating is null`, function () {
+        movieData.should.contain({ criticsRating: null });
+      });
+
+      it(`the number of critics' votes is null because it's not fetched`, function () {
+        movieData.should.contain({ numberOfCriticsVotes: null });
+      });
+
+      it('toplistPosition is null', function () {
+        movieData.should.contain({ toplistPosition: null });
+      });
+    });
+
     context(`on a not top250 movie's imdb page`, function () {
       before(async function () {
         document = await getTestDocument(
@@ -94,7 +130,7 @@ describe('ImdbPage', function () {
       });
 
       it('not read toplistPosition', function () {
-        movieData.should.contain({ toplistPosition: -1 });
+        movieData.should.contain({ toplistPosition: null });
       });
     });
 

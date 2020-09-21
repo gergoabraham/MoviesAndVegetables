@@ -186,27 +186,54 @@ contract('ImdbContract', function (fetchDOM) {
     });
 
     context('top250 position', function () {
-      it('hides in a string', async function () {
+      it('hides in an anchor', async function () {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/'
         );
-        const awardDescription = document.getElementById('titleAwardsRanks')
-          .textContent;
+        const toplistPositionElement = document.querySelector(
+          'a[href="/chart/top?ref_=tt_awd"'
+        ).textContent;
 
-        awardDescription.should.match(/Top Rated Movies #\d/);
+        toplistPositionElement.should.match(/Top Rated Movies #1/);
       });
 
-      it('or it is not amongst the awards', async function () {
+      it('or it is not there', async function () {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt7984734/'
         );
-        const awardDescription = document.getElementById('titleAwardsRanks')
-          .textContent;
 
-        awardDescription.should.not.match(/Top Rated Movies #\d/);
+        should.not.exist(
+          document.querySelector('a[href="/chart/top?ref_=tt_awd"')
+        );
+      });
+    });
+
+    context('missing scores', function () {
+      let document;
+      before(`let's check some unimportant data`, async function () {
+        document = await fetchDOM('https://www.imdb.com/title/tt5637536/');
+
+        const metadataRaw = document.head.querySelector(
+          'script[type="application/ld+json"]'
+        ).textContent;
+        const metadata = JSON.parse(metadataRaw);
+
+        metadata['@type'].should.equal('Movie');
+        metadata.name.should.equal('Avatar 5');
+        metadata.datePublished.should.equal('2028-12-22');
       });
 
-      it.skip('or there is no titleAwardsRanks', function () {});
+      it(`user score doesn't exist`, function () {
+        should.not.exist(document.querySelector('span[itemprop="ratingValue"'));
+      });
+
+      it(`user score count doesn't exist`, function () {
+        should.not.exist(document.querySelector('span[itemprop="ratingCount"'));
+      });
+
+      it(`critics score doesn't exist`, function () {
+        should.not.exist(document.querySelector('div.metacriticScore'));
+      });
     });
   });
 

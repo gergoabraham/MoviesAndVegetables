@@ -51,7 +51,7 @@ class RottenPage extends MoviePage {
       Number(numberOfUserRatings),
       Number(tomatoMeter),
       Number(numberOfCriticRatings),
-      -1
+      null
     );
   }
 
@@ -121,7 +121,7 @@ class RottenPage extends MoviePage {
   }
 
   generateToplistPositionString(movieData) {
-    return movieData.toplistPosition > 0
+    return movieData.toplistPosition
       ? ` #${movieData.toplistPosition}/250`
       : ``;
   }
