@@ -199,7 +199,7 @@ contract('ImdbContract', function (fetchDOM) {
 
       it('or it is not there', async function () {
         const document = await fetchDOM(
-          'https://www.imdb.com/title/tt7984734/'
+          'https://www.imdb.com/title/tt5637536/'
         );
 
         should.not.exist(

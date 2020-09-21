@@ -119,17 +119,17 @@ describe('ImdbPage', function () {
     context(`on a not top250 movie's imdb page`, function () {
       before(async function () {
         document = await getTestDocument(
-          `imdb.title.tt7984734 - a simple movie.html`
+          `imdb.title.tt5637536 - no ratings yet.html`
         );
         imdbPage = new ImdbPage(
           document,
-          `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`
+          `https://www.imdb.com/title/tt5637536/`
         );
 
         movieData = await imdbPage.getMovieData();
       });
 
-      it('not read toplistPosition', function () {
+      it('toplistPosition is null', function () {
         movieData.should.contain({ toplistPosition: null });
       });
     });
