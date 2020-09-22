@@ -15,41 +15,45 @@ class RottenPage extends MoviePage {
       'span.mop-ratings-wrap__percentage'
     );
 
-    const tomatoMeter = rottenScores[0].innerHTML.replace(/[^0-9]/g, '');
-    const audienceScore = rottenScores[1].innerHTML.replace(/[^0-9]/g, '');
+    const tomatoMeter = rottenScores[0]
+      ? Number(rottenScores[0].innerHTML.replace(/[^0-9]/g, ''))
+      : null;
+    const audienceScore = rottenScores[1]
+      ? Number(rottenScores[1].innerHTML.replace(/[^0-9]/g, ''))
+      : null;
 
-    const numberOfCriticRatingsHTML = this.document.body.querySelectorAll(
+    const numberOfCriticRatingsElement = this.document.body.querySelectorAll(
       'small.mop-ratings-wrap__text--small'
     )[0];
-    const numberOfCriticRatings = numberOfCriticRatingsHTML.textContent.replace(
-      /[^0-9]/g,
-      ''
-    );
+    const numberOfCriticRatings = tomatoMeter
+      ? Number(numberOfCriticRatingsElement.textContent.replace(/[^0-9]/g, ''))
+      : null;
 
-    const numberOfUserRatingsHtml = this.document.body.querySelectorAll(
+    const numberOfUserRatingsElement = this.document.body.querySelectorAll(
       'strong.mop-ratings-wrap__text--small'
     )[1];
-    const numberOfUserRatings = numberOfUserRatingsHtml.textContent.replace(
-      /[^0-9]/g,
-      ''
-    );
+    const numberOfUserRatings = audienceScore
+      ? Number(numberOfUserRatingsElement.textContent.replace(/[^0-9]/g, ''))
+      : null;
 
     const metaDataJSON = this.readMetadataJSON();
     const title = metaDataJSON.name;
 
-    const year = this.document.head
-      .querySelector('meta[property="og:title"')
-      .getAttribute('content')
-      .match(/\d{4}(?=\)$)/);
+    const year = Number(
+      this.document.head
+        .querySelector('meta[property="og:title"')
+        .getAttribute('content')
+        .match(/\d{4}(?=\)$)/)
+    );
 
     return new MovieData(
       title,
-      Number(year),
+      year,
       this.url,
-      Number(audienceScore),
-      Number(numberOfUserRatings),
-      Number(tomatoMeter),
-      Number(numberOfCriticRatings),
+      audienceScore,
+      numberOfUserRatings,
+      tomatoMeter,
+      numberOfCriticRatings,
       null
     );
   }

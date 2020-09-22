@@ -71,11 +71,7 @@ contract('RottenContract', function (fetchDOM) {
     });
 
     it('release year', async function () {
-      document.head
-        .querySelector('meta[property="og:title"')
-        .getAttribute('content')
-        .match(/\d{4}/)[0]
-        .should.equal('1994');
+      readReleaseYear(document).should.equal('1994');
     });
 
     context('tomatometer', function () {
@@ -119,6 +115,40 @@ contract('RottenContract', function (fetchDOM) {
           .and.most(2000000);
       });
     });
+
+    context('missing scores', function () {
+      let document;
+      before(`let's check some unimportant data`, async function () {
+        document = await fetchDOM('https://www.rottentomatoes.com/m/avatar_5');
+
+        readMetadata(document).name.should.equal('Avatar 5');
+        readReleaseYear(document).should.equal('2028');
+      });
+
+      it(`tomatometer doesn't exist`, function () {
+        should.not.exist(
+          document.getElementsByClassName('mop-ratings-wrap__percentage')[0]
+        );
+      });
+
+      it(`tomatometer vote count contains N/A`, function () {
+        document.body
+          .querySelectorAll('small.mop-ratings-wrap__text--small')[0]
+          .textContent.should.contain('N/A');
+      });
+
+      it(`audience score doesn't exist`, function () {
+        should.not.exist(
+          document.getElementsByClassName('mop-ratings-wrap__percentage')[1]
+        );
+      });
+
+      it(`audience score vote count contains "Not yet available"`, function () {
+        document.body
+          .querySelectorAll('strong.mop-ratings-wrap__text--small')[1]
+          .textContent.should.contain('Not yet available');
+      });
+    });
   });
 });
 
@@ -128,4 +158,11 @@ function readMetadata(document) {
   ).textContent;
 
   return JSON.parse(metadataRaw);
+}
+
+function readReleaseYear(document) {
+  return document.head
+    .querySelector('meta[property="og:title"')
+    .getAttribute('content')
+    .match(/\d{4}/)[0];
 }

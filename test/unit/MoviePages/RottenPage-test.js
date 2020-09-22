@@ -9,14 +9,12 @@
 const { JSDOM } = require('jsdom');
 
 describe('rottenPage', function () {
-  let document;
-
-  before(async function () {
-    const dom = await JSDOM.fromFile(
-      FakeHtmlPath + 'rottentomatoes.m.shawshank_redemption.html'
-    );
-    document = dom.window.document;
-  });
+  async function getTestDocument(
+    filename = 'rottentomatoes.m.shawshank_redemption.html'
+  ) {
+    const dom = await JSDOM.fromFile(FakeHtmlPath + filename);
+    return dom.window.document;
+  }
 
   it('can be instantiated', function () {
     const rottenPage = new RottenPage(
@@ -31,49 +29,95 @@ describe('rottenPage', function () {
   });
 
   describe(`getMovieData`, function () {
-    let rottenPage;
-    let movieData;
+    context('on a movie with ratings', function () {
+      let rottenPage;
+      let movieData;
+      let document;
 
-    before(async function () {
-      rottenPage = new RottenPage(
-        document,
-        'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'
-      );
-      movieData = await rottenPage.getMovieData();
-    });
+      before(async function () {
+        document = await getTestDocument();
+        rottenPage = new RottenPage(
+          document,
+          'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'
+        );
+        movieData = await rottenPage.getMovieData();
+      });
 
-    it(`read the title`, function () {
-      movieData.should.contain({ title: 'The Shawshank Redemption' });
-    });
+      it(`read the title`, function () {
+        movieData.should.contain({ title: 'The Shawshank Redemption' });
+      });
 
-    it(`read the release year`, function () {
-      movieData.should.contain({ year: 1994 });
-    });
+      it(`read the release year`, function () {
+        movieData.should.contain({ year: 1994 });
+      });
 
-    it(`read the url of the page`, function () {
-      movieData.should.contain({
-        url: 'https://www.rottentomatoes.com/m/shawshank_redemption',
+      it(`read the url of the page`, function () {
+        movieData.should.contain({
+          url: 'https://www.rottentomatoes.com/m/shawshank_redemption',
+        });
+      });
+
+      it('read the user rating', function () {
+        movieData.should.contain({ userRating: 98 });
+      });
+
+      it(`read the number of users' votes`, function () {
+        movieData.should.contain({ numberOfUserVotes: 885688 });
+      });
+
+      it('read the critics rating', function () {
+        movieData.should.contain({ criticsRating: 90 });
+      });
+
+      it(`read the number of critics' votes`, function () {
+        movieData.should.contain({ numberOfCriticsVotes: 71 });
+      });
+
+      it('not read toplistPosition', function () {
+        movieData.should.contain({ toplistPosition: null });
       });
     });
 
-    it('read the user rating', function () {
-      movieData.should.contain({ userRating: 98 });
-    });
+    context('on a movie without ratings', function () {
+      let rottenPage;
+      let movieData;
+      let document;
+      before(`let's check some unimportant data`, async function () {
+        document = await getTestDocument(
+          'rottentomatoes.m.avatar_5 - no ratings yet.html'
+        );
+        rottenPage = new RottenPage(
+          document,
+          'https://www.rottentomatoes.com/m/avatar_5'
+        );
+        movieData = await rottenPage.getMovieData();
 
-    it(`read the number of users' votes`, function () {
-      movieData.should.contain({ numberOfUserVotes: 885688 });
-    });
+        movieData.should.contain({ title: 'Avatar 5' });
+        movieData.should.contain({ year: 2028 });
+        movieData.should.contain({
+          url: 'https://www.rottentomatoes.com/m/avatar_5',
+        });
+      });
 
-    it('read the critics rating', function () {
-      movieData.should.contain({ criticsRating: 90 });
-    });
+      it('read the user rating', function () {
+        movieData.should.contain({ userRating: null });
+      });
 
-    it(`read the number of critics' votes`, function () {
-      movieData.should.contain({ numberOfCriticsVotes: 71 });
-    });
+      it(`read the number of users' votes`, function () {
+        movieData.should.contain({ numberOfUserVotes: null });
+      });
 
-    it('not read toplistPosition', function () {
-      movieData.should.contain({ toplistPosition: null });
+      it('read the critics rating', function () {
+        movieData.should.contain({ criticsRating: null });
+      });
+
+      it(`read the number of critics' votes`, function () {
+        movieData.should.contain({ numberOfCriticsVotes: null });
+      });
+
+      it('not read toplistPosition', function () {
+        movieData.should.contain({ toplistPosition: null });
+      });
     });
   });
 
@@ -82,10 +126,7 @@ describe('rottenPage', function () {
     let rottenPage;
     context('no toplist position', function () {
       before(async function () {
-        const dom = await JSDOM.fromFile(
-          FakeHtmlPath + 'rottentomatoes.m.shawshank_redemption.html'
-        );
-        document = dom.window.document;
+        document = await getTestDocument();
 
         rottenPage = new RottenPage(
           document,
@@ -165,10 +206,7 @@ describe('rottenPage', function () {
 
     context('toplist position', function () {
       before(async function () {
-        const dom = await JSDOM.fromFile(
-          FakeHtmlPath + 'rottentomatoes.m.shawshank_redemption.html'
-        );
-        document = dom.window.document;
+        document = await getTestDocument();
 
         rottenPage = new RottenPage(
           document,
