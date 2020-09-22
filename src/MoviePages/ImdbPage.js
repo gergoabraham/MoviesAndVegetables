@@ -18,39 +18,11 @@ class ImdbPage extends MoviePage {
     }
 
     const title = movieDataJSON.name;
-
-    const year = Number(
-      this.document.head
-        .querySelector('meta[property="og:title"')
-        .getAttribute('content')
-        .match(/(?<=\()\d{4}(?=\) - IMDb)/)[0]
-    );
-
-    const userRatingElement = this.document.querySelector(
-      'span[itemprop="ratingValue"'
-    );
-    const userRating = userRatingElement
-      ? Number(userRatingElement.innerHTML.replace(',', '.'))
-      : null;
-
-    const numberOfUserVotesElement = this.document.querySelector(
-      'span[itemprop="ratingCount"'
-    );
-    const numberOfUserVotes = numberOfUserVotesElement
-      ? Number(numberOfUserVotesElement.textContent.replace(/[^0-9]/g, ``))
-      : null;
-
-    const criticsRatingElement = this.document.querySelector(
-      'div.metacriticScore'
-    );
-    const criticsRating = criticsRatingElement
-      ? Number(criticsRatingElement.querySelector('span').innerHTML)
-      : null;
-
-    const numberOfCriticVotes = criticsRatingElement
-      ? await this.fetchNumberOfCriticVotes(this.url)
-      : null;
-
+    const year = this.readYear();
+    const userRating = this.readUserRating();
+    const numberOfUserVotes = this.readNumberOfUserVotes();
+    const criticsRating = this.readCriticsRating();
+    const numberOfCriticVotes = await this.readNumberOfCriticsVotes();
     const toplistPosition = this.getToplistPosition();
 
     return new MovieData(
@@ -65,22 +37,59 @@ class ImdbPage extends MoviePage {
     );
   }
 
-  getToplistPosition() {
-    const toplistPositionElement = this.document.querySelector(
-      'a[href="/chart/top?ref_=tt_awd"'
-    );
-    const toplistPosition = toplistPositionElement
-      ? Number(toplistPositionElement.textContent.match(/\d{1,3}/g)[0])
-      : null;
-
-    return toplistPosition;
-  }
-
   getMovieDataJSON() {
     const rawJSONContainingMovieData = this.document.head.querySelector(
       '[type="application/ld+json"]'
     ).textContent;
     return JSON.parse(rawJSONContainingMovieData);
+  }
+
+  readYear() {
+    return Number(
+      this.document.head
+        .querySelector('meta[property="og:title"')
+        .getAttribute('content')
+        .match(/(?<=\()\d{4}(?=\) - IMDb)/)[0]
+    );
+  }
+
+  readUserRating() {
+    const userRatingElement = this.document.querySelector(
+      'span[itemprop="ratingValue"'
+    );
+    const userRating = userRatingElement
+      ? Number(userRatingElement.innerHTML.replace(',', '.'))
+      : null;
+    return userRating;
+  }
+
+  readNumberOfUserVotes() {
+    const numberOfUserVotesElement = this.document.querySelector(
+      'span[itemprop="ratingCount"'
+    );
+    const numberOfUserVotes = numberOfUserVotesElement
+      ? Number(numberOfUserVotesElement.textContent.replace(/[^0-9]/g, ``))
+      : null;
+    return numberOfUserVotes;
+  }
+
+  readCriticsRating() {
+    const criticsRatingElement = this.getCriticsRatingElement();
+    const criticsRating = criticsRatingElement
+      ? Number(criticsRatingElement.querySelector('span').innerHTML)
+      : null;
+    return criticsRating;
+  }
+
+  async readNumberOfCriticsVotes() {
+    const criticsRatingElement = this.getCriticsRatingElement();
+    return criticsRatingElement
+      ? await this.fetchNumberOfCriticVotes(this.url)
+      : null;
+  }
+
+  getCriticsRatingElement() {
+    return this.document.querySelector('div.metacriticScore');
   }
 
   async fetchNumberOfCriticVotes(movieUrl) {
@@ -92,6 +101,17 @@ class ImdbPage extends MoviePage {
     ).textContent;
 
     return Number(numberOfCriticVotes);
+  }
+
+  getToplistPosition() {
+    const toplistPositionElement = this.document.querySelector(
+      'a[href="/chart/top?ref_=tt_awd"'
+    );
+    const toplistPosition = toplistPositionElement
+      ? Number(toplistPositionElement.textContent.match(/\d{1,3}/g)[0])
+      : null;
+
+    return toplistPosition;
   }
 
   async fetchPage(url) {
