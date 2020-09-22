@@ -11,15 +11,18 @@ class RottenPage extends MoviePage {
    * @return  {MovieData} movieData
    */
   async getMovieData() {
-    const rottenScores = this.document.body.querySelectorAll(
-      'span.mop-ratings-wrap__percentage'
-    );
-
-    const tomatoMeter = rottenScores[0]
-      ? Number(rottenScores[0].innerHTML.replace(/[^0-9]/g, ''))
+    const tomatoMeterElement = this.document.body
+      .getElementsByClassName('mop-ratings-wrap__half')[0]
+      .getElementsByClassName('mop-ratings-wrap__percentage')[0];
+    const tomatoMeter = tomatoMeterElement
+      ? Number(tomatoMeterElement.innerHTML.replace(/[^0-9]/g, ''))
       : null;
-    const audienceScore = rottenScores[1]
-      ? Number(rottenScores[1].innerHTML.replace(/[^0-9]/g, ''))
+
+    const audienceScoreElement = this.document.body
+      .getElementsByClassName('mop-ratings-wrap__half')[1]
+      .getElementsByClassName('mop-ratings-wrap__percentage')[0];
+    const audienceScore = audienceScoreElement
+      ? Number(audienceScoreElement.innerHTML.replace(/[^0-9]/g, ''))
       : null;
 
     const numberOfCriticRatingsElement = this.document.body.querySelectorAll(

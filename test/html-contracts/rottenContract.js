@@ -149,6 +149,52 @@ contract('RottenContract', function (fetchDOM) {
           .textContent.should.contain('Not yet available');
       });
     });
+
+    context('missing tomatomer, but existing audience score', function () {
+      let document;
+      before(`let's check some unimportant data`, async function () {
+        document = await fetchDOM('https://www.rottentomatoes.com/m/amblin');
+
+        readMetadata(document).name.should.equal("Amblin'");
+        readReleaseYear(document).should.equal('1968');
+      });
+
+      it(`tomatometer doesn't exist`, function () {
+        should.not.exist(
+          document
+            .getElementsByClassName('mop-ratings-wrap__half')[0]
+            .getElementsByClassName('mop-ratings-wrap__percentage')[0]
+        );
+      });
+
+      it(`tomatometer vote count contains N/A`, function () {
+        document.body
+          .getElementsByClassName('mop-ratings-wrap__half')[0]
+          .querySelectorAll('small.mop-ratings-wrap__text--small')[0]
+          .textContent.should.contain('N/A');
+      });
+
+      it(`audience score exists`, function () {
+        const audienceScore = document
+          .getElementsByClassName('mop-ratings-wrap__half')[1]
+          .getElementsByClassName('mop-ratings-wrap__percentage')[0].innerHTML;
+
+        Number(audienceScore.match(/\d+(?=%)/))
+          .should.be.above(20)
+          .and.most(100);
+      });
+
+      it(`audience score vote count exists`, function () {
+        const ratingsNumber = document
+          .getElementsByClassName('mop-ratings-wrap__half')[1]
+          .querySelectorAll('strong.mop-ratings-wrap__text--small')[0]
+          .innerHTML;
+
+        Number(ratingsNumber.replace(/[^\d]/g, ''))
+          .should.be.above(10)
+          .and.most(2000);
+      });
+    });
   });
 });
 

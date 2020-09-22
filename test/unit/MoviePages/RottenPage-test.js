@@ -119,6 +119,48 @@ describe('rottenPage', function () {
         movieData.should.contain({ toplistPosition: null });
       });
     });
+
+    context('on a movie with only audience score', function () {
+      let rottenPage;
+      let movieData;
+      let document;
+      before(`let's check some unimportant data`, async function () {
+        document = await getTestDocument(
+          'rottentomatoes.m.amblin - only audience score.html'
+        );
+        rottenPage = new RottenPage(
+          document,
+          'https://www.rottentomatoes.com/m/amblin'
+        );
+        movieData = await rottenPage.getMovieData();
+
+        movieData.should.contain({ title: "Amblin'" });
+        movieData.should.contain({ year: 1968 });
+        movieData.should.contain({
+          url: 'https://www.rottentomatoes.com/m/amblin',
+        });
+      });
+
+      it('read the user rating', function () {
+        movieData.should.contain({ userRating: 60 });
+      });
+
+      it(`read the number of users' votes`, function () {
+        movieData.should.contain({ numberOfUserVotes: 309 });
+      });
+
+      it('read the critics rating', function () {
+        movieData.should.contain({ criticsRating: null });
+      });
+
+      it(`read the number of critics' votes`, function () {
+        movieData.should.contain({ numberOfCriticsVotes: null });
+      });
+
+      it('not read toplistPosition', function () {
+        movieData.should.contain({ toplistPosition: null });
+      });
+    });
   });
 
   describe('injectRatings', function () {
