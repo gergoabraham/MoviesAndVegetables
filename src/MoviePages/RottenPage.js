@@ -11,43 +11,14 @@ class RottenPage extends MoviePage {
    * @return  {MovieData} movieData
    */
   async getMovieData() {
-    const tomatoMeterElement = this.document.body
-      .getElementsByClassName('mop-ratings-wrap__half')[0]
-      .getElementsByClassName('mop-ratings-wrap__percentage')[0];
-    const tomatoMeter = tomatoMeterElement
-      ? Number(tomatoMeterElement.innerHTML.replace(/[^0-9]/g, ''))
-      : null;
-
-    const audienceScoreElement = this.document.body
-      .getElementsByClassName('mop-ratings-wrap__half')[1]
-      .getElementsByClassName('mop-ratings-wrap__percentage')[0];
-    const audienceScore = audienceScoreElement
-      ? Number(audienceScoreElement.innerHTML.replace(/[^0-9]/g, ''))
-      : null;
-
-    const numberOfCriticRatingsElement = this.document.body.querySelectorAll(
-      'small.mop-ratings-wrap__text--small'
-    )[0];
-    const numberOfCriticRatings = tomatoMeter
-      ? Number(numberOfCriticRatingsElement.textContent.replace(/[^0-9]/g, ''))
-      : null;
-
-    const numberOfUserRatingsElement = this.document.body.querySelectorAll(
-      'strong.mop-ratings-wrap__text--small'
-    )[1];
-    const numberOfUserRatings = audienceScore
-      ? Number(numberOfUserRatingsElement.textContent.replace(/[^0-9]/g, ''))
-      : null;
-
     const metaDataJSON = this.readMetadataJSON();
-    const title = metaDataJSON.name;
 
-    const year = Number(
-      this.document.head
-        .querySelector('meta[property="og:title"')
-        .getAttribute('content')
-        .match(/\d{4}(?=\)$)/)
-    );
+    const title = metaDataJSON.name;
+    const year = this.readYear();
+    const tomatoMeter = this.readTomatoMeter();
+    const numberOfCriticRatings = this.readNumberOfCriticsVotes(tomatoMeter);
+    const audienceScore = this.readAudienceScore();
+    const numberOfUserRatings = this.readNumberOfUserVotes(audienceScore);
 
     return new MovieData(
       title,
@@ -59,6 +30,52 @@ class RottenPage extends MoviePage {
       numberOfCriticRatings,
       null
     );
+  }
+
+  readYear() {
+    return Number(this.getTitleMetaTag().match(/\d{4}(?=\)$)/));
+  }
+
+  readTomatoMeter() {
+    const tomatoMeterElement = this.document.body
+      .getElementsByClassName('mop-ratings-wrap__half')[0]
+      .getElementsByClassName('mop-ratings-wrap__percentage')[0];
+
+    return tomatoMeterElement
+      ? Number(tomatoMeterElement.innerHTML.replace(/[^0-9]/g, ''))
+      : null;
+  }
+
+  readNumberOfCriticsVotes(tomatoMeter) {
+    return tomatoMeter
+      ? Number(
+          this.document.body
+            .getElementsByClassName('mop-ratings-wrap__half')[0]
+            .querySelectorAll('small.mop-ratings-wrap__text--small')[0]
+            .textContent.replace(/[^0-9]/g, '')
+        )
+      : null;
+  }
+
+  readAudienceScore() {
+    const audienceScoreElement = this.document.body
+      .getElementsByClassName('mop-ratings-wrap__half')[1]
+      .getElementsByClassName('mop-ratings-wrap__percentage')[0];
+
+    return audienceScoreElement
+      ? Number(audienceScoreElement.innerHTML.replace(/[^0-9]/g, ''))
+      : null;
+  }
+
+  readNumberOfUserVotes(audienceScore) {
+    return audienceScore
+      ? Number(
+          this.document.body
+            .getElementsByClassName('mop-ratings-wrap__half')[1]
+            .querySelectorAll('strong.mop-ratings-wrap__text--small')[0]
+            .textContent.replace(/[^0-9]/g, '')
+        )
+      : null;
   }
 
   /**

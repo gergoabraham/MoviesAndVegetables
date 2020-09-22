@@ -30,13 +30,11 @@ describe('rottenPage', function () {
 
   describe(`getMovieData`, function () {
     context('on a movie with ratings', function () {
-      let rottenPage;
       let movieData;
-      let document;
 
       before(async function () {
-        document = await getTestDocument();
-        rottenPage = new RottenPage(
+        const document = await getTestDocument();
+        const rottenPage = new RottenPage(
           document,
           'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'
         );
@@ -79,14 +77,13 @@ describe('rottenPage', function () {
     });
 
     context('on a movie without ratings', function () {
-      let rottenPage;
       let movieData;
-      let document;
+
       before(`let's check some unimportant data`, async function () {
-        document = await getTestDocument(
+        const document = await getTestDocument(
           'rottentomatoes.m.avatar_5 - no ratings yet.html'
         );
-        rottenPage = new RottenPage(
+        const rottenPage = new RottenPage(
           document,
           'https://www.rottentomatoes.com/m/avatar_5'
         );
@@ -121,14 +118,13 @@ describe('rottenPage', function () {
     });
 
     context('on a movie with only audience score', function () {
-      let rottenPage;
       let movieData;
-      let document;
+
       before(`let's check some unimportant data`, async function () {
-        document = await getTestDocument(
+        const document = await getTestDocument(
           'rottentomatoes.m.amblin - only audience score.html'
         );
-        rottenPage = new RottenPage(
+        const rottenPage = new RottenPage(
           document,
           'https://www.rottentomatoes.com/m/amblin'
         );
@@ -164,13 +160,13 @@ describe('rottenPage', function () {
   });
 
   describe('injectRatings', function () {
-    let document;
-    let rottenPage;
     context('no toplist position', function () {
+      let document;
+
       before(async function () {
         document = await getTestDocument();
 
-        rottenPage = new RottenPage(
+        const rottenPage = new RottenPage(
           document,
           'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'
         );
@@ -247,10 +243,12 @@ describe('rottenPage', function () {
     });
 
     context('toplist position', function () {
+      let document;
+
       before(async function () {
         document = await getTestDocument();
 
-        rottenPage = new RottenPage(
+        const rottenPage = new RottenPage(
           document,
           'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'
         );

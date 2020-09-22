@@ -12,6 +12,7 @@ contract('ImdbContract', function (fetchDOM) {
   context('structure', function () {
     context('user score - ratings wrapper', async function () {
       let ratingsWrapper;
+
       before(async function () {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/'
@@ -59,6 +60,7 @@ contract('ImdbContract', function (fetchDOM) {
 
     context('critics score - titleReviewBar', function () {
       let titleReviewBar;
+
       before(async function () {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/'
@@ -136,6 +138,7 @@ contract('ImdbContract', function (fetchDOM) {
 
     context('user rating', function () {
       let document;
+
       before(async function () {
         document = await fetchDOM('https://www.imdb.com/title/tt0111161/');
       });
@@ -213,6 +216,7 @@ contract('ImdbContract', function (fetchDOM) {
 
     context('missing scores', function () {
       let document;
+
       before(`let's check some unimportant data`, async function () {
         document = await fetchDOM('https://www.imdb.com/title/tt5637536/');
 

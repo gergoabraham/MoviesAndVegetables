@@ -45,6 +45,12 @@ class MoviePage {
 
     return JSON.parse(metadataRaw);
   }
+
+  getTitleMetaTag() {
+    return this.document.head
+      .querySelector('meta[property="og:title"')
+      .getAttribute('content');
+  }
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {

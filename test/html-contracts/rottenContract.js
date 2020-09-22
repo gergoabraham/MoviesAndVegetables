@@ -60,6 +60,46 @@ contract('RottenContract', function (fetchDOM) {
 
   context('data', function () {
     let document;
+
+    function getAudienceScoreCountElement(document) {
+      return document
+        .getElementsByClassName('mop-ratings-wrap__half')[1]
+        .querySelectorAll('strong.mop-ratings-wrap__text--small')[0];
+    }
+
+    function getTomatometerElement(document) {
+      return document
+        .getElementsByClassName('mop-ratings-wrap__half')[0]
+        .getElementsByClassName('mop-ratings-wrap__percentage')[0];
+    }
+
+    function getTomatometerCountElement(document) {
+      return document.body
+        .getElementsByClassName('mop-ratings-wrap__half')[0]
+        .querySelectorAll('small.mop-ratings-wrap__text--small')[0];
+    }
+
+    function getAudienceScoreElement(document) {
+      return document
+        .getElementsByClassName('mop-ratings-wrap__half')[1]
+        .getElementsByClassName('mop-ratings-wrap__percentage')[0];
+    }
+
+    function readMetadata(document) {
+      const metadataRaw = document.head.querySelector(
+        'script[type="application/ld+json"]'
+      ).textContent;
+
+      return JSON.parse(metadataRaw);
+    }
+
+    function readReleaseYear(document) {
+      return document.head
+        .querySelector('meta[property="og:title"')
+        .getAttribute('content')
+        .match(/\d{4}/)[0];
+    }
+
     before(async function () {
       document = await fetchDOM(
         'https://www.rottentomatoes.com/m/shawshank_redemption'
@@ -76,9 +116,7 @@ contract('RottenContract', function (fetchDOM) {
 
     context('tomatometer', function () {
       it('value is a number', async function () {
-        const tomatoMeter = document.getElementsByClassName(
-          'mop-ratings-wrap__percentage'
-        )[0].innerHTML;
+        const tomatoMeter = getTomatometerElement(document).innerHTML;
 
         Number(tomatoMeter.match(/\d+(?=%)/))
           .should.be.above(80)
@@ -86,19 +124,17 @@ contract('RottenContract', function (fetchDOM) {
       });
 
       it('count is a number', async function () {
-        const voteCount = document.querySelectorAll(
-          'small.mop-ratings-wrap__text--small'
-        )[0].innerHTML;
+        const tomatometerCount = getTomatometerCountElement(document).innerHTML;
 
-        Number(voteCount.match(/\d+/)).should.be.above(60).and.below(100);
+        Number(tomatometerCount.match(/\d+/))
+          .should.be.above(60)
+          .and.below(100);
       });
     });
 
     context('audience score', function () {
       it('value is a number', async function () {
-        const audienceScore = document.getElementsByClassName(
-          'mop-ratings-wrap__percentage'
-        )[1].innerHTML;
+        const audienceScore = getAudienceScoreElement(document).textContent;
 
         Number(audienceScore.match(/\d+(?=%)/))
           .should.be.above(80)
@@ -106,11 +142,10 @@ contract('RottenContract', function (fetchDOM) {
       });
 
       it('count is a number', async function () {
-        const ratingsNumber = document.querySelectorAll(
-          'strong.mop-ratings-wrap__text--small'
-        )[1].innerHTML;
+        const audienceScoreCount = getAudienceScoreCountElement(document)
+          .textContent;
 
-        Number(ratingsNumber.replace(/[^\d]/g, ''))
+        Number(audienceScoreCount.replace(/[^\d]/g, ''))
           .should.be.above(880000)
           .and.most(2000000);
       });
@@ -118,6 +153,7 @@ contract('RottenContract', function (fetchDOM) {
 
     context('missing scores', function () {
       let document;
+
       before(`let's check some unimportant data`, async function () {
         document = await fetchDOM('https://www.rottentomatoes.com/m/avatar_5');
 
@@ -126,32 +162,27 @@ contract('RottenContract', function (fetchDOM) {
       });
 
       it(`tomatometer doesn't exist`, function () {
-        should.not.exist(
-          document.getElementsByClassName('mop-ratings-wrap__percentage')[0]
-        );
+        should.not.exist(getTomatometerElement(document));
       });
 
       it(`tomatometer vote count contains N/A`, function () {
-        document.body
-          .querySelectorAll('small.mop-ratings-wrap__text--small')[0]
-          .textContent.should.contain('N/A');
+        getTomatometerCountElement(document).textContent.should.contain('N/A');
       });
 
       it(`audience score doesn't exist`, function () {
-        should.not.exist(
-          document.getElementsByClassName('mop-ratings-wrap__percentage')[1]
-        );
+        should.not.exist(getAudienceScoreElement(document));
       });
 
       it(`audience score vote count contains "Not yet available"`, function () {
-        document.body
-          .querySelectorAll('strong.mop-ratings-wrap__text--small')[1]
-          .textContent.should.contain('Not yet available');
+        getAudienceScoreCountElement(document).textContent.should.contain(
+          'Not yet available'
+        );
       });
     });
 
     context('missing tomatomer, but existing audience score', function () {
       let document;
+
       before(`let's check some unimportant data`, async function () {
         document = await fetchDOM('https://www.rottentomatoes.com/m/amblin');
 
@@ -160,24 +191,15 @@ contract('RottenContract', function (fetchDOM) {
       });
 
       it(`tomatometer doesn't exist`, function () {
-        should.not.exist(
-          document
-            .getElementsByClassName('mop-ratings-wrap__half')[0]
-            .getElementsByClassName('mop-ratings-wrap__percentage')[0]
-        );
+        should.not.exist(getTomatometerElement(document));
       });
 
       it(`tomatometer vote count contains N/A`, function () {
-        document.body
-          .getElementsByClassName('mop-ratings-wrap__half')[0]
-          .querySelectorAll('small.mop-ratings-wrap__text--small')[0]
-          .textContent.should.contain('N/A');
+        getTomatometerCountElement(document).textContent.should.contain('N/A');
       });
 
       it(`audience score exists`, function () {
-        const audienceScore = document
-          .getElementsByClassName('mop-ratings-wrap__half')[1]
-          .getElementsByClassName('mop-ratings-wrap__percentage')[0].innerHTML;
+        const audienceScore = getAudienceScoreElement(document).innerHTML;
 
         Number(audienceScore.match(/\d+(?=%)/))
           .should.be.above(20)
@@ -185,30 +207,13 @@ contract('RottenContract', function (fetchDOM) {
       });
 
       it(`audience score vote count exists`, function () {
-        const ratingsNumber = document
-          .getElementsByClassName('mop-ratings-wrap__half')[1]
-          .querySelectorAll('strong.mop-ratings-wrap__text--small')[0]
+        const audienceScoreCount = getAudienceScoreCountElement(document)
           .innerHTML;
 
-        Number(ratingsNumber.replace(/[^\d]/g, ''))
+        Number(audienceScoreCount.replace(/[^\d]/g, ''))
           .should.be.above(10)
           .and.most(2000);
       });
     });
   });
 });
-
-function readMetadata(document) {
-  const metadataRaw = document.head.querySelector(
-    'script[type="application/ld+json"]'
-  ).textContent;
-
-  return JSON.parse(metadataRaw);
-}
-
-function readReleaseYear(document) {
-  return document.head
-    .querySelector('meta[property="og:title"')
-    .getAttribute('content')
-    .match(/\d{4}/)[0];
-}

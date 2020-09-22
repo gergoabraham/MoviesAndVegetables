@@ -38,44 +38,40 @@ class ImdbPage extends MoviePage {
   }
 
   readYear() {
-    return Number(
-      this.document.head
-        .querySelector('meta[property="og:title"')
-        .getAttribute('content')
-        .match(/(?<=\()\d{4}(?=\) - IMDb)/)[0]
-    );
+    return Number(this.getTitleMetaTag().match(/\d{4}(?=\) - IMDb)/)[0]);
   }
 
   readUserRating() {
     const userRatingElement = this.document.querySelector(
       'span[itemprop="ratingValue"'
     );
-    const userRating = userRatingElement
+
+    return userRatingElement
       ? Number(userRatingElement.innerHTML.replace(',', '.'))
       : null;
-    return userRating;
   }
 
   readNumberOfUserVotes() {
     const numberOfUserVotesElement = this.document.querySelector(
       'span[itemprop="ratingCount"'
     );
-    const numberOfUserVotes = numberOfUserVotesElement
+
+    return numberOfUserVotesElement
       ? Number(numberOfUserVotesElement.textContent.replace(/[^0-9]/g, ``))
       : null;
-    return numberOfUserVotes;
   }
 
   readCriticsRating() {
     const criticsRatingElement = this.getCriticsRatingElement();
-    const criticsRating = criticsRatingElement
+
+    return criticsRatingElement
       ? Number(criticsRatingElement.querySelector('span').innerHTML)
       : null;
-    return criticsRating;
   }
 
   async readNumberOfCriticsVotes() {
     const criticsRatingElement = this.getCriticsRatingElement();
+
     return criticsRatingElement
       ? await this.fetchNumberOfCriticVotes(this.url)
       : null;
