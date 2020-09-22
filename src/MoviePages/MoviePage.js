@@ -37,6 +37,14 @@ class MoviePage {
   injectRatings(movieData) {
     throw new Error(`Function not implemented.`);
   }
+
+  readMetadataJSON() {
+    const metadataRaw = this.document.head.querySelector(
+      'script[type="application/ld+json"]'
+    ).textContent;
+
+    return JSON.parse(metadataRaw);
+  }
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {

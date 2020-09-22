@@ -11,13 +11,13 @@ class ImdbPage extends MoviePage {
    * @return  {MovieData} movieData
    */
   async getMovieData() {
-    const movieDataJSON = this.getMovieDataJSON();
+    const metaDataJSON = this.readMetadataJSON();
 
-    if (movieDataJSON['@type'] != 'Movie') {
+    if (metaDataJSON['@type'] != 'Movie') {
       throw new Error('Not a movie');
     }
 
-    const title = movieDataJSON.name;
+    const title = metaDataJSON.name;
     const year = this.readYear();
     const userRating = this.readUserRating();
     const numberOfUserVotes = this.readNumberOfUserVotes();
@@ -35,13 +35,6 @@ class ImdbPage extends MoviePage {
       numberOfCriticVotes,
       toplistPosition
     );
-  }
-
-  getMovieDataJSON() {
-    const rawJSONContainingMovieData = this.document.head.querySelector(
-      '[type="application/ld+json"]'
-    ).textContent;
-    return JSON.parse(rawJSONContainingMovieData);
   }
 
   readYear() {

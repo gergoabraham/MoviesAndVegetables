@@ -34,9 +34,8 @@ class RottenPage extends MoviePage {
       ''
     );
 
-    const title = this.document.body.querySelectorAll(
-      'h1.mop-ratings-wrap__title.mop-ratings-wrap__title--top'
-    )[0].innerHTML;
+    const metaDataJSON = this.readMetadataJSON();
+    const title = metaDataJSON.name;
 
     const year = this.document.head
       .querySelector('meta[property="og:title"')

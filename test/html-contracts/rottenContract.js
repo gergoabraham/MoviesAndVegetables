@@ -67,11 +67,7 @@ contract('RottenContract', function (fetchDOM) {
     });
 
     it('title', async function () {
-      document.body
-        .querySelectorAll(
-          'h1.mop-ratings-wrap__title.mop-ratings-wrap__title--top'
-        )[0]
-        .innerHTML.should.equal('The Shawshank Redemption');
+      readMetadata(document).name.should.equal('The Shawshank Redemption');
     });
 
     it('release year', async function () {
@@ -125,3 +121,11 @@ contract('RottenContract', function (fetchDOM) {
     });
   });
 });
+
+function readMetadata(document) {
+  const metadataRaw = document.head.querySelector(
+    'script[type="application/ld+json"]'
+  ).textContent;
+
+  return JSON.parse(metadataRaw);
+}

@@ -98,10 +98,7 @@ contract('ImdbContract', function (fetchDOM) {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/'
         );
-        const metadataRaw = document.head.querySelector(
-          'script[type="application/ld+json"]'
-        ).textContent;
-        metadata = JSON.parse(metadataRaw);
+        metadata = readMetadata(document);
       });
 
       it('type is "movie"', function () {
@@ -132,11 +129,7 @@ contract('ImdbContract', function (fetchDOM) {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0149460/'
         );
-        const metadataRaw = document.head.querySelector(
-          'script[type="application/ld+json"]'
-        ).textContent;
-        const metadata = JSON.parse(metadataRaw);
-
+        const metadata = readMetadata(document);
         metadata['@type'].should.equal('TVSeries');
       });
     });
@@ -223,10 +216,7 @@ contract('ImdbContract', function (fetchDOM) {
       before(`let's check some unimportant data`, async function () {
         document = await fetchDOM('https://www.imdb.com/title/tt5637536/');
 
-        const metadataRaw = document.head.querySelector(
-          'script[type="application/ld+json"]'
-        ).textContent;
-        const metadata = JSON.parse(metadataRaw);
+        const metadata = readMetadata(document);
 
         metadata['@type'].should.equal('Movie');
         metadata.name.should.equal('Avatar 5');
@@ -253,3 +243,11 @@ contract('ImdbContract', function (fetchDOM) {
 
   // TODO: different languages
 });
+
+function readMetadata(document) {
+  const metadataRaw = document.head.querySelector(
+    'script[type="application/ld+json"]'
+  ).textContent;
+
+  return JSON.parse(metadataRaw);
+}
