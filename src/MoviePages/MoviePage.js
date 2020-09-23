@@ -51,6 +51,11 @@ class MoviePage {
       .querySelector('meta[property="og:title"')
       .getAttribute('content');
   }
+
+  generateElement(innerHTML) {
+    return new DOMParser().parseFromString(innerHTML, 'text/html').body
+      .children[0];
+  }
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {

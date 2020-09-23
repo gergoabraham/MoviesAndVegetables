@@ -216,7 +216,7 @@ describe('rottenPage', function () {
           `<section id="mv-imdb-scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
             ` style="border-top:2px solid #2a2c32;margin-top:20px">` +
             `  <div class="mop-ratings-wrap__half" style="min-width:240px">` +
-            `  <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
             `      <h2 class="mop-ratings-wrap__score">` +
             `        <span class="mop-ratings-wrap__percentage">80</span></h2>` +
             `    <div class="mop-ratings-wrap__review-totals" style="margin-top:0px">` +
@@ -224,10 +224,10 @@ describe('rottenPage', function () {
             `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
             `      <small class="mop-ratings-wrap__text--small">20</small>` +
             `    </div>` +
-            `</a>` +
+            `  </a>` +
             `</div>` +
             `  <div class="mop-ratings-wrap__half audience-score" style="min-width:240px">` +
-            `  <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on IMDb">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on IMDb">` +
             `    <h2 class="mop-ratings-wrap__score">` +
             `        <span class="mop-ratings-wrap__percentage">9.0</span>` +
             `    </h2>` +
@@ -272,7 +272,7 @@ describe('rottenPage', function () {
           .getElementById('mv-imdb-scores')
           .getElementsByClassName('mop-ratings-wrap__half')[0]
           .innerHTML.should.equal(
-            `  <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
               `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
               `>There are no<br>Metacritic reviews</div>    ` +
               `<div class="mop-ratings-wrap__review-totals" style="margin-top:0px">` +
@@ -288,7 +288,7 @@ describe('rottenPage', function () {
           .getElementById('mv-imdb-scores')
           .getElementsByClassName('mop-ratings-wrap__half')[1]
           .innerHTML.should.equal(
-            `  <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on IMDb">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on IMDb">` +
               `  <div class="audience-score__italics mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion mop-ratings-wrap__text--not-released">` +
               `        <p class="mop-ratings-wrap__prerelease-text">Coming soon</p>` +
               `    </div>` +

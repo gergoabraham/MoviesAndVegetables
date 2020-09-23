@@ -142,28 +142,24 @@ class ImdbPage extends MoviePage {
   }
 
   createTomatoMeterElement(url, percent, votes) {
-    const innerHTML =
+    return this.generateElement(
       `<div class="titleReviewBarItem" id="mv-tomatometer">\n` +
-      `<a href="${url}">\n` +
-      `<div class="metacriticScore ${this.getFavorableness(percent)}\n` +
-      `titleReviewBarSubItem" style="width: 40px">\n` +
-      `<span>${percent}%</span>\n` +
-      `</div></a>\n` +
-      `<div class="titleReviewBarSubItem">\n` +
-      `<div>\n` +
-      `<a href="${url}">Tomatometer</a>\n` +
-      `</div>\n` +
-      `<div>\n` +
-      `<span class="subText">` +
-      `Total Count: ${this.groupThousands(votes)}</span>\n` +
-      `</div>\n` +
-      `</div>\n` +
-      `</div>`;
-
-    const parser = new DOMParser();
-    const tomatoMeterElement = parser.parseFromString(innerHTML, 'text/html');
-
-    return tomatoMeterElement.body.children[0];
+        `<a href="${url}">\n` +
+        `<div class="metacriticScore ${this.getFavorableness(percent)}\n` +
+        `titleReviewBarSubItem" style="width: 40px">\n` +
+        `<span>${percent}%</span>\n` +
+        `</div></a>\n` +
+        `<div class="titleReviewBarSubItem">\n` +
+        `<div>\n` +
+        `<a href="${url}">Tomatometer</a>\n` +
+        `</div>\n` +
+        `<div>\n` +
+        `<span class="subText">` +
+        `Total Count: ${this.groupThousands(votes)}</span>\n` +
+        `</div>\n` +
+        `</div>\n` +
+        `</div>`
+    );
   }
 
   getFavorableness(percent) {
@@ -198,25 +194,21 @@ class ImdbPage extends MoviePage {
   }
 
   createAudienceScoreElement(percent, url, votes) {
-    const innerHTML =
+    return this.generateElement(
       `<div class="imdbRating" id="mv-audience-score"` +
-      `style="background:none; text-align:center; padding:2px 0 0 2px;\n` +
-      `width:90px;border-left:1px solid #6b6b6b;">\n` +
-      `<div class="ratingValue">\n` +
-      `<strong title="Audience score from RottenTomatoes">\n` +
-      `<span itemprop="ratingValue">${percent}%</span>\n` +
-      `</strong>\n` +
-      `</div>\n` +
-      `<a href="${url}">\n` +
-      `<span class="small" itemprop="ratingCount">` +
-      `${this.groupThousands(votes)}</span>\n` +
-      `</a>\n` +
-      `</div>`;
-
-    const parser = new DOMParser();
-    const audienceScoreElement = parser.parseFromString(innerHTML, 'text/html');
-
-    return audienceScoreElement.body.children[0];
+        `style="background:none; text-align:center; padding:2px 0 0 2px;\n` +
+        `width:90px;border-left:1px solid #6b6b6b;">\n` +
+        `<div class="ratingValue">\n` +
+        `<strong title="Audience score from RottenTomatoes">\n` +
+        `<span itemprop="ratingValue">${percent}%</span>\n` +
+        `</strong>\n` +
+        `</div>\n` +
+        `<a href="${url}">\n` +
+        `<span class="small" itemprop="ratingCount">` +
+        `${this.groupThousands(votes)}</span>\n` +
+        `</a>\n` +
+        `</div>`
+    );
   }
 
   groupThousands(number) {
