@@ -216,25 +216,26 @@ describe('rottenPage', function () {
           `<section id="mv-imdb-scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
             ` style="border-top:2px solid #2a2c32;margin-top:20px">` +
             `  <div class="mop-ratings-wrap__half" style="min-width:240px">` +
-            `  <h2 class="mop-ratings-wrap__score">` +
-            `      <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink">` +
-            `        <span class="mop-ratings-wrap__percentage" title="Open Critic Reviews on IMDb">80</span></a></h2>` +
-            `<div class="mop-ratings-wrap__review-totals" style="margin-top:0px">` +
+            `  <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
+            `      <h2 class="mop-ratings-wrap__score">` +
+            `        <span class="mop-ratings-wrap__percentage">80</span></h2>` +
+            `    <div class="mop-ratings-wrap__review-totals" style="margin-top:0px">` +
             `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
             `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
             `      <small class="mop-ratings-wrap__text--small">20</small>` +
             `    </div>` +
+            `</a>` +
             `</div>` +
             `  <div class="mop-ratings-wrap__half audience-score" style="min-width:240px">` +
-            `  <h2 class="mop-ratings-wrap__score">` +
-            `      <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink">` +
-            `        <span class="mop-ratings-wrap__percentage" title="Open The Shawshank Redemption on IMDb">9.0</span>` +
-            `      </a>` +
+            `  <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on IMDb">` +
+            `    <h2 class="mop-ratings-wrap__score">` +
+            `        <span class="mop-ratings-wrap__percentage">9.0</span>` +
             `    </h2>` +
-            `<div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released" style="margin-top:0px">` +
+            `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released" style="margin-top:0px">` +
             `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
             `      <strong class="mop-ratings-wrap__text--small">Number of votes: 2,181,618</strong>` +
             `    </div>` +
+            `      </a>` +
             `</div>` +
             `</section>`
         );
@@ -271,14 +272,14 @@ describe('rottenPage', function () {
           .getElementById('mv-imdb-scores')
           .getElementsByClassName('mop-ratings-wrap__half')[0]
           .innerHTML.should.equal(
-            `  <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink">` +
+            `  <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
               `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
-              ` title="Open Critic Reviews on IMDb">There are no<br>Metacritic reviews</div></a>` +
+              `>There are no<br>Metacritic reviews</div>    ` +
               `<div class="mop-ratings-wrap__review-totals" style="margin-top:0px">` +
               `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
               `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
               `      <small class="mop-ratings-wrap__text--small">N/A</small>` +
-              `    </div>`
+              `    </div></a>`
           );
       });
 

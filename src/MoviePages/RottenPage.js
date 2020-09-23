@@ -114,31 +114,28 @@ class RottenPage extends MoviePage {
     let metacriticsElement;
     if (movieData.criticsRating) {
       metacriticsElement = this.generateElement(
-        `      <h2 class="mop-ratings-wrap__score">` +
-          `      <a href="${movieData.url}criticreviews" class="unstyled articleLink">` +
-          `        <span class="mop-ratings-wrap__percentage" title="Open Critic Reviews on IMDb">${movieData.criticsRating}</span></a></h2>` +
+        `      <a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
+          `      <h2 class="mop-ratings-wrap__score">` +
+          `        <span class="mop-ratings-wrap__percentage">${movieData.criticsRating}</span></h2>` +
           `    <div class="mop-ratings-wrap__review-totals" style="margin-top:0px">` +
           `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
           `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
           `      <small class="mop-ratings-wrap__text--small">${movieData.numberOfCriticsVotes}</small>` +
-          `    </div>`
+          `    </div>` +
+          `</a>`
       );
     } else {
       metacriticsElement = this.generateElement(
-        `      <a href="${movieData.url}criticreviews" class="unstyled articleLink">` +
+        `      <a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
           `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
-          ` title="Open Critic Reviews on IMDb">There are no<br>Metacritic reviews</div></a>` +
+          ` >There are no<br>Metacritic reviews</div>` +
           `    <div class="mop-ratings-wrap__review-totals" style="margin-top:0px">` +
           `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
           `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
           `      <small class="mop-ratings-wrap__text--small">N/A</small>` +
-          `    </div>`
+          `    </div></a>`
       );
     }
-    tomatoMeterElement
-      .getElementById('mv-imdb-scores')
-      .getElementsByClassName('mop-ratings-wrap__half')[0]
-      .appendChild(metacriticsElement.body.children[0]);
     tomatoMeterElement
       .getElementById('mv-imdb-scores')
       .getElementsByClassName('mop-ratings-wrap__half')[0]
@@ -147,15 +144,15 @@ class RottenPage extends MoviePage {
     let userratingElement;
     if (movieData.userRating) {
       userratingElement = this.generateElement(
-        `    <h2 class="mop-ratings-wrap__score">` +
-          `      <a href="${movieData.url}" class="unstyled articleLink">` +
-          `        <span class="mop-ratings-wrap__percentage" title="Open ${
-            movieData.title
-          } on IMDb">${movieData.userRating.toLocaleString('en', {
-            minimumFractionDigits: 1,
-            maximumFractionDigits: 1,
-          })}</span>` +
-          `      </a>` +
+        `      <a href="${movieData.url}" class="unstyled articleLink" title="Open ${movieData.title} on IMDb">` +
+          `    <h2 class="mop-ratings-wrap__score">` +
+          `        <span class="mop-ratings-wrap__percentage">${movieData.userRating.toLocaleString(
+            'en',
+            {
+              minimumFractionDigits: 1,
+              maximumFractionDigits: 1,
+            }
+          )}</span>` +
           `    </h2>` +
           `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released" style="margin-top:0px">` +
           `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating${this.generateToplistPositionString(
@@ -164,7 +161,8 @@ class RottenPage extends MoviePage {
           `      <strong class="mop-ratings-wrap__text--small">Number of votes: ${movieData.numberOfUserVotes.toLocaleString(
             'en'
           )}</strong>` +
-          `    </div>`
+          `    </div>` +
+          `      </a>`
       );
     } else {
       userratingElement = this.generateElement(
@@ -183,12 +181,7 @@ class RottenPage extends MoviePage {
       .getElementById('mv-imdb-scores')
       .getElementsByClassName('mop-ratings-wrap__half')[1]
       .appendChild(userratingElement.body.children[0]);
-    if (userratingElement.body.children[0]) {
-      tomatoMeterElement
-        .getElementById('mv-imdb-scores')
-        .getElementsByClassName('mop-ratings-wrap__half')[1]
-        .appendChild(userratingElement.body.children[0]);
-    }
+
     return tomatoMeterElement.body.children[0];
   }
 
