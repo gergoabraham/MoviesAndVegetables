@@ -2,7 +2,7 @@
   "name": "movies-and-vegetables",
   "version": "0.2.1",
   "scripts": {
-    "tdd:unit": "mocha --watch test/unit/",
+    "tdd:unit": "mocha --watch test/unit/ --inline-diffs",
     "tdd:html-contracts": "mocha test/html-contracts --watch --timeout 5000",
     "tdd:tools": "mocha test/tools --watch --color --timeout 5000",
     "clear-html-cache": "rm test/tools/real-htmls-cache -r",
