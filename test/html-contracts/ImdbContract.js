@@ -12,6 +12,7 @@ contract('ImdbContract', function (fetchDOM) {
   context('structure', function () {
     context('user score - ratings wrapper', async function () {
       let ratingsWrapper;
+
       before(async function () {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/'
@@ -59,6 +60,7 @@ contract('ImdbContract', function (fetchDOM) {
 
     context('critics score - titleReviewBar', function () {
       let titleReviewBar;
+
       before(async function () {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/'
@@ -98,10 +100,7 @@ contract('ImdbContract', function (fetchDOM) {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/'
         );
-        const metadataRaw = document.head.querySelector(
-          'script[type="application/ld+json"]'
-        ).textContent;
-        metadata = JSON.parse(metadataRaw);
+        metadata = readMetadata(document);
       });
 
       it('type is "movie"', function () {
@@ -111,9 +110,19 @@ contract('ImdbContract', function (fetchDOM) {
       it('title is in the json', function () {
         metadata.name.should.equal('The Shawshank Redemption');
       });
+    });
 
-      it('release date is in the json', function () {
-        metadata.datePublished.should.equal('1994-09-23');
+    context('release year', function () {
+      it('is in a meta tag', async function () {
+        const document = await fetchDOM(
+          'https://www.imdb.com/title/tt0111161/'
+        );
+
+        document.head
+          .querySelector('meta[property="og:title"')
+          .getAttribute('content')
+          .match(/\d{4}/)[0]
+          .should.equal('1994');
       });
     });
 
@@ -122,17 +131,14 @@ contract('ImdbContract', function (fetchDOM) {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0149460/'
         );
-        const metadataRaw = document.head.querySelector(
-          'script[type="application/ld+json"]'
-        ).textContent;
-        const metadata = JSON.parse(metadataRaw);
-
+        const metadata = readMetadata(document);
         metadata['@type'].should.equal('TVSeries');
       });
     });
 
     context('user rating', function () {
       let document;
+
       before(async function () {
         document = await fetchDOM('https://www.imdb.com/title/tt0111161/');
       });
@@ -186,29 +192,66 @@ contract('ImdbContract', function (fetchDOM) {
     });
 
     context('top250 position', function () {
-      it('hides in a string', async function () {
+      it('hides in an anchor', async function () {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/'
         );
-        const awardDescription = document.getElementById('titleAwardsRanks')
-          .textContent;
+        const toplistPositionElement = document.querySelector(
+          'a[href="/chart/top?ref_=tt_awd"'
+        ).textContent;
 
-        awardDescription.should.match(/Top Rated Movies #\d/);
+        toplistPositionElement.should.match(/Top Rated Movies #1/);
       });
 
-      it('or it is not amongst the awards', async function () {
+      it('or it is not there', async function () {
         const document = await fetchDOM(
-          'https://www.imdb.com/title/tt7984734/'
+          'https://www.imdb.com/title/tt5637536/'
         );
-        const awardDescription = document.getElementById('titleAwardsRanks')
-          .textContent;
 
-        awardDescription.should.not.match(/Top Rated Movies #\d/);
+        should.not.exist(
+          document.querySelector('a[href="/chart/top?ref_=tt_awd"')
+        );
+      });
+    });
+
+    context('missing scores', function () {
+      let document;
+
+      before(`let's check some unimportant data`, async function () {
+        document = await fetchDOM('https://www.imdb.com/title/tt5637536/');
+
+        const metadata = readMetadata(document);
+
+        metadata['@type'].should.equal('Movie');
+        metadata.name.should.equal('Avatar 5');
+        document.head
+          .querySelector('meta[property="og:title"')
+          .getAttribute('content')
+          .match(/\d{4}/)[0]
+          .should.equal('2028');
       });
 
-      it.skip('or there is no titleAwardsRanks', function () {});
+      it(`user score doesn't exist`, function () {
+        should.not.exist(document.querySelector('span[itemprop="ratingValue"'));
+      });
+
+      it(`user score count doesn't exist`, function () {
+        should.not.exist(document.querySelector('span[itemprop="ratingCount"'));
+      });
+
+      it(`critics score doesn't exist`, function () {
+        should.not.exist(document.querySelector('div.metacriticScore'));
+      });
     });
   });
 
   // TODO: different languages
 });
+
+function readMetadata(document) {
+  const metadataRaw = document.head.querySelector(
+    'script[type="application/ld+json"]'
+  ).textContent;
+
+  return JSON.parse(metadataRaw);
+}

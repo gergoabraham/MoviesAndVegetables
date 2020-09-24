@@ -18,6 +18,8 @@ class BackgroundScript {
     const movieUrl = BackgroundScript.removeForwardWarning(
       responseOfSearchUrl.url
     );
+    Logger.log('Remote page url: ', movieUrl);
+
     const moviePageResponse = await fetch(movieUrl);
     const moviePage = await BackgroundScript.getRemotePage(moviePageResponse);
 
@@ -37,6 +39,7 @@ class BackgroundScript {
       movieData,
       remotePage
     );
+    Logger.log('Search url: ', searchURL);
     return fetch(searchURL);
   }
 

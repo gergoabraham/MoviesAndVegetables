@@ -45,7 +45,7 @@ describe('Background script', function () {
           885688,
           90,
           71,
-          -1
+          null
         )
       );
     });

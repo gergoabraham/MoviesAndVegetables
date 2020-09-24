@@ -37,6 +37,25 @@ class MoviePage {
   injectRatings(movieData) {
     throw new Error(`Function not implemented.`);
   }
+
+  readMetadataJSON() {
+    const metadataRaw = this.document.head.querySelector(
+      'script[type="application/ld+json"]'
+    ).textContent;
+
+    return JSON.parse(metadataRaw);
+  }
+
+  getTitleMetaTag() {
+    return this.document.head
+      .querySelector('meta[property="og:title"')
+      .getAttribute('content');
+  }
+
+  generateElement(innerHTML) {
+    return new DOMParser().parseFromString(innerHTML, 'text/html').body
+      .children[0];
+  }
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {

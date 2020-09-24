@@ -10,7 +10,6 @@ const { JSDOM } = require('jsdom');
 const sinon = require('sinon');
 
 describe('ImdbPage', function () {
-  let document;
   const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
 
   async function getTestDocument(
@@ -31,13 +30,12 @@ describe('ImdbPage', function () {
   });
 
   describe('getMovieData', function () {
-    let imdbPage;
-    let movieData;
+    context(`on a movie with ratings`, function () {
+      let movieData;
 
-    context(`on a movie's imdb page`, function () {
       before(async function () {
-        document = await getTestDocument();
-        imdbPage = new ImdbPage(
+        const document = await getTestDocument();
+        const imdbPage = new ImdbPage(
           document,
           `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`
         );
@@ -80,27 +78,71 @@ describe('ImdbPage', function () {
       });
     });
 
-    context(`on a not top250 movie's imdb page`, function () {
-      before(async function () {
-        document = await getTestDocument(
-          `imdb.title.tt7984734 - a simple movie.html`
+    context(`on a movie without ratings`, function () {
+      let movieData;
+
+      before(`let's check some unimportant data`, async function () {
+        const document = await getTestDocument(
+          'imdb.title.tt5637536 - no ratings yet.html'
         );
-        imdbPage = new ImdbPage(
+        const imdbPage = new ImdbPage(
           document,
-          `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`
+          `https://www.imdb.com/title/tt5637536/`
+        );
+
+        movieData = await imdbPage.getMovieData();
+        movieData.should.contain({ title: 'Avatar 5' });
+        movieData.should.contain({ year: 2028 });
+      });
+
+      it(`the user rating is null`, function () {
+        movieData.should.contain({ userRating: null });
+      });
+
+      it(`the number of users' votes is null`, function () {
+        movieData.should.contain({ numberOfUserVotes: null });
+      });
+
+      it(`the critics rating is null`, function () {
+        movieData.should.contain({ criticsRating: null });
+      });
+
+      it(`the number of critics' votes is null because it's not fetched`, function () {
+        movieData.should.contain({ numberOfCriticsVotes: null });
+      });
+
+      it('toplistPosition is null', function () {
+        movieData.should.contain({ toplistPosition: null });
+      });
+    });
+
+    context(`on a not top250 movie's imdb page`, function () {
+      let movieData;
+
+      before(async function () {
+        const document = await getTestDocument(
+          `imdb.title.tt5637536 - no ratings yet.html`
+        );
+        const imdbPage = new ImdbPage(
+          document,
+          `https://www.imdb.com/title/tt5637536/`
         );
 
         movieData = await imdbPage.getMovieData();
       });
 
-      it('not read toplistPosition', function () {
-        movieData.should.contain({ toplistPosition: -1 });
+      it('toplistPosition is null', function () {
+        movieData.should.contain({ toplistPosition: null });
       });
     });
 
     context(`on a series' imdb page`, function () {
+      let imdbPage;
+
       before(async function () {
-        document = await getTestDocument('imdb.title.tt0149460 - series.html');
+        const document = await getTestDocument(
+          'imdb.title.tt0149460 - series.html'
+        );
         imdbPage = new ImdbPage(document, 'https://url');
       });
 
@@ -113,13 +155,12 @@ describe('ImdbPage', function () {
   });
 
   describe('injectRatings', function () {
-    let titleReviewBar;
-    let imdbPage;
-
     context('Tomatometer', function () {
+      let titleReviewBar;
+
       before(async function () {
-        document = await getTestDocument();
-        imdbPage = new ImdbPage(document, 'https://url');
+        const document = await getTestDocument();
+        const imdbPage = new ImdbPage(document, 'https://url');
         imdbPage.injectRatings(
           new MovieData('title', 2002, rottenURL, 85, 666, 93, 1268)
         );
@@ -172,10 +213,11 @@ describe('ImdbPage', function () {
 
     describe('AudienceScore', function () {
       let ratingsWrapper;
+      let document;
 
       before(async function () {
         document = await getTestDocument();
-        imdbPage = new ImdbPage(document, 'https://url');
+        const imdbPage = new ImdbPage(document, 'https://url');
         imdbPage.injectRatings(
           new MovieData('title', 2002, rottenURL, 98, 885228, 93, 1268)
         );
@@ -226,6 +268,7 @@ describe('ImdbPage', function () {
   describe('"private" methods', function () {
     context('Favorableness', function () {
       let imdbPage;
+      let document;
 
       before(async function () {
         document = await getTestDocument();
