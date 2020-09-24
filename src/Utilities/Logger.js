@@ -9,7 +9,7 @@
 class Logger {
   static log(message, ...optionalParams) {
     if (this.isAddonTemporary()) {
-      console.log(message, ...optionalParams);
+      console.log('🎥🍅', message, ...optionalParams);
     }
   }
 
