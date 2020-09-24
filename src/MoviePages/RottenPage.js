@@ -119,7 +119,7 @@ class RottenPage extends MoviePage {
   generateEmptyRatingsRowElement() {
     return this.generateElement(
       `<section id="mv-imdb-scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
-        `  style="border-top:2px solid #2a2c32;margin-top:20px">` +
+        `  style="border-top:2px solid #2a2c32;margin-top:30px;padding-top:20px">` +
         `  <div class="mop-ratings-wrap__half" style="min-width:240px">` +
         `    </div>` +
         `  <div class="mop-ratings-wrap__half audience-score" style="min-width:240px">` +
@@ -135,7 +135,7 @@ class RottenPage extends MoviePage {
         `<a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
         `      <h2 class="mop-ratings-wrap__score">` +
         `        <span class="mop-ratings-wrap__percentage">${movieData.criticsRating}</span></h2>` +
-        `    <div class="mop-ratings-wrap__review-totals" style="margin-top:0px">` +
+        `    <div class="mop-ratings-wrap__review-totals">` +
         `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
         `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
         `      <small class="mop-ratings-wrap__text--small">${movieData.numberOfCriticsVotes}</small>` +
@@ -146,7 +146,7 @@ class RottenPage extends MoviePage {
         `      <a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
         `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
         ` >There are no<br>Metacritic reviews</div>` +
-        `    <div class="mop-ratings-wrap__review-totals" style="margin-top:0px">` +
+        `    <div class="mop-ratings-wrap__review-totals">` +
         `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
         `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
         `      <small class="mop-ratings-wrap__text--small">N/A</small>` +
@@ -171,7 +171,7 @@ class RottenPage extends MoviePage {
           }
         )}</span>` +
         `    </h2>` +
-        `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released" style="margin-top:0px">` +
+        `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
         `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating${this.generateToplistPositionString(
           movieData
         )}</h3>` +
@@ -186,7 +186,7 @@ class RottenPage extends MoviePage {
         `  <div class="audience-score__italics mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion mop-ratings-wrap__text--not-released">` +
         `        <p class="mop-ratings-wrap__prerelease-text">Coming soon</p>` +
         `    </div>` +
-        `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released" style="margin-top:0px">` +
+        `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
         `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
         `      <strong class="mop-ratings-wrap__text--small">Number of votes: N/A</strong>` +
         `    </div>` +
