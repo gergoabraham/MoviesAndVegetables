@@ -8,7 +8,7 @@
 
 class ContentScriptImdb {
   static async injectRottenTomatoesScores() {
-    await ContentScript.injectScores('RottenTomatoes', 'Imdb');
+    await ContentScript.injectScores(RottenPage.NAME, ImdbPage.NAME);
   }
 }
 

@@ -40,6 +40,7 @@
       "js": [
         "MoviePages/MovieData.js",
         "MoviePages/MoviePage.js",
+        "MoviePages/RottenPage.js",
         "MoviePages/ImdbPage.js",
         "MoviePages/MoviePageFactory.js",
         "ContentScript.js",
@@ -51,6 +52,7 @@
       "js": [
         "MoviePages/MovieData.js",
         "MoviePages/MoviePage.js",
+        "MoviePages/ImdbPage.js",
         "MoviePages/RottenPage.js",
         "MoviePages/MoviePageFactory.js",
         "ContentScript.js",

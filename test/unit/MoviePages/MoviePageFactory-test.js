@@ -21,7 +21,11 @@ describe('MoviePageFactory', function () {
     });
 
     it('create ImdbPage', function () {
-      const imdbPage = MoviePageFactory.create('Imdb', 'doc', 'https://url');
+      const imdbPage = MoviePageFactory.create(
+        ImdbPage.NAME,
+        'doc',
+        'https://url'
+      );
 
       (imdbPage instanceof ImdbPage).should.be.true;
       (imdbPage instanceof MoviePage).should.be.true;
@@ -34,7 +38,7 @@ describe('MoviePageFactory', function () {
 
     it('create RottenPage', function () {
       const rottenPage = MoviePageFactory.create(
-        'RottenTomatoes',
+        RottenPage.NAME,
         'doc',
         'https://url.two'
       );

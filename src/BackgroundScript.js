@@ -7,64 +7,105 @@
 'use strict';
 
 class BackgroundScript {
-  static async getRemotePageData(input) {
-    const { movieData, remotePageName } = input;
+  static async getRemotePageData(message) {
+    const { movieData, remotePageName } = message;
     Logger.log('Actual page: ', movieData);
 
-    const responseOfSearchUrl = await BackgroundScript.fetchResponse(
+    const movieUrl = await BackgroundScript.findRemoteMoviePageUrl(
       movieData,
       remotePageName
     );
-    const movieUrl = BackgroundScript.removeForwardWarning(
-      responseOfSearchUrl.url
+    const remoteMovieData = await BackgroundScript.fetchMovieData(
+      movieUrl,
+      remotePageName
     );
-    Logger.log('Remote page url: ', movieUrl);
 
-    const moviePageResponse = await fetch(movieUrl);
-    const moviePage = await BackgroundScript.getRemotePage(moviePageResponse);
-
-    const remotePage = MoviePageFactory.create(
-      remotePageName,
-      moviePage,
-      moviePageResponse.url
-    );
-    const remoteMovieData = await remotePage.getMovieData();
     Logger.log('Remote page: ', remoteMovieData);
-
     return remoteMovieData;
   }
 
-  static async fetchResponse(movieData, remotePage) {
+  static async findRemoteMoviePageUrl(movieData, remotePageName) {
+    const searchResponse = await BackgroundScript.fetchMovieSearch(
+      movieData,
+      remotePageName
+    );
+    const isSearchRedirected = BackgroundScript.isSearchRedirected(
+      remotePageName,
+      searchResponse
+    );
+
+    let movieUrl;
+    if (isSearchRedirected) {
+      movieUrl = BackgroundScript.skipRedirectNotice(searchResponse.url);
+      Logger.log('feeling lucky 😎', movieUrl);
+    } else {
+      movieUrl = await BackgroundScript.readMovieUrlFromSearchResults(
+        searchResponse,
+        remotePageName
+      );
+      Logger.log('feeling unlucky 😥', movieUrl);
+    }
+
+    return movieUrl;
+  }
+
+  static async fetchMovieSearch(movieData, remotePageName) {
     const searchURL = BackgroundScript.constructSearchUrl(
       movieData,
-      remotePage
+      remotePageName
     );
     Logger.log('Search url: ', searchURL);
+
     return fetch(searchURL);
   }
 
-  static constructSearchUrl(movieData, remotePage) {
+  static constructSearchUrl(movieData, remotePageName) {
     const { title, year } = movieData;
-
     const titleWithoutSpecialCharacters = title.replace(/&/g, '');
+
     return (
       `https://www.google.com/search?btnI=true&` +
-      `q=${titleWithoutSpecialCharacters}+${year}+movie+${remotePage}`.replace(
-        / /g,
-        '+'
-      )
-    );
+      `q=${titleWithoutSpecialCharacters}+${year}` +
+      `+movie+${remotePageName}`
+    ).replace(/ /g, '+');
   }
 
-  static removeForwardWarning(url) {
+  static isSearchRedirected(remotePageName, responseOfSearch) {
+    const urlPattern = MoviePageFactory.getMoviePageUrlPattern(remotePageName);
+    return responseOfSearch.url.match(urlPattern);
+  }
+
+  static skipRedirectNotice(url) {
     return url.replace('https://www.google.com/url?q=', '');
   }
 
-  static async getRemotePage(response) {
-    const remotePage = await response.text();
+  static async readMovieUrlFromSearchResults(responseOfSearch, remotePageName) {
+    const urlPattern = MoviePageFactory.getMoviePageUrlPattern(remotePageName);
+    const googleSearchPage = await BackgroundScript.getDOM(responseOfSearch);
 
-    const parser = new DOMParser();
-    return parser.parseFromString(remotePage, 'text/html');
+    const aElements = [...googleSearchPage.getElementsByTagName('A')];
+    const urls = aElements.map((elem) => elem.getAttribute('href'));
+    const movieUrls = urls.filter((href) => href && href.match(urlPattern));
+
+    return movieUrls[0].match(urlPattern)[0];
+  }
+
+  static async fetchMovieData(movieUrl, moviePageName) {
+    const moviePageResponse = await fetch(movieUrl);
+    const moviePageDOM = await BackgroundScript.getDOM(moviePageResponse);
+
+    const remotePage = MoviePageFactory.create(
+      moviePageName,
+      moviePageDOM,
+      moviePageResponse.url
+    );
+
+    return remotePage.getMovieData();
+  }
+
+  static async getDOM(response) {
+    const text = await response.text();
+    return new DOMParser().parseFromString(text, 'text/html');
   }
 
   static init() {

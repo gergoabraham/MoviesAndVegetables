@@ -18,14 +18,24 @@ class MoviePageFactory {
    * @return {MoviePage} MoviePage
    */
   static create(moviePageType, document, url) {
-    if (moviePageType == 'Imdb') {
+    if (moviePageType == ImdbPage.NAME) {
       return new ImdbPage(document, url);
-    } else if (moviePageType == 'RottenTomatoes') {
+    } else if (moviePageType == RottenPage.NAME) {
       return new RottenPage(document, url);
     } else {
       throw new Error(
         `MoviePagesFactory cannot instantiate ` + `"${moviePageType}"`
       );
+    }
+  }
+
+  static getMoviePageUrlPattern(moviePageType) {
+    if (moviePageType == ImdbPage.NAME) {
+      return ImdbPage.URL_PATTERN;
+    } else if (moviePageType == RottenPage.NAME) {
+      return RottenPage.URL_PATTERN;
+    } else {
+      return null;
     }
   }
 }
