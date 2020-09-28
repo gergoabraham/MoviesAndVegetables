@@ -7,6 +7,13 @@
 'use strict';
 
 class ImdbPage extends MoviePage {
+  static get NAME() {
+    return 'Imdb';
+  }
+  static get URL_PATTERN() {
+    return /https:\/\/www\.imdb\.com\/title\/tt\d+\//;
+  }
+
   /**
    * @return  {MovieData} movieData
    */

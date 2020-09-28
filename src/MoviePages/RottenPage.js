@@ -7,6 +7,14 @@
 'use strict';
 
 class RottenPage extends MoviePage {
+  static get NAME() {
+    return 'RottenTomatoes';
+  }
+
+  static get URL_PATTERN() {
+    return /https:\/\/www\.rottentomatoes\.com\/m\/[^&]+/;
+  }
+
   /**
    * @return  {MovieData} movieData
    */
