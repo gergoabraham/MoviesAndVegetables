@@ -150,21 +150,24 @@ class ImdbPage extends MoviePage {
 
   createTomatoMeterElement(url, percent, votes) {
     return this.generateElement(
-      `<div class="titleReviewBarItem" id="mv-tomatometer">\n` +
-        `<a href="${url}">\n` +
-        `<div class="metacriticScore ${this.getFavorableness(percent)}\n` +
-        `titleReviewBarSubItem" style="width: 40px">\n` +
-        `<span>${percent}%</span>\n` +
-        `</div></a>\n` +
-        `<div class="titleReviewBarSubItem">\n` +
-        `<div>\n` +
-        `<a href="${url}">Tomatometer</a>\n` +
-        `</div>\n` +
-        `<div>\n` +
-        `<span class="subText">` +
-        `Total Count: ${this.groupThousands(votes)}</span>\n` +
-        `</div>\n` +
-        `</div>\n` +
+      `<div class="titleReviewBarItem" id="mv-tomatometer">` +
+        `    <a href="${url}">` +
+        `        <div class="metacriticScore ${this.getFavorableness(
+          percent
+        )} titleReviewBarSubItem" style="width: 40px">` +
+        `            <span>${percent ? percent + '%' : 'TBD'}</span>` +
+        `        </div>` +
+        `    </a>` +
+        `    <div class="titleReviewBarSubItem">` +
+        `        <div>` +
+        `            <a href="${url}">Tomatometer</a>` +
+        `        </div>` +
+        `        <div>` +
+        `            <span class="subText">Total Count: ${
+          votes ? this.groupThousands(votes) : 'N/A'
+        }</span>` +
+        `        </div>` +
+        `    </div>` +
         `</div>`
     );
   }
@@ -172,7 +175,9 @@ class ImdbPage extends MoviePage {
   getFavorableness(percent) {
     let favorableness;
 
-    if (percent >= 61) {
+    if (percent === null) {
+      favorableness = 'tbd';
+    } else if (percent >= 61) {
       favorableness = 'favorable';
     } else if (percent >= 41) {
       favorableness = 'mixed';
@@ -203,17 +208,20 @@ class ImdbPage extends MoviePage {
   createAudienceScoreElement(percent, url, votes) {
     return this.generateElement(
       `<div class="imdbRating" id="mv-audience-score"` +
-        `style="background:none; text-align:center; padding:2px 0 0 2px;\n` +
-        `width:90px;border-left:1px solid #6b6b6b;">\n` +
-        `<div class="ratingValue">\n` +
-        `<strong title="Audience score from RottenTomatoes">\n` +
-        `<span itemprop="ratingValue">${percent}%</span>\n` +
-        `</strong>\n` +
-        `</div>\n` +
-        `<a href="${url}">\n` +
-        `<span class="small" itemprop="ratingCount">` +
-        `${this.groupThousands(votes)}</span>\n` +
-        `</a>\n` +
+        `     style="background:none;text-align:center;padding:2px 0 0 2px;` +
+        `width:90px;border-left:1px solid #6b6b6b;">` +
+        `    <div class="ratingValue">` +
+        `        <strong title="Audience score from RottenTomatoes">` +
+        `            <span itemprop="ratingValue">${
+          percent ? percent + '%' : 'TBD'
+        }</span>` +
+        `        </strong>` +
+        `    </div>` +
+        `    <a href="${url}">` +
+        `        <span class="small" itemprop="ratingCount">${
+          votes ? this.groupThousands(votes) : 'N/A'
+        }</span>` +
+        `    </a>` +
         `</div>`
     );
   }
