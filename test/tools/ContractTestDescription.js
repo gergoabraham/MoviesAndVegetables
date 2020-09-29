@@ -51,7 +51,15 @@ contract.skip = function (title, body) {
   describe.skip(title, contractTestPerformer(body));
 };
 
-const DOMcache = {};
+let DOMcache = {};
+
+after(function () {
+  /* Letting the GC know that the cache object can be deleted,
+     by unreferencing it in an explicit way.
+     Without this, the contract test tdd script crashes after twenty-so runs,
+     due to an oversized (>2GB) heap. */
+  DOMcache = null;
+});
 
 function contractTestPerformer(body) {
   return () => {
