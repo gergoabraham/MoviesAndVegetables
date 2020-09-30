@@ -154,7 +154,9 @@ class ImdbPage extends MoviePage {
         `        <div class="metacriticScore ${this.getFavorableness(
           percent
         )} titleReviewBarSubItem" style="width: 40px">` +
-        `            <span>${percent ? percent + '%' : 'TBD'}</span>` +
+        `            <span${percent ? '' : ' style="color:black"'}>${
+          percent ? percent + '%' : '-'
+        }</span>` +
         `        </div>` +
         `    </a>` +
         `    <div class="titleReviewBarSubItem">` +
@@ -279,7 +281,7 @@ class ImdbPage extends MoviePage {
         `    <div class="ratingValue">` +
         `        <strong title="Audience score from RottenTomatoes">` +
         `            <span itemprop="ratingValue">${
-          percent ? percent + '%' : 'TBD'
+          percent ? percent + '%' : '-'
         }</span>` +
         `        </strong>` +
         `    </div>` +

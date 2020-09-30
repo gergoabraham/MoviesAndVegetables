@@ -282,7 +282,7 @@ describe('ImdbPage', function () {
           `<div class="titleReviewBarItem" id="mv-tomatometer">` +
             `    <a href="${rottenURL}">` +
             `        <div class="metacriticScore score_tbd titleReviewBarSubItem" style="width: 40px">` +
-            `            <span>TBD</span>` +
+            `            <span style="color:black">-</span>` +
             `        </div>` +
             `    </a>` +
             `    <div class="titleReviewBarSubItem">` +
@@ -306,7 +306,7 @@ describe('ImdbPage', function () {
             `width: 90px; border-left: 1px solid #6b6b6b;">` +
             `    <div class="ratingValue">` +
             `        <strong title="Audience score from RottenTomatoes">` +
-            `            <span itemprop="ratingValue">TBD</span>` +
+            `            <span itemprop="ratingValue">-</span>` +
             `        </strong>` +
             `    </div>` +
             `    <a href="${rottenURL}">` +
