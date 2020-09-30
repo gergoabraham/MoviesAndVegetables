@@ -158,7 +158,7 @@ class ImdbPage extends MoviePage {
           percent ? percent + '%' : '-'
         }</span>` +
         `        </div>` +
-        `    </a>` +
+        `</a>` +
         `    <div class="titleReviewBarSubItem">` +
         `        <div>` +
         `            <a href="${url}">Tomatometer</a>` +

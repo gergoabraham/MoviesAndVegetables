@@ -192,7 +192,7 @@ describe('ImdbPage', function () {
               `        <div class="metacriticScore score_favorable titleReviewBarSubItem" style="width: 40px">` +
               `            <span>93%</span>` +
               `        </div>` +
-              `    </a>` +
+              `</a>` +
               `    <div class="titleReviewBarSubItem">` +
               `        <div>` +
               `            <a href="${rottenURL}">Tomatometer</a>` +
@@ -276,7 +276,7 @@ describe('ImdbPage', function () {
             `        <div class="metacriticScore score_tbd titleReviewBarSubItem" style="width: 40px">` +
             `            <span style="color:black">-</span>` +
             `        </div>` +
-            `    </a>` +
+            `</a>` +
             `    <div class="titleReviewBarSubItem">` +
             `        <div>` +
             `            <a href="${rottenURL}">Tomatometer</a>` +
