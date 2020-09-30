@@ -170,23 +170,17 @@ describe('ImdbPage', function () {
         });
 
         it('add TomatoMeter inside dividers after MetaScore', function () {
-          titleReviewBar.children[0]
-            .getAttribute('class')
-            .should.equal('titleReviewBarItem');
-          titleReviewBar.children[1]
-            .getAttribute('class')
-            .should.equal('divider');
+          titleReviewBar.children[0].className.should.equal(
+            'titleReviewBarItem'
+          );
+          titleReviewBar.children[1].className.should.equal('divider');
 
-          titleReviewBar.children[2]
-            .getAttribute('class')
-            .should.equal('titleReviewBarItem');
-          titleReviewBar.children[2]
-            .getAttribute('id')
-            .should.equal('mv-tomatometer');
+          titleReviewBar.children[2].className.should.equal(
+            'titleReviewBarItem'
+          );
+          titleReviewBar.children[2].id.should.equal('mv-tomatometer');
 
-          titleReviewBar.children[3]
-            .getAttribute('class')
-            .should.equal('divider');
+          titleReviewBar.children[3].className.should.equal('divider');
         });
 
         it('add TomatoMeter with correct data and format', function () {
@@ -253,9 +247,7 @@ describe('ImdbPage', function () {
         });
 
         it('increase the width of the User Score', function () {
-          ratingsWrapper.children[0]
-            .getAttribute('style')
-            .should.contain('width:95px');
+          ratingsWrapper.children[0].style.width.should.equal('95px');
         });
 
         it("modify ratings_wrapper's width to auto", function () {
@@ -337,12 +329,10 @@ describe('ImdbPage', function () {
           const titleReviewBar = getTitleReviewBar(document);
 
           titleReviewBar.children[0].id.should.equal('mv-tomatometer');
-          titleReviewBar.children[1]
-            .getAttribute('class')
-            .should.equal('divider');
-          titleReviewBar.children[2]
-            .getAttribute('class')
-            .should.equal('titleReviewBarItem');
+          titleReviewBar.children[1].className.should.equal('divider');
+          titleReviewBar.children[2].className.should.equal(
+            'titleReviewBarItem'
+          );
         });
 
         it('no metacritics, no dividers in review bar', async function () {
@@ -352,9 +342,7 @@ describe('ImdbPage', function () {
           const titleReviewBar = getTitleReviewBar(document);
 
           titleReviewBar.children[0].id.should.equal('mv-tomatometer');
-          titleReviewBar.children[1]
-            .getAttribute('class')
-            .should.equal('divider');
+          titleReviewBar.children[1].className.should.equal('divider');
         });
 
         it('no review bar', async function () {

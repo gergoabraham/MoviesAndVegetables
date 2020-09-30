@@ -190,12 +190,8 @@ describe('rottenPage', function () {
           'div.mop-ratings-wrap__half'
         );
 
-        ratingsContainers[0]
-          .getAttribute('style')
-          .should.equal('min-width:240px');
-        ratingsContainers[1]
-          .getAttribute('style')
-          .should.equal('min-width:240px');
+        ratingsContainers[0].style.minWidth.should.equal('240px');
+        ratingsContainers[1].style.minWidth.should.equal('240px');
       });
 
       it('add IMDb scoreboard container', function () {
@@ -204,9 +200,7 @@ describe('rottenPage', function () {
         );
 
         scoreboardContainers.length.should.equal(2);
-        scoreboardContainers[1]
-          .getAttribute('id')
-          .should.equal('mv-imdb-scores');
+        scoreboardContainers[1].id.should.equal('mv-imdb-scores');
       });
 
       it('insert the scores with correct data and format', function () {

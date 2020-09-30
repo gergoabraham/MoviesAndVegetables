@@ -258,7 +258,7 @@ class ImdbPage extends MoviePage {
 
   fixUserScoreWidth(audienceScoreElement) {
     const imdbRating = audienceScoreElement.previousElementSibling;
-    imdbRating.setAttribute('style', 'width:95px');
+    imdbRating.style.width = '95px';
   }
 
   addAudienceScoreToNewRatingsWrapper(doc, audienceScoreElement) {

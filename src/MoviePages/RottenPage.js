@@ -103,9 +103,7 @@ class RottenPage extends MoviePage {
     const ratingsContainers = this.document.querySelectorAll(
       'div.mop-ratings-wrap__half'
     );
-    ratingsContainers.forEach((x) =>
-      x.setAttribute('style', 'min-width:240px')
-    );
+    ratingsContainers.forEach((x) => (x.style.minWidth = '240px'));
   }
 
   generateImdbRatingsRowElement(movieData) {

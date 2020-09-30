@@ -84,7 +84,7 @@ class BackgroundScript {
     const googleSearchPage = await BackgroundScript.getDOM(responseOfSearch);
 
     const aElements = [...googleSearchPage.getElementsByTagName('A')];
-    const urls = aElements.map((elem) => elem.getAttribute('href'));
+    const urls = aElements.map((elem) => elem.href);
     const movieUrls = urls.filter((href) => href && href.match(urlPattern));
 
     return movieUrls[0].match(urlPattern)[0];

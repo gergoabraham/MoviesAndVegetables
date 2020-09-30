@@ -34,9 +34,7 @@ contract('ImdbContract', function (fetchDOM) {
 
         context('imdbRating', function () {
           it('is the first child', function () {
-            ratingsWrapper.children[0]
-              .getAttribute('class')
-              .should.equal('imdbRating');
+            ratingsWrapper.children[0].className.should.equal('imdbRating');
           });
 
           it('contains the ratingValue', function () {
@@ -105,9 +103,9 @@ contract('ImdbContract', function (fetchDOM) {
         });
 
         it('its first child is a titleReviewBarItem', async function () {
-          titleReviewBar.children[0]
-            .getAttribute('class')
-            .should.equal('titleReviewBarItem');
+          titleReviewBar.children[0].className.should.equal(
+            'titleReviewBarItem'
+          );
         });
 
         it('the first child contains the metacriticScore', async function () {
@@ -117,9 +115,7 @@ contract('ImdbContract', function (fetchDOM) {
         });
 
         it('its second child is a divider', async function () {
-          titleReviewBar.children[1]
-            .getAttribute('class')
-            .should.equal('divider');
+          titleReviewBar.children[1].className.should.equal('divider');
         });
       });
 
@@ -138,15 +134,15 @@ contract('ImdbContract', function (fetchDOM) {
         });
 
         it("titleReviewBar's parent is plotSummaryWrapper", function () {
-          titleReviewBar.parentNode
-            .getAttribute('class')
-            .should.contain('plot_summary_wrapper');
+          titleReviewBar.parentNode.className.should.contain(
+            'plot_summary_wrapper'
+          );
         });
 
         it('its first child is a titleReviewBarItem', async function () {
-          titleReviewBar.children[0]
-            .getAttribute('class')
-            .should.contain('titleReviewBarItem');
+          titleReviewBar.children[0].className.should.contain(
+            'titleReviewBarItem'
+          );
         });
 
         it('the first child is NOT metacritics', async function () {
@@ -206,8 +202,7 @@ contract('ImdbContract', function (fetchDOM) {
 
         document.head
           .querySelector('meta[property="og:title"')
-          .getAttribute('content')
-          .match(/\d{4}/)[0]
+          .content.match(/\d{4}/)[0]
           .should.equal('1994');
       });
     });
@@ -312,8 +307,7 @@ contract('ImdbContract', function (fetchDOM) {
         metadata.name.should.equal('Avatar 5');
         document.head
           .querySelector('meta[property="og:title"')
-          .getAttribute('content')
-          .match(/\d{4}/)[0]
+          .content.match(/\d{4}/)[0]
           .should.equal('2028');
       });
 
