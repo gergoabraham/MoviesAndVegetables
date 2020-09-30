@@ -11,48 +11,79 @@ const contract = require('../tools/ContractTestDescription');
 contract('ImdbContract', function (fetchDOM) {
   context('structure', function () {
     context('user score - ratings wrapper', async function () {
-      let ratingsWrapper;
+      context('full version', function () {
+        let ratingsWrapper;
+        let document;
 
-      before(async function () {
-        const document = await fetchDOM(
-          'https://www.imdb.com/title/tt0111161/'
-        );
-        ratingsWrapper = document.getElementsByClassName('ratings_wrapper')[0];
+        before(async function () {
+          document = await fetchDOM('https://www.imdb.com/title/tt0111161/');
+          ratingsWrapper = document.getElementsByClassName(
+            'ratings_wrapper'
+          )[0];
+        });
+
+        it('ratings_wrapper exists', function () {
+          ratingsWrapper.should.exist;
+        });
+
+        it("ratings_wrapper is title_bar_wrapper's first child", function () {
+          ratingsWrapper.should.equal(
+            document.getElementsByClassName('title_bar_wrapper')[0].children[0]
+          );
+        });
+
+        context('imdbRating', function () {
+          it('is the first child', function () {
+            ratingsWrapper.children[0]
+              .getAttribute('class')
+              .should.equal('imdbRating');
+          });
+
+          it('contains the ratingValue', function () {
+            ratingsWrapper.children[0].querySelector(
+              'span[itemprop="ratingValue"'
+            ).should.exist;
+          });
+
+          it('contains the ratingCount', function () {
+            ratingsWrapper.children[0].querySelector(
+              'span[itemprop="ratingCount"'
+            ).should.exist;
+          });
+        });
+
+        context('star-rating-widget', function () {
+          it('is the second child', function () {
+            ratingsWrapper.children[1].id.should.equal('star-rating-widget');
+          });
+
+          it('has a button inside', function () {
+            const starRatingWidget = ratingsWrapper.children[1];
+            starRatingWidget.children[0].children[0].tagName.should.equal(
+              'BUTTON'
+            );
+          });
+        });
       });
 
-      it('ratings_wrapper exists', function () {
-        ratingsWrapper.should.exist;
-      });
+      context('no user score yet', function () {
+        let document;
+        let titleBarWrapper;
 
-      context('imdbRating', function () {
-        it('is the first child', function () {
-          ratingsWrapper.children[0]
-            .getAttribute('class')
-            .should.equal('imdbRating');
+        before(async function () {
+          document = await fetchDOM('https://www.imdb.com/title/tt5637536/');
+          titleBarWrapper = document.getElementsByClassName(
+            'title_bar_wrapper'
+          )[0];
         });
 
-        it('contains the ratingValue', function () {
-          ratingsWrapper.children[0].querySelector(
-            'span[itemprop="ratingValue"'
-          ).should.exist;
+        it('title_bar_wrapper exists', function () {
+          titleBarWrapper.should.exist;
         });
 
-        it('contains the ratingCount', function () {
-          ratingsWrapper.children[0].querySelector(
-            'span[itemprop="ratingCount"'
-          ).should.exist;
-        });
-      });
-
-      context('star-rating-widget', function () {
-        it('is the second child', function () {
-          ratingsWrapper.children[1].id.should.equal('star-rating-widget');
-        });
-
-        it('has a button inside', function () {
-          const starRatingWidget = ratingsWrapper.children[1];
-          starRatingWidget.children[0].children[0].tagName.should.equal(
-            'BUTTON'
+        it("it doesn't contain ratings_wrapper", function () {
+          should.not.exist(
+            titleBarWrapper.getElementsByClassName('ratings_wrapper')[0]
           );
         });
       });

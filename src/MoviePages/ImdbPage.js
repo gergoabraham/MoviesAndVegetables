@@ -227,27 +227,52 @@ class ImdbPage extends MoviePage {
   }
 
   injectAudienceScore(doc, percent, url, votes) {
-    const starRatingWidget = doc.getElementById('star-rating-widget');
-
+    const ratingsWrapper = doc.getElementsByClassName('ratings_wrapper')[0];
     const audienceScoreElement = this.createAudienceScoreElement(
       percent,
       url,
       votes
     );
+
+    if (ratingsWrapper) {
+      this.addAudienceScoreToExistingRatingsWrapper(doc, audienceScoreElement);
+    } else {
+      this.addAudienceScoreToNewRatingsWrapper(doc, audienceScoreElement);
+    }
+  }
+
+  addAudienceScoreToExistingRatingsWrapper(doc, audienceScoreElement) {
+    const starRatingWidget = doc.getElementById('star-rating-widget');
     starRatingWidget.before(audienceScoreElement);
+
+    audienceScoreElement.style.borderLeft = '1px solid #6b6b6b';
+    this.fixUserScoreWidth(audienceScoreElement);
 
     const button = starRatingWidget.children[0].children[0];
     button.setAttribute('style', 'border-left-width: 0px');
+  }
 
+  fixUserScoreWidth(audienceScoreElement) {
     const imdbRating = audienceScoreElement.previousElementSibling;
     imdbRating.setAttribute('style', 'width:95px');
+  }
+
+  addAudienceScoreToNewRatingsWrapper(doc, audienceScoreElement) {
+    const newRatingsWrapper = doc.createElement('div');
+    newRatingsWrapper.className = 'ratings_wrapper';
+    newRatingsWrapper.style.width = 'auto';
+
+    const titleBarWrapper = doc.getElementsByClassName('title_bar_wrapper')[0];
+    titleBarWrapper.prepend(newRatingsWrapper);
+
+    newRatingsWrapper.appendChild(audienceScoreElement);
   }
 
   createAudienceScoreElement(percent, url, votes) {
     return this.generateElement(
       `<div class="imdbRating" id="mv-audience-score"` +
         `     style="background:none;text-align:center;padding:2px 0 0 2px;` +
-        `width:90px;border-left:1px solid #6b6b6b;">` +
+        `width:90px;">` +
         `    <div class="ratingValue">` +
         `        <strong title="Audience score from RottenTomatoes">` +
         `            <span itemprop="ratingValue">${
