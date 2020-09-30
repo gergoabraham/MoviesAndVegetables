@@ -137,15 +137,14 @@ class ImdbPage extends MoviePage {
   }
 
   injectTomatoMeter(doc, percent, url, votes) {
-    const titleReviewBar = doc.getElementsByClassName('titleReviewBar')[0];
-    const firstDivider = titleReviewBar.getElementsByClassName('divider')[0];
-
     const tomatoMeter = this.createTomatoMeterElement(url, percent, votes);
-    firstDivider.after(tomatoMeter);
+    const titleReviewBar = doc.getElementsByClassName('titleReviewBar')[0];
 
-    const newDivider = doc.createElement('div');
-    newDivider.setAttribute('class', 'divider');
-    tomatoMeter.after(newDivider);
+    if (!titleReviewBar) {
+      this.addTomatometerWithNewReviewBar(doc, tomatoMeter);
+    } else {
+      this.addTomatometerToExistingReviewBar(doc, titleReviewBar, tomatoMeter);
+    }
   }
 
   createTomatoMeterElement(url, percent, votes) {
@@ -186,6 +185,45 @@ class ImdbPage extends MoviePage {
     }
 
     return `score_${favorableness}`;
+  }
+
+  addTomatometerWithNewReviewBar(doc, newTomatoMeter) {
+    const plotSummaryWrapper = doc.getElementsByClassName(
+      'plot_summary_wrapper'
+    )[0];
+    const newTitleReviewBar = this.createEmptyTitleReviewBar(doc);
+
+    plotSummaryWrapper.appendChild(newTitleReviewBar);
+    newTitleReviewBar.appendChild(newTomatoMeter);
+  }
+
+  createEmptyTitleReviewBar(doc) {
+    const titleReviewBar = doc.createElement('div');
+    titleReviewBar.className = 'titleReviewBar';
+    return titleReviewBar;
+  }
+
+  addTomatometerToExistingReviewBar(doc, titleReviewBar, newTomatoMeter) {
+    const newDivider = this.createDividerElement(doc);
+    const firstItem = titleReviewBar.children[0];
+
+    if (this.isItMetascore(firstItem)) {
+      firstItem.after(newTomatoMeter);
+      newTomatoMeter.before(newDivider);
+    } else {
+      titleReviewBar.prepend(newTomatoMeter);
+      newTomatoMeter.after(newDivider);
+    }
+  }
+
+  createDividerElement(doc) {
+    const newDivider = doc.createElement('div');
+    newDivider.className = 'divider';
+    return newDivider;
+  }
+
+  isItMetascore(element) {
+    return element.getElementsByClassName('metacriticScore')[0];
   }
 
   injectAudienceScore(doc, percent, url, votes) {

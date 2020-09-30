@@ -169,7 +169,7 @@ describe('ImdbPage', function () {
           titleReviewBar = document.getElementsByClassName('titleReviewBar')[0];
         });
 
-        it('add TomatoMeter inside dividers next to MetaScore', function () {
+        it('add TomatoMeter inside dividers after MetaScore', function () {
           titleReviewBar.children[0]
             .getAttribute('class')
             .should.equal('titleReviewBarItem');
@@ -321,6 +321,62 @@ describe('ImdbPage', function () {
         );
       });
     });
+
+    context('missing structures on imdb', function () {
+      context('for Tomatometer', function () {
+        async function injectDummyRatings(fileName) {
+          const document = await getTestDocument(fileName);
+          const imdbPage = new ImdbPage(document, 'https://url');
+
+          imdbPage.injectRatings(
+            new MovieData('title', 2002, rottenURL, 66, 666, 66, 666)
+          );
+
+          return document;
+        }
+
+        it('no metacritics - but multiple items in review bar', async function () {
+          const document = await injectDummyRatings(
+            'imdb.title.tt0067023- no metacritics.html'
+          );
+          const titleReviewBar = getTitleReviewBar(document);
+
+          titleReviewBar.children[0].id.should.equal('mv-tomatometer');
+          titleReviewBar.children[1]
+            .getAttribute('class')
+            .should.equal('divider');
+          titleReviewBar.children[2]
+            .getAttribute('class')
+            .should.equal('titleReviewBarItem');
+        });
+
+        it('no metacritics, no dividers in review bar', async function () {
+          const document = await injectDummyRatings(
+            'imdb.title.tt0064010 - no metacritics, no divider.html'
+          );
+          const titleReviewBar = getTitleReviewBar(document);
+
+          titleReviewBar.children[0].id.should.equal('mv-tomatometer');
+          titleReviewBar.children[1]
+            .getAttribute('class')
+            .should.equal('divider');
+        });
+
+        it.skip('no review bar', async function () {
+          const document = await injectDummyRatings(
+            'imdb.title.tt5637536 - no ratings yet.html'
+          );
+          const titleReviewBar = getTitleReviewBar(document);
+
+          titleReviewBar.children.length.should.equal(1);
+          titleReviewBar.children[0].id.should.equal('mv-tomatometer');
+        });
+      });
+
+      context('for Audiencescore', function () {
+        it('no user rating', function () {});
+      });
+    });
   });
 
   describe('"private" methods', function () {
@@ -376,8 +432,6 @@ describe('ImdbPage', function () {
         imdbPage.getFavorableness(80).should.equal(favorable);
         imdbPage.getFavorableness(100).should.equal(favorable);
       });
-
-      it('give TBD style if TBD');
     });
   });
 
@@ -407,3 +461,7 @@ describe('ImdbPage', function () {
     });
   });
 });
+
+function getTitleReviewBar(document) {
+  return document.getElementsByClassName('titleReviewBar')[0];
+}
