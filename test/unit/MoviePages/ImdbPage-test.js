@@ -258,13 +258,8 @@ describe('ImdbPage', function () {
             .should.contain('width:95px');
         });
 
-        it('remove border from Rating button', function () {
-          const starRatingWidget = document.getElementById(
-            'star-rating-widget'
-          );
-          const button = starRatingWidget.children[0].children[0];
-
-          button.getAttribute('style').should.equal('border-left-width: 0px');
+        it("modify ratings_wrapper's width to auto", function () {
+          ratingsWrapper.style.width.should.equal('auto');
         });
       });
     });

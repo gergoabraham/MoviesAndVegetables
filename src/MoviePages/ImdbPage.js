@@ -227,7 +227,7 @@ class ImdbPage extends MoviePage {
   }
 
   injectAudienceScore(doc, percent, url, votes) {
-    const ratingsWrapper = doc.getElementsByClassName('ratings_wrapper')[0];
+    let ratingsWrapper = doc.getElementsByClassName('ratings_wrapper')[0];
     const audienceScoreElement = this.createAudienceScoreElement(
       percent,
       url,
@@ -237,8 +237,13 @@ class ImdbPage extends MoviePage {
     if (ratingsWrapper) {
       this.addAudienceScoreToExistingRatingsWrapper(doc, audienceScoreElement);
     } else {
-      this.addAudienceScoreToNewRatingsWrapper(doc, audienceScoreElement);
+      ratingsWrapper = this.addAudienceScoreToNewRatingsWrapper(
+        doc,
+        audienceScoreElement
+      );
     }
+
+    ratingsWrapper.style.width = 'auto';
   }
 
   addAudienceScoreToExistingRatingsWrapper(doc, audienceScoreElement) {
@@ -247,9 +252,6 @@ class ImdbPage extends MoviePage {
 
     audienceScoreElement.style.borderLeft = '1px solid #6b6b6b';
     this.fixUserScoreWidth(audienceScoreElement);
-
-    const button = starRatingWidget.children[0].children[0];
-    button.setAttribute('style', 'border-left-width: 0px');
   }
 
   fixUserScoreWidth(audienceScoreElement) {
@@ -260,12 +262,13 @@ class ImdbPage extends MoviePage {
   addAudienceScoreToNewRatingsWrapper(doc, audienceScoreElement) {
     const newRatingsWrapper = doc.createElement('div');
     newRatingsWrapper.className = 'ratings_wrapper';
-    newRatingsWrapper.style.width = 'auto';
 
     const titleBarWrapper = doc.getElementsByClassName('title_bar_wrapper')[0];
     titleBarWrapper.prepend(newRatingsWrapper);
 
     newRatingsWrapper.appendChild(audienceScoreElement);
+
+    return newRatingsWrapper;
   }
 
   createAudienceScoreElement(percent, url, votes) {
