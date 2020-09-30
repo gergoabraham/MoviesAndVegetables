@@ -23,9 +23,7 @@ contract('GoogleContract', function (fetchDOM) {
     });
 
     it('the movie url is amongst the hrefs', function () {
-      const hrefs = [...document.getElementsByTagName('A')].map((a) =>
-        a.getAttribute('href')
-      );
+      const hrefs = [...document.getElementsByTagName('A')].map((a) => a.href);
 
       hrefs
         .filter(

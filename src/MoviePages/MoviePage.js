@@ -47,9 +47,7 @@ class MoviePage {
   }
 
   getTitleMetaTag() {
-    return this.document.head
-      .querySelector('meta[property="og:title"')
-      .getAttribute('content');
+    return this.document.head.querySelector('meta[property="og:title"').content;
   }
 
   generateElement(innerHTML) {

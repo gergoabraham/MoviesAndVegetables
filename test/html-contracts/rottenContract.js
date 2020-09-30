@@ -31,9 +31,9 @@ contract('RottenContract', function (fetchDOM) {
 
     context('tomatometer', function () {
       it('is the first child', function () {
-        ratingContainer.children[0]
-          .getAttribute('class')
-          .should.equal('mop-ratings-wrap__half');
+        ratingContainer.children[0].className.should.equal(
+          'mop-ratings-wrap__half'
+        );
       });
 
       it('contains a percentage', function () {
@@ -45,9 +45,9 @@ contract('RottenContract', function (fetchDOM) {
 
     context('tomatometer', function () {
       it('second child is audience score', function () {
-        ratingContainer.children[1]
-          .getAttribute('class')
-          .should.equal('mop-ratings-wrap__half audience-score');
+        ratingContainer.children[1].className.should.equal(
+          'mop-ratings-wrap__half audience-score'
+        );
       });
 
       it('contains a percentage', function () {
@@ -96,8 +96,7 @@ contract('RottenContract', function (fetchDOM) {
     function readReleaseYear(document) {
       return document.head
         .querySelector('meta[property="og:title"')
-        .getAttribute('content')
-        .match(/\d{4}/)[0];
+        .content.match(/\d{4}/)[0];
     }
 
     before(async function () {

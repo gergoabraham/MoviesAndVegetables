@@ -11,83 +11,158 @@ const contract = require('../tools/ContractTestDescription');
 contract('ImdbContract', function (fetchDOM) {
   context('structure', function () {
     context('user score - ratings wrapper', async function () {
-      let ratingsWrapper;
+      context('full version', function () {
+        let ratingsWrapper;
+        let document;
 
-      before(async function () {
-        const document = await fetchDOM(
-          'https://www.imdb.com/title/tt0111161/'
-        );
-        ratingsWrapper = document.getElementsByClassName('ratings_wrapper')[0];
+        before(async function () {
+          document = await fetchDOM('https://www.imdb.com/title/tt0111161/');
+          ratingsWrapper = document.getElementsByClassName(
+            'ratings_wrapper'
+          )[0];
+        });
+
+        it('ratings_wrapper exists', function () {
+          ratingsWrapper.should.exist;
+        });
+
+        it("ratings_wrapper is title_bar_wrapper's first child", function () {
+          ratingsWrapper.should.equal(
+            document.getElementsByClassName('title_bar_wrapper')[0].children[0]
+          );
+        });
+
+        context('imdbRating', function () {
+          it('is the first child', function () {
+            ratingsWrapper.children[0].className.should.equal('imdbRating');
+          });
+
+          it('contains the ratingValue', function () {
+            ratingsWrapper.children[0].querySelector(
+              'span[itemprop="ratingValue"'
+            ).should.exist;
+          });
+
+          it('contains the ratingCount', function () {
+            ratingsWrapper.children[0].querySelector(
+              'span[itemprop="ratingCount"'
+            ).should.exist;
+          });
+        });
+
+        context('star-rating-widget', function () {
+          it('is the second child', function () {
+            ratingsWrapper.children[1].id.should.equal('star-rating-widget');
+          });
+        });
       });
 
-      it('ratings_wrapper exists', function () {
-        ratingsWrapper.should.exist;
-      });
+      context('no user score yet', function () {
+        let document;
+        let titleBarWrapper;
 
-      context('imdbRating', function () {
-        it('is the first child', function () {
-          ratingsWrapper.children[0]
-            .getAttribute('class')
-            .should.equal('imdbRating');
+        before(async function () {
+          document = await fetchDOM('https://www.imdb.com/title/tt5637536/');
+          titleBarWrapper = document.getElementsByClassName(
+            'title_bar_wrapper'
+          )[0];
         });
 
-        it('contains the ratingValue', function () {
-          ratingsWrapper.children[0].querySelector(
-            'span[itemprop="ratingValue"'
-          ).should.exist;
+        it('title_bar_wrapper exists', function () {
+          titleBarWrapper.should.exist;
         });
 
-        it('contains the ratingCount', function () {
-          ratingsWrapper.children[0].querySelector(
-            'span[itemprop="ratingCount"'
-          ).should.exist;
-        });
-      });
-
-      context('star-rating-widget', function () {
-        it('is the second child', function () {
-          ratingsWrapper.children[1].id.should.equal('star-rating-widget');
-        });
-
-        it('has a button inside', function () {
-          const starRatingWidget = ratingsWrapper.children[1];
-          starRatingWidget.children[0].children[0].tagName.should.equal(
-            'BUTTON'
+        it("it doesn't contain ratings_wrapper", function () {
+          should.not.exist(
+            titleBarWrapper.getElementsByClassName('ratings_wrapper')[0]
           );
         });
       });
     });
 
     context('critics score - titleReviewBar', function () {
-      let titleReviewBar;
+      context('full version', function () {
+        let titleReviewBar;
 
-      before(async function () {
-        const document = await fetchDOM(
-          'https://www.imdb.com/title/tt0111161/'
-        );
-        titleReviewBar = document.getElementsByClassName('titleReviewBar')[0];
+        before(async function () {
+          const document = await fetchDOM(
+            'https://www.imdb.com/title/tt0111161/'
+          );
+          titleReviewBar = document.getElementsByClassName('titleReviewBar')[0];
+        });
+
+        it('titleReviewBar exists', async function () {
+          titleReviewBar.should.exist;
+        });
+
+        it('its first child is a titleReviewBarItem', async function () {
+          titleReviewBar.children[0].className.should.equal(
+            'titleReviewBarItem'
+          );
+        });
+
+        it('the first child contains the metacriticScore', async function () {
+          titleReviewBar.children[0].getElementsByClassName(
+            'metacriticScore'
+          )[0].should.exist;
+        });
+
+        it('its second child is a divider', async function () {
+          titleReviewBar.children[1].className.should.equal('divider');
+        });
       });
 
-      it('titleReviewBar exists', async function () {
-        titleReviewBar.should.exist;
+      context('metacritic is missing', function () {
+        let titleReviewBar;
+
+        before(async function () {
+          const document = await fetchDOM(
+            'https://www.imdb.com/title/tt0064010/'
+          );
+          titleReviewBar = document.getElementsByClassName('titleReviewBar')[0];
+        });
+
+        it('titleReviewBar exists', async function () {
+          titleReviewBar.should.exist;
+        });
+
+        it("titleReviewBar's parent is plotSummaryWrapper", function () {
+          titleReviewBar.parentNode.className.should.contain(
+            'plot_summary_wrapper'
+          );
+        });
+
+        it('its first child is a titleReviewBarItem', async function () {
+          titleReviewBar.children[0].className.should.contain(
+            'titleReviewBarItem'
+          );
+        });
+
+        it('the first child is NOT metacritics', async function () {
+          should.not.exist(
+            titleReviewBar.children[0].getElementsByClassName(
+              'metacriticScore'
+            )[0]
+          );
+        });
+
+        it('there are no other items', async function () {
+          titleReviewBar.children.length.should.equal(1);
+        });
       });
 
-      it('its first child is a titleReviewBarItem', async function () {
-        titleReviewBar.children[0]
-          .getAttribute('class')
-          .should.equal('titleReviewBarItem');
-      });
+      context('there is no titleReviewBar', function () {
+        let document;
 
-      it('the first child contains the metacriticScore', async function () {
-        titleReviewBar.children[0].getElementsByClassName(
-          'metacriticScore'
-        )[0].should.exist;
-      });
+        before(async function () {
+          document = await fetchDOM('https://www.imdb.com/title/tt5637536/');
+        });
 
-      it('its second child is a divider', async function () {
-        titleReviewBar.children[1]
-          .getAttribute('class')
-          .should.equal('divider');
+        it("titleReviewBar doesn't exist", async function () {
+          should.not.exist(
+            document.getElementsByClassName('titleReviewBar')[0]
+          );
+        });
       });
     });
   });
@@ -120,8 +195,7 @@ contract('ImdbContract', function (fetchDOM) {
 
         document.head
           .querySelector('meta[property="og:title"')
-          .getAttribute('content')
-          .match(/\d{4}/)[0]
+          .content.match(/\d{4}/)[0]
           .should.equal('1994');
       });
     });
@@ -226,8 +300,7 @@ contract('ImdbContract', function (fetchDOM) {
         metadata.name.should.equal('Avatar 5');
         document.head
           .querySelector('meta[property="og:title"')
-          .getAttribute('content')
-          .match(/\d{4}/)[0]
+          .content.match(/\d{4}/)[0]
           .should.equal('2028');
       });
 

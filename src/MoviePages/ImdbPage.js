@@ -137,34 +137,38 @@ class ImdbPage extends MoviePage {
   }
 
   injectTomatoMeter(doc, percent, url, votes) {
-    const titleReviewBar = doc.getElementsByClassName('titleReviewBar')[0];
-    const firstDivider = titleReviewBar.getElementsByClassName('divider')[0];
-
     const tomatoMeter = this.createTomatoMeterElement(url, percent, votes);
-    firstDivider.after(tomatoMeter);
+    const titleReviewBar = doc.getElementsByClassName('titleReviewBar')[0];
 
-    const newDivider = doc.createElement('div');
-    newDivider.setAttribute('class', 'divider');
-    tomatoMeter.after(newDivider);
+    if (!titleReviewBar) {
+      this.addTomatometerWithNewReviewBar(doc, tomatoMeter);
+    } else {
+      this.addTomatometerToExistingReviewBar(doc, titleReviewBar, tomatoMeter);
+    }
   }
 
   createTomatoMeterElement(url, percent, votes) {
     return this.generateElement(
-      `<div class="titleReviewBarItem" id="mv-tomatometer">\n` +
-        `<a href="${url}">\n` +
-        `<div class="metacriticScore ${this.getFavorableness(percent)}\n` +
-        `titleReviewBarSubItem" style="width: 40px">\n` +
-        `<span>${percent}%</span>\n` +
-        `</div></a>\n` +
-        `<div class="titleReviewBarSubItem">\n` +
-        `<div>\n` +
-        `<a href="${url}">Tomatometer</a>\n` +
-        `</div>\n` +
-        `<div>\n` +
-        `<span class="subText">` +
-        `Total Count: ${this.groupThousands(votes)}</span>\n` +
-        `</div>\n` +
-        `</div>\n` +
+      `<div class="titleReviewBarItem" id="mv-tomatometer">` +
+        `    <a href="${url}">` +
+        `        <div class="metacriticScore ${this.getFavorableness(
+          percent
+        )} titleReviewBarSubItem" style="width: 40px">` +
+        `            <span${percent ? '' : ' style="color:black"'}>${
+          percent ? percent + '%' : '-'
+        }</span>` +
+        `        </div>` +
+        `</a>` +
+        `    <div class="titleReviewBarSubItem">` +
+        `        <div>` +
+        `            <a href="${url}">Tomatometer</a>` +
+        `        </div>` +
+        `        <div>` +
+        `            <span class="subText">Total Count: ${
+          votes ? this.groupThousands(votes) : 'N/A'
+        }</span>` +
+        `        </div>` +
+        `    </div>` +
         `</div>`
     );
   }
@@ -172,7 +176,9 @@ class ImdbPage extends MoviePage {
   getFavorableness(percent) {
     let favorableness;
 
-    if (percent >= 61) {
+    if (percent === null) {
+      favorableness = 'tbd';
+    } else if (percent >= 61) {
       favorableness = 'favorable';
     } else if (percent >= 41) {
       favorableness = 'mixed';
@@ -183,37 +189,108 @@ class ImdbPage extends MoviePage {
     return `score_${favorableness}`;
   }
 
-  injectAudienceScore(doc, percent, url, votes) {
-    const starRatingWidget = doc.getElementById('star-rating-widget');
+  addTomatometerWithNewReviewBar(doc, newTomatoMeter) {
+    const plotSummaryWrapper = doc.getElementsByClassName(
+      'plot_summary_wrapper'
+    )[0];
+    const newTitleReviewBar = this.createEmptyTitleReviewBar(doc);
 
+    plotSummaryWrapper.appendChild(newTitleReviewBar);
+    newTitleReviewBar.appendChild(newTomatoMeter);
+  }
+
+  createEmptyTitleReviewBar(doc) {
+    const titleReviewBar = doc.createElement('div');
+    titleReviewBar.className = 'titleReviewBar';
+    return titleReviewBar;
+  }
+
+  addTomatometerToExistingReviewBar(doc, titleReviewBar, newTomatoMeter) {
+    const newDivider = this.createDividerElement(doc);
+    const firstItem = titleReviewBar.children[0];
+
+    if (this.isItMetascore(firstItem)) {
+      firstItem.after(newTomatoMeter);
+      newTomatoMeter.before(newDivider);
+    } else {
+      titleReviewBar.prepend(newTomatoMeter);
+      newTomatoMeter.after(newDivider);
+    }
+  }
+
+  createDividerElement(doc) {
+    const newDivider = doc.createElement('div');
+    newDivider.className = 'divider';
+    return newDivider;
+  }
+
+  isItMetascore(element) {
+    return element.getElementsByClassName('metacriticScore')[0];
+  }
+
+  injectAudienceScore(doc, percent, url, votes) {
+    let ratingsWrapper = doc.getElementsByClassName('ratings_wrapper')[0];
     const audienceScoreElement = this.createAudienceScoreElement(
       percent,
       url,
       votes
     );
-    starRatingWidget.before(audienceScoreElement);
 
-    const button = starRatingWidget.children[0].children[0];
-    button.setAttribute('style', 'border-left-width: 0px');
+    if (ratingsWrapper) {
+      this.addAudienceScoreToExistingRatingsWrapper(
+        ratingsWrapper,
+        audienceScoreElement
+      );
+    } else {
+      ratingsWrapper = this.addAudienceScoreToNewRatingsWrapper(
+        doc,
+        audienceScoreElement
+      );
+    }
 
-    const imdbRating = audienceScoreElement.previousElementSibling;
-    imdbRating.setAttribute('style', 'width:95px');
+    ratingsWrapper.style.width = 'auto';
+  }
+
+  addAudienceScoreToExistingRatingsWrapper(ratingsWrapper, audienceScoreElem) {
+    ratingsWrapper.children[0].after(audienceScoreElem);
+    audienceScoreElem.style.borderLeft = '1px solid #6b6b6b';
+    this.fixUserScoreWidth(ratingsWrapper);
+  }
+
+  fixUserScoreWidth(ratingsWrapper) {
+    const imdbRating = ratingsWrapper.children[0];
+    imdbRating.style.width = '95px';
+  }
+
+  addAudienceScoreToNewRatingsWrapper(doc, audienceScoreElement) {
+    const newRatingsWrapper = doc.createElement('div');
+    newRatingsWrapper.className = 'ratings_wrapper';
+
+    const titleBarWrapper = doc.getElementsByClassName('title_bar_wrapper')[0];
+    titleBarWrapper.prepend(newRatingsWrapper);
+
+    newRatingsWrapper.appendChild(audienceScoreElement);
+
+    return newRatingsWrapper;
   }
 
   createAudienceScoreElement(percent, url, votes) {
     return this.generateElement(
       `<div class="imdbRating" id="mv-audience-score"` +
-        `style="background:none; text-align:center; padding:2px 0 0 2px;\n` +
-        `width:90px;border-left:1px solid #6b6b6b;">\n` +
-        `<div class="ratingValue">\n` +
-        `<strong title="Audience score from RottenTomatoes">\n` +
-        `<span itemprop="ratingValue">${percent}%</span>\n` +
-        `</strong>\n` +
-        `</div>\n` +
-        `<a href="${url}">\n` +
-        `<span class="small" itemprop="ratingCount">` +
-        `${this.groupThousands(votes)}</span>\n` +
-        `</a>\n` +
+        `     style="background:none;text-align:center;padding:2px 0 0 2px;` +
+        `width:90px;">` +
+        `    <div class="ratingValue">` +
+        `        <strong title="Audience score from RottenTomatoes">` +
+        `            <span itemprop="ratingValue">${
+          percent ? percent + '%' : '-'
+        }</span>` +
+        `        </strong>` +
+        `    </div>` +
+        `    <a href="${url}">` +
+        `        <span class="small" itemprop="ratingCount">${
+          votes ? this.groupThousands(votes) : 'N/A'
+        }</span>` +
+        `    </a>` +
         `</div>`
     );
   }
