@@ -54,13 +54,6 @@ contract('ImdbContract', function (fetchDOM) {
           it('is the second child', function () {
             ratingsWrapper.children[1].id.should.equal('star-rating-widget');
           });
-
-          it('has a button inside', function () {
-            const starRatingWidget = ratingsWrapper.children[1];
-            starRatingWidget.children[0].children[0].tagName.should.equal(
-              'BUTTON'
-            );
-          });
         });
       });
 

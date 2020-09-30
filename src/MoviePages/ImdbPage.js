@@ -237,7 +237,10 @@ class ImdbPage extends MoviePage {
     );
 
     if (ratingsWrapper) {
-      this.addAudienceScoreToExistingRatingsWrapper(doc, audienceScoreElement);
+      this.addAudienceScoreToExistingRatingsWrapper(
+        ratingsWrapper,
+        audienceScoreElement
+      );
     } else {
       ratingsWrapper = this.addAudienceScoreToNewRatingsWrapper(
         doc,
@@ -248,16 +251,14 @@ class ImdbPage extends MoviePage {
     ratingsWrapper.style.width = 'auto';
   }
 
-  addAudienceScoreToExistingRatingsWrapper(doc, audienceScoreElement) {
-    const starRatingWidget = doc.getElementById('star-rating-widget');
-    starRatingWidget.before(audienceScoreElement);
-
-    audienceScoreElement.style.borderLeft = '1px solid #6b6b6b';
-    this.fixUserScoreWidth(audienceScoreElement);
+  addAudienceScoreToExistingRatingsWrapper(ratingsWrapper, audienceScoreElem) {
+    ratingsWrapper.children[0].after(audienceScoreElem);
+    audienceScoreElem.style.borderLeft = '1px solid #6b6b6b';
+    this.fixUserScoreWidth(ratingsWrapper);
   }
 
-  fixUserScoreWidth(audienceScoreElement) {
-    const imdbRating = audienceScoreElement.previousElementSibling;
+  fixUserScoreWidth(ratingsWrapper) {
+    const imdbRating = ratingsWrapper.children[0];
     imdbRating.style.width = '95px';
   }
 
