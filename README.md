@@ -10,26 +10,14 @@ Develop: [![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/d
 
 ## Description
 
-Do you like to check out a movie both on <b>IMDb</b> and <b>RottenTomatoes</b> when you're searching for tonight's entertainment? But you hate to do all the searches twice... This extension might help you. : )
+Do you like to check out a movie both on <b>IMDb</b> and <b>RottenTomatoes</b> when you're searching for tonight's entertainment? But you hate to do all the searches twice... This extension might help you. =)
 
 <b>With this extension, you can</b>
 
 - check out a movie's RottenTomatoes <b>Tomatometer</b> and <b>AudienceScore</b> on <b>IMDb</b>,
-- or its IMDb <b>User score</b> and <b>Metascore</b> on <b>RottenTomatoes</b>,
-- and even the <b>TOP250 position</b>!
+- or its IMDb <b>User score</b> and <b>Metascore</b> on <b>RottenTomatoes</b>, and even the <b>TOP250 position</b>!
 
 <b>Please consider that this extension is currently under development, there is a lot missing. New features are being implemented and released continuously.</b>
-
-<b>Release log</b>
-
-<ul id="relese_log">
-<li>v0.1.0: First release, showing RottenTomatoes scores on IMDb.</li>
-<li>v0.1.1: Icon is updated.</li>
-<li>v0.1.2: Number formatting is based on the browser's preferred language, just like on IMDb.</li>
-<li>v0.1.3: Adapting to changes to make the extension working again.</li>
-<li>v0.2.0: Showing IMDb scores and top250 position on RottenTomatoes.</li>
-<li>v0.2.1: Minor update for changed RottenTomatoes website.</li>
-</ul>
 
 <b>Why does this extension need access for my data on IMDb, RottenTomatoes and especially on Google?</b>
 First, the extension modifies the currently viewed IMDb/RottenTomatoes page by adding the scores.
