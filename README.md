@@ -10,44 +10,37 @@ Develop: [![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/d
 
 ## Description
 
-<b>Please consider that this extension is currently being under development. New features are being implemented and released continuously. There are also some known issues.</b> Nothing serious though, it simply doesn't find some movies, and doesn't look nice in some cases.
+Do you like to check out a movie both on <b>IMDb</b> and <b>RottenTomatoes</b> when you're searching for tonight's entertainment? But you hate to do all the searches twice... This extension might help you. : )
 
-Do you like to check out a movie both on IMDb and RottenTomatoes when you're searching for tonight's entertainment?
+<b>With this extension, you can</b>
 
-But do you hate to do all the searches <b>TWICE</b>? Once for RottenTomatoes, once for IMDb...
+- check out a movie's RottenTomatoes <b>Tomatometer</b> and <b>AudienceScore</b> on <b>IMDb</b>,
+- or its IMDb <b>User score</b> and <b>Metascore</b> on <b>RottenTomatoes</b>,
+- and even the <b>TOP250 position</b>!
 
-Look no further then! This extension can <b>spare your time</b> by searching for the movies' other page automatically! Moreover, you can see <b>all the scores</b> on IMDb in a nicely blended way.
-
-<b>Current features</b>
-
-- Shows a movie's Tomatometer and AudienceScore on its IMDb page,
-- Shows a movie's Metascore and User score on RottenTomatoes,
-- and also the TOP250 position.
-- You can navigate to the other page via the inserted movie scores.
-
-<b>Coming soon!</b>
-
-- Improvements, bugfixes,
-- Option to switch between the movie's IMDb and RottenTomatoes page with a hotkey.
-- Maybe showing scores on list views.
+<b>Please consider that this extension is currently under development, there is a lot missing. New features are being implemented and released continuously.</b>
 
 <b>Release log</b>
 
-- v0.1.0: First release, showing RottenTomatoes scores on IMDb.
-- v0.1.1: Icon is updated.
-- v0.1.2: Number formatting is based on the browser's preferred language, just like on IMDb.
-- v0.1.3: Bugfix to make the extension working again.
-- v0.2.0: <b>RottenTomatoes now shows the IMDb scores!</b> Even the <b>TOP250</b> position is displayed!
-- v0.2.1: Minor update for changed RottenTomatoes website.
+<ul id="relese_log">
+<li>v0.1.0: First release, showing RottenTomatoes scores on IMDb.</li>
+<li>v0.1.1: Icon is updated.</li>
+<li>v0.1.2: Number formatting is based on the browser's preferred language, just like on IMDb.</li>
+<li>v0.1.3: Adapting to changes to make the extension working again.</li>
+<li>v0.2.0: Showing IMDb scores and top250 position on RottenTomatoes.</li>
+<li>v0.2.1: Minor update for changed RottenTomatoes website.</li>
+</ul>
 
 <b>Why does this extension need access for my data on IMDb, RottenTomatoes and especially on Google?</b>
-First, the extension modifies the currently viewed IMDb (and in the next release the RottenTomatoes) page by adding the score.
+First, the extension modifies the currently viewed IMDb/RottenTomatoes page by adding the scores.
 Second, it does the same what you would do: searches for the movie's pages in Google and opens its RottenTomatoes page in the background to get the scores. The given permissions are needed to make the extension be able to do this. (In the future, this may be changed to use some movie database API.)
 
 <b>Support</b>
+
 Please write a mail to the following address if you find any issue, or have a feature request: sw.gergo.abraham@gmail.com
 
 <b>Donation</b>
+
 If you like this extension, please <a href="https://www.buymeacoffee.com/gergoabraham">buy me a coffee</a> or <a href="https://www.patreon.com/gergoabraham">become my patron</a>. ◕ ◡ ◕
 
 ## Development notes
@@ -69,7 +62,3 @@ The Firefox Add-on related **badges** are hosted by [Shields.io](https://shields
 ## Disclaimer
 
 This extension is neither a robot, nor a crawler. It is a simple browser extension that spares some mouse clicks for the user, triggered by the user's actions, and visualizes the result in a simple way.
-
-`testImdbPage-*.html` are unmodified copies of movie's and series' IMDb pages, I do not own them. They are the intellectual properties of their owners, and the sole purpose of storing them is to be able to test the web extension without downloading the pages from the internet every time. So we can say, that those are practically cached pages.
-
-`testRottenTomatoesPage.html` is an unmodified copy of a movie's RottenTomatoes page, I do not own it. Same, as above.
