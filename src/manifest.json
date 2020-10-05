@@ -2,7 +2,6 @@
   "manifest_version": 2,
 
   "name": "Movies and Vegetables",
-  "id": "{8d78f34c-3b12-480c-88aa-c2702d484114}",
   "description": "Links movies' IMDb and RottenTomatoes pages by showing their scores.",
   "version": "0.2.1",
 
