@@ -19,9 +19,10 @@
     "test:tools": "mocha test/tools --color --timeout 5000",
     "ci:unit-test": "nyc --reporter=lcov --all mocha --forbid-only test/unit/ && codecov",
     "build": "web-ext -s src build -i icons/icon.psd",
-    "preversion": "npm test",
+    "preversion": "npm run force-develop-branch && npm test",
     "version": "npm run bump-manifest-version && git add src\\manifest.json",
     "postversion": "git checkout master && git merge develop --ff-only && git checkout develop",
+    "force-develop-branch": "powershell -Command \"$branch = git branch --show-current; if ($branch -ne 'develop') {throw '### Version should be generated only on develop branch! ###'} \"",
     "bump-manifest-version": "powershell -Command \"$manifest = ((Get-Content -encoding utf8 src/manifest.json) -replace '(?<=\\\"version\\\": \\\")\\d+\\.\\d+\\.\\d+(?=\\\",)', $env:npm_package_version); [System.IO.File]::WriteAllLines('src/manifest.json', $manifest);\""
   },
   "author": "gergooo <abrahamgergo@gmail.com>",
