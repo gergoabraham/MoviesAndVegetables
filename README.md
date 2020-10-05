@@ -17,6 +17,8 @@ Do you like to check out a movie both on <b>IMDb</b> and <b>RottenTomatoes</b> w
 - check out a movie's RottenTomatoes <b>Tomatometer</b> and <b>AudienceScore</b> on <b>IMDb</b>,
 - or its IMDb <b>User score</b> and <b>Metascore</b> on <b>RottenTomatoes</b>, and even the <b>TOP250 position</b>!
 
+<a href="https://github.com/gergooo/MoviesAndVegetables/blob/master/CHANGELOG.md">[Click here for the CHANGELOG]</a>
+
 <b>Please consider that this extension is currently under development, there is a lot missing. New features are being implemented and released continuously.</b>
 
 <b>Why does this extension need access for my data on IMDb, RottenTomatoes and especially on Google?</b>
