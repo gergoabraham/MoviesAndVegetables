@@ -35,7 +35,7 @@ If you like this extension, please <a href="https://www.buymeacoffee.com/gergoab
 
 ### Branching
 
-- `master` - production-ready state,
+- `master` - released version - daily tests are performed on this branch,
 - `develop` - integration branch,
 - `feature branches` - for features.
 
