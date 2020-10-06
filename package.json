@@ -18,6 +18,7 @@
     "test:unit": "nyc --reporter=text-summary --all --check-coverage mocha -R=progress --forbid-only --color test/unit/",
     "test:tools": "mocha test/tools --color --timeout 5000",
     "ci:unit-test": "nyc --reporter=lcov --all mocha --forbid-only test/unit/ && codecov",
+    "ci:deploy-to-amo": "web-ext sign -s src --channel listed -i icons/icon.psd | grep -q 'Your add-on has been submitted for review.' || error 1",
     "build": "web-ext -s src build -i icons/icon.psd",
     "preversion": "npm run force-develop-branch && npm test",
     "version": "npm run bump-manifest-version && npm run generate-changelog && git add src\\manifest.json CHANGELOG.md",
