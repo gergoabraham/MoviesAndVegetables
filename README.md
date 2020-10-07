@@ -8,7 +8,7 @@ Develop: [![CircleCI](https://circleci.com/gh/gergooo/MoviesAndVegetables/tree/d
 [![Users](https://img.shields.io/amo/users/movies-and-vegetables)](https://addons.mozilla.org/hu/firefox/addon/movies-and-vegetables/)
 [![Rating](https://img.shields.io/amo/rating/movies-and-vegetables)](https://addons.mozilla.org/hu/firefox/addon/movies-and-vegetables/)
 
-## Description
+## Feature description
 
 Do you like to check out a movie both on <b>IMDb</b> and <b>RottenTomatoes</b> when you're searching for tonight's entertainment? But you hate to do all the searches twice... This extension might help you. =)
 
@@ -17,7 +17,7 @@ Do you like to check out a movie both on <b>IMDb</b> and <b>RottenTomatoes</b> w
 - check out a movie's RottenTomatoes <b>Tomatometer</b> and <b>AudienceScore</b> on <b>IMDb</b>,
 - or its IMDb <b>User score</b> and <b>Metascore</b> on <b>RottenTomatoes</b>, and even the <b>TOP250 position</b>!
 
-<a href="https://github.com/gergooo/MoviesAndVegetables/blob/master/CHANGELOG.md#movies-and-vegetables-changelog">[Click here for the CHANGELOG]</a>
+<a href="https://github.com/gergooo/MoviesAndVegetables/blob/master/CHANGELOG.md">[Click here for the CHANGELOG]</a>
 
 <b>Please consider that this extension is currently under development, there is a lot missing. New features are being implemented and released continuously.</b>
 
@@ -33,13 +33,27 @@ Please write a mail to the following address if you find any issue, or have a fe
 
 If you like this extension, please <a href="https://www.buymeacoffee.com/gergoabraham">buy me a coffee</a> or <a href="https://www.patreon.com/gergoabraham">become my patron</a>. ◕ ◡ ◕
 
-## Development notes
+## Developer showcase
 
 ### Branching
 
 - `master` - released version - daily tests are performed on this branch,
 - `develop` - integration branch,
 - `feature branches` - for features.
+
+### Testing
+
+There are multiple test levels:
+
+- `Unit tests`: sociable (units see each other - mini integration), working fakes instead of mocks, results are checked instead of behaviour.
+- `Contract tests` for IMDb, RottenTomatoes and Google: on one hand, these tests make sure that when these websites change over time, I will know about it. On the other hand, thanks to these I can use much smaller fake html files for unit tests. This resulted that the unit tests' speed has increased by one order of magnitude.
+- `End-to-end tests`: a minimal number of user journeys using geckodriver, just to make sure.
+
+### CI, automatization
+
+- `On push`: Every type of test is performed on every push by the CI server.
+- `Daily`: Contract and end-to-end tests are performed daily, so if any of the websites or browser features change, I receive an email immediately.
+- `Release`: Bumping version, generating [changelog](CHANGELOG.md) from tag messages, tagging, merging to master, pushing to remote with one `npm` command, then deploying to AMO by the CI server.
 
 ## Sources
 
