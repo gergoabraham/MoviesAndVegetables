@@ -53,7 +53,7 @@ class FakeHtmlFetcher {
       const url = fileName
         .replace(/\.\.\./, '?')
         .replace(/\.html/g, '')
-        .replace(/\./g, '/')
+        .replace(/\.(?!\w{3,4}$)/g, '/') // dots that are not before a file extension
         .replace(/^([^/]+)\//, `https://www.$1.com/`)
         .replace(/ .+$/, '');
 
@@ -63,14 +63,14 @@ class FakeHtmlFetcher {
   }
 
   static convertToFileName(url) {
-    return (
-      url
-        .replace(/^https:\/\//, '')
-        .replace(/^www\./, '')
-        .replace(/\.com/, '')
-        .replace(/\//g, '.')
-        .replace(/\?/, '...') + '.html'
-    );
+    const filename = url
+      .replace(/^https:\/\//, '')
+      .replace(/^www\./, '')
+      .replace(/\.com/, '')
+      .replace(/\//g, '.')
+      .replace(/\?/, '...');
+
+    return filename + (filename.match(/\.\w{3,4}$/) ? '' : '.html');
   }
 
   static getDocumentUrl(fileContent, originalUrl) {
