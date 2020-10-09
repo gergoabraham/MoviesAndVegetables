@@ -76,6 +76,12 @@ describe('ImdbPage', function () {
       it('read toplistPosition', function () {
         movieData.should.contain({ toplistPosition: 1 });
       });
+
+      it('read imdb logo', function () {
+        movieData.should.contain({
+          userRatingLogo: '<svg id="home_img">This is the logo.</svg>',
+        });
+      });
     });
 
     context(`on a movie without ratings`, function () {

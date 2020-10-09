@@ -163,13 +163,13 @@ class RottenPage extends MoviePage {
   }
 
   generateUserRatingElement(movieData) {
-    let userratingOuterHtml;
+    let userRatingElement;
 
     if (movieData.userRating) {
-      userratingOuterHtml =
+      const userratingOuterHtml =
         `<a href="${movieData.url}" class="unstyled articleLink" title="Open ${movieData.title} on IMDb">` +
         `    <h2 class="mop-ratings-wrap__score">` +
-        `        <span class="mop-ratings-wrap__percentage">${movieData.userRating.toLocaleString(
+        `        <span class="mop-ratings-wrap__percentage" style="vertical-align: middle;">${movieData.userRating.toLocaleString(
           'en',
           {
             minimumFractionDigits: 1,
@@ -186,8 +186,13 @@ class RottenPage extends MoviePage {
         )}</strong>` +
         `    </div>` +
         `      </a>`;
+      userRatingElement = this.generateElement(userratingOuterHtml);
+
+      const userRatingLogo = this.generateElement(movieData.userRatingLogo);
+      userRatingLogo.style.verticalAlign = 'middle';
+      userRatingElement.firstElementChild.prepend(userRatingLogo);
     } else {
-      userratingOuterHtml =
+      const userratingOuterHtml =
         `      <a href="${movieData.url}" class="unstyled articleLink" title="Open ${movieData.title} on IMDb">` +
         `  <div class="audience-score__italics mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion mop-ratings-wrap__text--not-released">` +
         `        <p class="mop-ratings-wrap__prerelease-text">Coming soon</p>` +
@@ -197,8 +202,9 @@ class RottenPage extends MoviePage {
         `      <strong class="mop-ratings-wrap__text--small">Number of votes: N/A</strong>` +
         `    </div>` +
         `      </a>`;
+      userRatingElement = this.generateElement(userratingOuterHtml);
     }
-    const userRatingElement = this.generateElement(userratingOuterHtml);
+
     return userRatingElement;
   }
 

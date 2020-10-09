@@ -25,7 +25,8 @@ class MovieData {
     numberOfUserVotes,
     criticsRating,
     numberOfCriticsVotes,
-    toplistPosition
+    toplistPosition,
+    userRatingLogo
   ) {
     this.title = title;
     this.year = year;
@@ -35,6 +36,7 @@ class MovieData {
     this.criticsRating = criticsRating;
     this.numberOfCriticsVotes = numberOfCriticsVotes;
     this.toplistPosition = toplistPosition;
+    this.userRatingLogo = userRatingLogo;
   }
 }
 

@@ -240,6 +240,17 @@ contract('ImdbContract', function (fetchDOM) {
       });
     });
 
+    context('imdb logo', function () {
+      it('is an svg', async function () {
+        const document = await fetchDOM(
+          'https://www.imdb.com/title/tt0111161/'
+        );
+
+        const logo = document.getElementById('home_img');
+        logo.tagName.should.equal('svg');
+      });
+    });
+
     context('critics rating', function () {
       it('value is a number', async function () {
         const document = await fetchDOM(

@@ -180,7 +180,8 @@ describe('rottenPage', function () {
             2181618,
             80,
             20,
-            null
+            null,
+            '<svg id="home_img">This is the logo.</svg>'
           )
         );
       });
@@ -223,7 +224,8 @@ describe('rottenPage', function () {
             `  <div class="mop-ratings-wrap__half audience-score" style="min-width:240px">` +
             `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on IMDb">` +
             `    <h2 class="mop-ratings-wrap__score">` +
-            `        <span class="mop-ratings-wrap__percentage">9.0</span>` +
+            `<svg id="home_img" style="vertical-align: middle;">This is the logo.</svg>` +
+            `        <span class="mop-ratings-wrap__percentage" style="vertical-align: middle;">9.0</span>` +
             `    </h2>` +
             `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
             `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
@@ -315,7 +317,8 @@ describe('rottenPage', function () {
             2181618,
             80,
             20,
-            33
+            33,
+            '<svg></svg>'
           )
         );
       });

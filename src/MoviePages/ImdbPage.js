@@ -31,6 +31,7 @@ class ImdbPage extends MoviePage {
     const criticsRating = this.readCriticsRating();
     const numberOfCriticVotes = await this.readNumberOfCriticsVotes();
     const toplistPosition = this.getToplistPosition();
+    const imdbLogo = this.getImdbLogo();
 
     return new MovieData(
       title,
@@ -40,7 +41,8 @@ class ImdbPage extends MoviePage {
       numberOfUserVotes,
       criticsRating,
       numberOfCriticVotes,
-      toplistPosition
+      toplistPosition,
+      imdbLogo
     );
   }
 
@@ -108,6 +110,10 @@ class ImdbPage extends MoviePage {
       : null;
 
     return toplistPosition;
+  }
+
+  getImdbLogo() {
+    return this.document.getElementById('home_img').outerHTML;
   }
 
   async fetchPage(url) {
