@@ -12,18 +12,19 @@ const FakeHtmlFetcher = require('./FakeHtmlFetcher');
 
 /**
  * Describe an **html contract test** suite. It runs the tests **twice**, both
- * for *fake* and *real* html documents, therefore every test needs to be
+ * for *fake* and *real* html/text documents, therefore every test needs to be
  * written only once.
  *
- * In order to get the *fake* and *real* html documents (from the *fake* folder
- * and from the *web*), the `async fetchDOM(url)` can be used. This callback
- * function is passed to the `body` as a parameter. It can be called multiple
- * times as it caches the documents. Therefore the document objects **must not
- * be changed**!
+ * In order to get the *fake* and *real* html/text documents (from the *fake*
+ * folder and from the *web*), the `async fetchDOM(url)` and the
+ * `async fetchText(url)` can be used. These callback functions are passed to
+ * the `body` as a parameter.
+ *
+ * ˙fetchDOM(url)` caches the document objects, so they **must not be changed**!
  *
  * @param {string} title Contract test title.
  * @param {contractCallback} body The test body. Use it like this:
- * `function(fetchDOM) {...const document = await fetchDOM(url);...}`
+ * `function(fetchDOM, fetchText) {...const document = await fetchDOM(url);...}`
  */
 function contract(title, body) {
   describe(title, contractTestPerformer(body));
@@ -33,8 +34,7 @@ function contract(title, body) {
  * Exclusive testing: only contract tests with '.only' will be performed.
  *
  * @param {string} title Contract test title.
- * @param {contractCallback} body The test body. Use it like this:
- * `function(fetchDOM) {...const document = await fetchDOM(url);...}`
+ * @param {contractCallback} body The test body.
  */
 contract.only = function (title, body) {
   describe.only(title, contractTestPerformer(body));
@@ -44,40 +44,50 @@ contract.only = function (title, body) {
  * Ignore this contract test.
  *
  * @param {string} title Contract test title.
- * @param {contractCallback} body The test body. Use it like this:
- * `function(fetchDOM) {...const document = await fetchDOM(url);...}`
+ * @param {contractCallback} body The test body.
  */
 contract.skip = function (title, body) {
   describe.skip(title, contractTestPerformer(body));
 };
 
-let DOMcache = {};
+let documentCache = {};
 
 after(function () {
   /* Letting the GC know that the cache object can be deleted,
      by unreferencing it in an explicit way.
      Without this, the contract test tdd script crashes after twenty-so runs,
      due to an oversized (>2GB) heap. */
-  DOMcache = null;
+  documentCache = null;
 });
 
 function contractTestPerformer(body) {
   return () => {
-    context('--- REAL ---', () => body(getDOMFetcher('real')));
-    context('--- FAKE ---', () => body(getDOMFetcher('fake')));
+    context('--- REAL ---', () =>
+      body(getFetcher('real', 'dom'), getFetcher('real', 'text'))
+    );
+    context('--- FAKE ---', () =>
+      body(getFetcher('fake', 'dom'), getFetcher('fake', 'text'))
+    );
   };
 }
 
-function getDOMFetcher(type) {
-  const htmlFetcher = createHtmlFetcher(type);
+function getFetcher(realOrFake, textOrDom) {
+  const htmlFetcher = createHtmlFetcher(realOrFake);
 
   return async (url) => {
-    const key = type + url;
-    if (DOMcache[key] === undefined) {
-      const upToDateDOM = await fetchUpToDateDOM(htmlFetcher, url);
-      DOMcache[key] = upToDateDOM;
+    const key = realOrFake + url + textOrDom;
+
+    if (documentCache[key] === undefined) {
+      const response = await htmlFetcher.fetch(url);
+      const text = await response.text();
+
+      const result =
+        textOrDom == 'dom' ? new JSDOM(text).window.document : text;
+
+      documentCache[key] = result;
     }
-    return DOMcache[key];
+
+    return documentCache[key];
   };
 }
 
@@ -89,18 +99,11 @@ function createHtmlFetcher(type) {
   }
 }
 
-async function fetchUpToDateDOM(htmlFetcher, url) {
-  const response = await htmlFetcher.fetch(url);
-  const text = await response.text();
-  const dom = new JSDOM(text).window.document;
-
-  return dom;
-}
-
 module.exports = contract;
 
 /** Type definition for the contract body.
  * @callback contractCallback
  * @param {(url:string)=>Promise<document>} fetchDOM
+ * @param {(url:string)=>Promise<string>} fetchText
  * @return {void}
  */
