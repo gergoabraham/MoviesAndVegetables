@@ -192,8 +192,8 @@ describe('rottenPage', function () {
           'div.mop-ratings-wrap__half'
         );
 
-        ratingsContainers[0].style.minWidth.should.equal('240px');
-        ratingsContainers[1].style.minWidth.should.equal('240px');
+        ratingsContainers[0].style.flexBasis.should.equal('100%');
+        ratingsContainers[1].style.flexBasis.should.equal('100%');
       });
 
       it('add IMDb scoreboard container', function () {
@@ -211,7 +211,7 @@ describe('rottenPage', function () {
         IMDbScores.outerHTML.should.equal(
           `<section id="mv-imdb-scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
             ` style="border-top:2px solid #2a2c32;margin-top:30px;padding-top:20px">` +
-            `  <div class="mop-ratings-wrap__half" style="min-width:240px">` +
+            `  <div class="mop-ratings-wrap__half" style="flex-basis: 100%">` +
             `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
             `      <h2 class="mop-ratings-wrap__score">` +
             `        <span class="mop-ratings-wrap__percentage" style="background-color: #66ffee; padding: 0px 8px;">80</span></h2>` +
@@ -222,7 +222,7 @@ describe('rottenPage', function () {
             `    </div>` +
             `  </a>` +
             `</div>` +
-            `  <div class="mop-ratings-wrap__half audience-score" style="min-width:240px">` +
+            `  <div class="mop-ratings-wrap__half audience-score" style="flex-basis: 100%">` +
             `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on IMDb">` +
             `    <h2 class="mop-ratings-wrap__score">` +
             `<svg id="home_img" style="vertical-align: middle;">This is the logo.</svg>` +

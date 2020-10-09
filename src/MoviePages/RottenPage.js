@@ -90,7 +90,7 @@ class RottenPage extends MoviePage {
    * @param  {MovieData} movieData
    */
   injectRatings(movieData) {
-    this.fixAlignmentOfTomatoMeterAndAudienceScore();
+    this.fixCenterAlignmentOfTomatoMeterAndAudienceScore();
 
     const imdbScoreElement = this.generateImdbRatingsRowElement(movieData);
     const scoreboardContainers = this.document.querySelectorAll(
@@ -99,11 +99,11 @@ class RottenPage extends MoviePage {
     scoreboardContainers[0].after(imdbScoreElement);
   }
 
-  fixAlignmentOfTomatoMeterAndAudienceScore() {
+  fixCenterAlignmentOfTomatoMeterAndAudienceScore() {
     const ratingsContainers = this.document.querySelectorAll(
       'div.mop-ratings-wrap__half'
     );
-    ratingsContainers.forEach((x) => (x.style.minWidth = '240px'));
+    ratingsContainers.forEach((x) => (x.style.flexBasis = '100%'));
   }
 
   generateImdbRatingsRowElement(movieData) {
@@ -126,9 +126,9 @@ class RottenPage extends MoviePage {
     return this.generateElement(
       `<section id="mv-imdb-scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
         `  style="border-top:2px solid #2a2c32;margin-top:30px;padding-top:20px">` +
-        `  <div class="mop-ratings-wrap__half" style="min-width:240px">` +
+        `  <div class="mop-ratings-wrap__half" style="flex-basis: 100%">` +
         `    </div>` +
-        `  <div class="mop-ratings-wrap__half audience-score" style="min-width:240px">` +
+        `  <div class="mop-ratings-wrap__half audience-score" style="flex-basis: 100%">` +
         `    </div>` +
         `</section>`
     );
