@@ -16,6 +16,8 @@ class MovieData {
    * @param  {number} criticsRating
    * @param  {number} numberOfCriticsVotes
    * @param  {number} toplistPosition
+   * @param  {string} userRatingLogo
+   * @param  {string} criticsRatingColor
    */
   constructor(
     title,
@@ -26,7 +28,8 @@ class MovieData {
     criticsRating,
     numberOfCriticsVotes,
     toplistPosition,
-    userRatingLogo
+    userRatingLogo,
+    criticsRatingColor
   ) {
     this.title = title;
     this.year = year;
@@ -37,6 +40,7 @@ class MovieData {
     this.numberOfCriticsVotes = numberOfCriticsVotes;
     this.toplistPosition = toplistPosition;
     this.userRatingLogo = userRatingLogo;
+    this.criticsRatingColor = criticsRatingColor;
   }
 }
 

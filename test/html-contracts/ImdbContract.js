@@ -8,7 +8,7 @@
 
 const contract = require('../tools/ContractTestDescription');
 
-contract('ImdbContract', function (fetchDOM) {
+contract('ImdbContract', function (fetchDOM, fetchText) {
   context('structure', function () {
     context('user score - ratings wrapper', async function () {
       context('full version', function () {
@@ -264,6 +264,15 @@ contract('ImdbContract', function (fetchDOM) {
         Number(metacritic).should.be.above(50).and.most(100);
       });
 
+      it('critic favorableness is in the class list', async function () {
+        const document = await fetchDOM(
+          'https://www.imdb.com/title/tt0111161/'
+        );
+        const metacritic = document.querySelector('div.metacriticScore');
+
+        metacritic.className.match(/score_\w+/).length.should.equal(1);
+      });
+
       it('count is a number in the critics page', async function () {
         const criticsPage = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/criticreviews'
@@ -325,6 +334,56 @@ contract('ImdbContract', function (fetchDOM) {
 
       it(`critics score doesn't exist`, function () {
         should.not.exist(document.querySelector('div.metacriticScore'));
+      });
+    });
+  });
+
+  context('style', function () {
+    let matchedStyleSheets;
+
+    before('get URL for latest stylesheet', async function () {
+      const document = await fetchDOM('https://www.imdb.com/title/tt0111161/');
+
+      const stylesheetLinkElements = document.querySelectorAll(
+        'link[rel="stylesheet"]'
+      );
+      const styleSheetLinks = Array.from(stylesheetLinkElements).map(
+        (linkElement) => linkElement.href
+      );
+      matchedStyleSheets = styleSheetLinks.filter((link) =>
+        link.match(/title-flat/)
+      );
+    });
+
+    context('link', function () {
+      it('html contains the needed "title-flat" stylesheet link', async function () {
+        matchedStyleSheets.length.should.equal(1);
+      });
+    });
+
+    context('css', function () {
+      let css;
+
+      before(async function () {
+        css = await fetchText(matchedStyleSheets[0]);
+      });
+
+      it('contains background color for .score_favorable', function () {
+        css
+          .match(/\.score_favorable{background-color:#[a-f0-9]{6}}/i)
+          .length.should.equal(1);
+      });
+
+      it('contains background color for .score_mixed', function () {
+        css
+          .match(/\.score_mixed{background-color:#[a-f0-9]{6}}/i)
+          .length.should.equal(1);
+      });
+
+      it('contains background color for .score_unfavorable', function () {
+        css
+          .match(/\.score_unfavorable{background-color:#[a-f0-9]{6}}/i)
+          .length.should.equal(1);
       });
     });
   });

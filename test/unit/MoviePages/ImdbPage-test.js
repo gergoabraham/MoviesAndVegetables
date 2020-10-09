@@ -82,6 +82,12 @@ describe('ImdbPage', function () {
           userRatingLogo: '<svg id="home_img">This is the logo.</svg>',
         });
       });
+
+      it('read metacritics color', function () {
+        movieData.should.contain({
+          criticsRatingColor: '#66Cc33',
+        });
+      });
     });
 
     context(`on a movie without ratings`, function () {
@@ -109,12 +115,20 @@ describe('ImdbPage', function () {
         movieData.should.contain({ numberOfUserVotes: null });
       });
 
+      it('the user ratings logo is null', function () {
+        movieData.should.contain({ userRatingLogo: null });
+      });
+
       it(`the critics rating is null`, function () {
         movieData.should.contain({ criticsRating: null });
       });
 
       it(`the number of critics' votes is null because it's not fetched`, function () {
         movieData.should.contain({ numberOfCriticsVotes: null });
+      });
+
+      it('the critic ratings color is null', function () {
+        movieData.should.contain({ criticsRatingColor: null });
       });
 
       it('toplistPosition is null', function () {

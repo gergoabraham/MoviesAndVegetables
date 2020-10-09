@@ -140,7 +140,8 @@ class RottenPage extends MoviePage {
       metacriticsOuterHtml =
         `<a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
         `      <h2 class="mop-ratings-wrap__score">` +
-        `        <span class="mop-ratings-wrap__percentage">${movieData.criticsRating}</span></h2>` +
+        `        <span class="mop-ratings-wrap__percentage"` +
+        `              style="background-color: ${movieData.criticsRatingColor}; padding: 0px 8px;">${movieData.criticsRating}</span></h2>` +
         `    <div class="mop-ratings-wrap__review-totals">` +
         `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
         `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +

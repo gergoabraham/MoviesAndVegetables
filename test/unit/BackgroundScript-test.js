@@ -100,7 +100,8 @@ describe('Background script', function () {
           null,
           null,
           null,
-          '<svg id="home_img">This is the logo.</svg>'
+          '<svg id="home_img">This is the logo.</svg>',
+          null
         )
       );
     });

@@ -32,6 +32,7 @@ class ImdbPage extends MoviePage {
     const numberOfCriticVotes = await this.readNumberOfCriticsVotes();
     const toplistPosition = this.getToplistPosition();
     const imdbLogo = this.getImdbLogo();
+    const metacriticsColor = await this.getMetacriticsColor();
 
     return new MovieData(
       title,
@@ -42,7 +43,8 @@ class ImdbPage extends MoviePage {
       criticsRating,
       numberOfCriticVotes,
       toplistPosition,
-      imdbLogo
+      imdbLogo,
+      metacriticsColor
     );
   }
 
@@ -51,13 +53,15 @@ class ImdbPage extends MoviePage {
   }
 
   readUserRating() {
-    const userRatingElement = this.document.querySelector(
-      'span[itemprop="ratingValue"'
-    );
+    const userRatingElement = this.getUserRatingElement();
 
     return userRatingElement
       ? Number(userRatingElement.innerHTML.replace(',', '.'))
       : null;
+  }
+
+  getUserRatingElement() {
+    return this.document.querySelector('span[itemprop="ratingValue"');
   }
 
   readNumberOfUserVotes() {
@@ -113,7 +117,45 @@ class ImdbPage extends MoviePage {
   }
 
   getImdbLogo() {
-    return this.document.getElementById('home_img').outerHTML;
+    return this.getUserRatingElement()
+      ? this.document.getElementById('home_img').outerHTML
+      : null;
+  }
+
+  async getMetacriticsColor() {
+    let color = null;
+    const criticsRating = this.getCriticsRatingElement();
+
+    if (criticsRating) {
+      const css = await this.fetchCss();
+      const favorableness = criticsRating.className.match(/score_\w+/)[0];
+
+      color = css.match(
+        `\\.${favorableness}{background-color:(#[a-zA-Z0-9]{6})`
+      )[1];
+    }
+
+    return color;
+  }
+
+  async fetchCss() {
+    const styleSheetUrl = this.getStylesheetUrl();
+
+    const response = await fetch(styleSheetUrl);
+    const css = await response.text();
+    return css;
+  }
+
+  getStylesheetUrl() {
+    const stylesheetLinkElements = this.document.querySelectorAll(
+      'link[rel="stylesheet"]'
+    );
+
+    const styleSheetLinks = Array.from(stylesheetLinkElements).map(
+      (linkElement) => linkElement.href
+    );
+
+    return styleSheetLinks.filter((link) => link.match(/title-flat/))[0];
   }
 
   async fetchPage(url) {

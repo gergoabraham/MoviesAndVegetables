@@ -181,7 +181,8 @@ describe('rottenPage', function () {
             80,
             20,
             null,
-            '<svg id="home_img">This is the logo.</svg>'
+            '<svg id="home_img">This is the logo.</svg>',
+            '#66ffee'
           )
         );
       });
@@ -213,7 +214,7 @@ describe('rottenPage', function () {
             `  <div class="mop-ratings-wrap__half" style="min-width:240px">` +
             `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
             `      <h2 class="mop-ratings-wrap__score">` +
-            `        <span class="mop-ratings-wrap__percentage">80</span></h2>` +
+            `        <span class="mop-ratings-wrap__percentage" style="background-color: #66ffee; padding: 0px 8px;">80</span></h2>` +
             `    <div class="mop-ratings-wrap__review-totals">` +
             `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
             `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
