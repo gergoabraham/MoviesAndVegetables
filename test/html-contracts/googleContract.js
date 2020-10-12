@@ -12,11 +12,14 @@ contract('GoogleContract', function (fetchDOM) {
   let document;
 
   context('when feeling unlucky', function () {
-    before(async function () {
-      document = await fetchDOM(
-        "https://www.google.com/search?btnI=true&q=Amblin'+1968+movie+RottenTomatoes"
-      );
-    });
+    before(
+      'fetching without "Feeling lucky" button to simulate unluckiness',
+      async function () {
+        document = await fetchDOM(
+          "https://www.google.com/search?q=Amblin'+1968+movie+RottenTomatoes"
+        );
+      }
+    );
 
     it('search result contains lots of hyperlinks', function () {
       document.getElementsByTagName('A').length.should.be.above(3);
