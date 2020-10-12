@@ -127,7 +127,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
         });
 
         it("titleReviewBar's parent is plotSummaryWrapper", function () {
-          titleReviewBar.parentNode.className.should.contain(
+          titleReviewBar.parentElement.className.should.contain(
             'plot_summary_wrapper'
           );
         });
@@ -359,6 +359,10 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
       it('html contains the needed "title-flat" stylesheet link', async function () {
         matchedStyleSheets.length.should.equal(1);
       });
+
+      it('as an absolute link', function () {
+        matchedStyleSheets[0].match(/^https:\/\/.+$/).should.exist;
+      });
     });
 
     context('css', function () {
@@ -370,19 +374,19 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
 
       it('contains background color for .score_favorable', function () {
         css
-          .match(/\.score_favorable{background-color:#[a-f0-9]{6}}/i)
+          .match(/\.score_favorable{background-color:#[a-f0-9]{6}}/gi)
           .length.should.equal(1);
       });
 
       it('contains background color for .score_mixed', function () {
         css
-          .match(/\.score_mixed{background-color:#[a-f0-9]{6}}/i)
+          .match(/\.score_mixed{background-color:#[a-f0-9]{6}}/gi)
           .length.should.equal(1);
       });
 
       it('contains background color for .score_unfavorable', function () {
         css
-          .match(/\.score_unfavorable{background-color:#[a-f0-9]{6}}/i)
+          .match(/\.score_unfavorable{background-color:#[a-f0-9]{6}}/gi)
           .length.should.equal(1);
       });
     });

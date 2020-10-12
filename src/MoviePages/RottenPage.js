@@ -27,6 +27,7 @@ class RottenPage extends MoviePage {
     const numberOfCriticRatings = this.readNumberOfCriticsVotes(tomatoMeter);
     const audienceScore = this.readAudienceScore();
     const numberOfUserRatings = this.readNumberOfUserVotes(audienceScore);
+    const userRatingLogo = await this.fetchAudienceScoreLogo(audienceScore);
 
     return new MovieData(
       title,
@@ -36,6 +37,8 @@ class RottenPage extends MoviePage {
       numberOfUserRatings,
       tomatoMeter,
       numberOfCriticRatings,
+      null,
+      userRatingLogo,
       null
     );
   }
@@ -84,6 +87,57 @@ class RottenPage extends MoviePage {
             .textContent.replace(/[^0-9]/g, '')
         )
       : null;
+  }
+
+  async fetchAudienceScoreLogo(audienceScore) {
+    let audienceScoreLogo = null;
+
+    if (audienceScore) {
+      const css = await this.fetchCss();
+      const freshness = this.readFreshness();
+      const iconUrl = this.findAudienceScoreLogoUrl(css, freshness);
+
+      const logoResponse = await fetch(
+        'https://www.rottentomatoes.com' + iconUrl
+      );
+      audienceScoreLogo = await logoResponse.text();
+    }
+
+    return audienceScoreLogo;
+  }
+
+  async fetchCss() {
+    const stylesheetLinkElements = this.document.querySelectorAll(
+      'link[as="style"]'
+    );
+    const styleSheetLinks = Array.from(stylesheetLinkElements).map(
+      (linkElement) => linkElement.href
+    );
+    const matchedStyleSheets = styleSheetLinks.filter((link) =>
+      link.match(/global.*\.css/)
+    );
+    const relativeUrl = matchedStyleSheets[0].match('/assets.+');
+    const styleSheetUrl = 'https://www.rottentomatoes.com' + relativeUrl;
+
+    const cssResponse = await fetch(styleSheetUrl);
+    return cssResponse.text();
+  }
+
+  readFreshness() {
+    const freshnessIcon = this.document
+      .getElementsByClassName('mop-ratings-wrap__half')[1]
+      .querySelector('span.mop-ratings-wrap__icon.meter-tomato');
+
+    return freshnessIcon.className.match(/(upright|spilled)/)[0];
+  }
+
+  findAudienceScoreLogoUrl(css, freshness) {
+    return css.match(
+      new RegExp(
+        `\\.icon\\.big\\.${freshness}[^{]*{background:transparent url\\(([^)]+)`,
+        'i'
+      )
+    )[1];
   }
 
   /**

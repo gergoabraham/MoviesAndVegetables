@@ -8,7 +8,7 @@
 
 const contract = require('../tools/ContractTestDescription');
 
-contract('RottenContract', function (fetchDOM) {
+contract('RottenContract', function (fetchDOM, fetchText) {
   context('structure', function () {
     let ratingContainer;
 
@@ -122,6 +122,16 @@ contract('RottenContract', function (fetchDOM) {
           .and.most(100);
       });
 
+      it('freshness is in the class name', function () {
+        const freshnessIcon = document.querySelector(
+          'span.mop-ratings-wrap__icon.meter-tomato'
+        );
+
+        freshnessIcon.className.should
+          .include(' icon big ')
+          .and.include(' certified-fresh');
+      });
+
       it('count is a number', async function () {
         const tomatometerCount = getTomatometerCountElement(document).innerHTML;
 
@@ -138,6 +148,16 @@ contract('RottenContract', function (fetchDOM) {
         Number(audienceScore.match(/\d+(?=%)/))
           .should.be.above(80)
           .and.most(100);
+      });
+
+      it('popcorn freshness is in the class name', function () {
+        const freshnessIcon = document.querySelectorAll(
+          'span.mop-ratings-wrap__icon.meter-tomato'
+        )[1];
+
+        freshnessIcon.className.should
+          .include(' icon big ')
+          .and.include(' upright');
       });
 
       it('count is a number', async function () {
@@ -212,6 +232,90 @@ contract('RottenContract', function (fetchDOM) {
         Number(audienceScoreCount.replace(/[^\d]/g, ''))
           .should.be.above(10)
           .and.most(2000);
+      });
+    });
+  });
+
+  context('style', function () {
+    let matchedStyleSheets;
+
+    before('get URL for latest stylesheet', async function () {
+      const document = await fetchDOM(
+        'https://www.rottentomatoes.com/m/shawshank_redemption'
+      );
+
+      const stylesheetLinkElements = document.querySelectorAll(
+        'link[as="style"]'
+      );
+      const styleSheetLinks = Array.from(stylesheetLinkElements).map(
+        (linkElement) => linkElement.href
+      );
+      matchedStyleSheets = styleSheetLinks.filter((link) =>
+        link.match(/global.*\.css/)
+      );
+    });
+
+    context('link', function () {
+      it('html contains the needed "global" stylesheet link', async function () {
+        matchedStyleSheets.length.should.equal(1);
+      });
+
+      it('as a relative link', function () {
+        matchedStyleSheets[0].match(/^\/assets.+$/).should.exist;
+      });
+    });
+
+    context('css', function () {
+      let css;
+
+      before(async function () {
+        css = await fetchText(
+          'https://www.rottentomatoes.com' + matchedStyleSheets[0]
+        );
+      });
+
+      context('tomatometer', function () {
+        it('contains relative svg link for .certified-fresh', function () {
+          css
+            .match(
+              /\.icon\.big\.certified-fresh[^{]*{background:transparent url\(([^)]+)/
+            )[1]
+            .should.match(/^\/assets.+certified_fresh.+\.svg$/);
+        });
+
+        it('contains relative svg link for .fresh', function () {
+          css
+            .match(
+              /\.icon\.big\.fresh[^{]*{background:transparent url\(([^)]+)/
+            )[1]
+            .should.match(/^\/assets.+fresh.+\.svg$/);
+        });
+
+        it('contains relative svg link for .rotten', function () {
+          css
+            .match(
+              /\.icon\.big\.rotten[^{]*{background:transparent url\(([^)]+)/
+            )[1]
+            .should.match(/^\/assets.+rotten.+\.svg$/);
+        });
+      });
+
+      context('tomatometer', function () {
+        it('contains relative svg link for .upright', function () {
+          css
+            .match(
+              /\.icon\.big\.upright[^{]*{background:transparent url\(([^)]+)/
+            )[1]
+            .should.match(/^\/assets.+aud_score-fresh.*\.svg$/);
+        });
+
+        it('contains relative svg link for .spilled', function () {
+          css
+            .match(
+              /\.icon\.big\.spilled[^{]*{background:transparent url\(([^)]+)/
+            )[1]
+            .should.match(/^\/assets.+aud_score-rotten.+\.svg$/);
+        });
       });
     });
   });

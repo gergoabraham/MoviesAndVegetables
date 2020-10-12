@@ -180,7 +180,8 @@ class ImdbPage extends MoviePage {
       this.document,
       movieData.userRating,
       movieData.url,
-      movieData.numberOfUserVotes
+      movieData.numberOfUserVotes,
+      movieData.userRatingLogo
     );
   }
 
@@ -276,12 +277,13 @@ class ImdbPage extends MoviePage {
     return element.getElementsByClassName('metacriticScore')[0];
   }
 
-  injectAudienceScore(doc, percent, url, votes) {
+  injectAudienceScore(doc, percent, url, votes, logo) {
     let ratingsWrapper = doc.getElementsByClassName('ratings_wrapper')[0];
     const audienceScoreElement = this.createAudienceScoreElement(
       percent,
       url,
-      votes
+      votes,
+      logo
     );
 
     if (ratingsWrapper) {
@@ -322,24 +324,61 @@ class ImdbPage extends MoviePage {
     return newRatingsWrapper;
   }
 
-  createAudienceScoreElement(percent, url, votes) {
-    return this.generateElement(
+  createAudienceScoreElement(percent, url, votes, logo) {
+    let audienceScoreElement;
+
+    if (percent) {
+      audienceScoreElement = this.generateElement(
+        this.getFilledAudienceScoreHtml(percent, url, votes)
+      );
+
+      const icon = this.generateElement(logo);
+      icon.style.height = '32px';
+      audienceScoreElement.prepend(icon);
+    } else {
+      audienceScoreElement = this.generateElement(
+        this.getEmptyAudienceScoreHtml(url)
+      );
+    }
+
+    return audienceScoreElement;
+  }
+
+  getFilledAudienceScoreHtml(percent, url, votes) {
+    return (
       `<div class="imdbRating" id="mv-audience-score"` +
-        `     style="background:none;text-align:center;padding:2px 0 0 2px;` +
-        `width:90px;">` +
-        `    <div class="ratingValue">` +
-        `        <strong title="Audience score from RottenTomatoes">` +
-        `            <span itemprop="ratingValue">${
-          percent ? percent + '%' : '-'
-        }</span>` +
-        `        </strong>` +
-        `    </div>` +
-        `    <a href="${url}">` +
-        `        <span class="small" itemprop="ratingCount">${
-          votes ? this.groupThousands(votes) : 'N/A'
-        }</span>` +
-        `    </a>` +
-        `</div>`
+      `     style="background:none;text-align:center;padding:0px 10px 0px 5px;` +
+      `width:100px;display:flex; align-items: center;">` +
+      `    <div>` +
+      `        <div class="ratingValue">` +
+      `            <strong title="Audience score from RottenTomatoes">` +
+      `                <span itemprop="ratingValue">${percent}%</span>` +
+      `            </strong>` +
+      `        </div>` +
+      `        <a href="${url}">` +
+      `            <span class="small" itemprop="ratingCount">${this.groupThousands(
+        votes
+      )}</span>` +
+      `        </a>` +
+      `    </div>` +
+      `</div>`
+    );
+  }
+
+  getEmptyAudienceScoreHtml(url) {
+    return (
+      `<div class="imdbRating" id="mv-audience-score"` +
+      `     style="background:none;text-align:center;padding:2px 0 0 2px;` +
+      `width:90px;">` +
+      `    <div class="ratingValue">` +
+      `        <strong title="Audience score from RottenTomatoes">` +
+      `            <span itemprop="ratingValue">-</span>` +
+      `        </strong>` +
+      `    </div>` +
+      `    <a href="${url}">` +
+      `        <span class="small" itemprop="ratingCount">N/A</span>` +
+      `    </a>` +
+      `</div>`
     );
   }
 

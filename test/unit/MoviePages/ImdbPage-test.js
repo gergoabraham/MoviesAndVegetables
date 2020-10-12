@@ -183,7 +183,17 @@ describe('ImdbPage', function () {
           const document = await getTestDocument();
           const imdbPage = new ImdbPage(document, 'https://url');
           imdbPage.injectRatings(
-            new MovieData('title', 2002, rottenURL, 85, 666, 93, 1268)
+            new MovieData(
+              'title',
+              2002,
+              rottenURL,
+              85,
+              666,
+              93,
+              1268,
+              null,
+              '<svg></svg>'
+            )
           );
 
           titleReviewBar = document.getElementsByClassName('titleReviewBar')[0];
@@ -234,7 +244,18 @@ describe('ImdbPage', function () {
           document = await getTestDocument();
           const imdbPage = new ImdbPage(document, 'https://url');
           imdbPage.injectRatings(
-            new MovieData('title', 2002, rottenURL, 98, 885228, 93, 1268)
+            new MovieData(
+              'title',
+              2002,
+              rottenURL,
+              98,
+              885228,
+              93,
+              1268,
+              null,
+              '<svg id="upright-logo"></svg>',
+              null
+            )
           );
 
           ratingsWrapper = document.getElementsByClassName(
@@ -252,16 +273,19 @@ describe('ImdbPage', function () {
 
           audienceScore.outerHTML.should.equal(
             `<div class="imdbRating" id="mv-audience-score"` +
-              ` style="background: none; text-align: center; padding: 2px 0px 0px 2px; ` +
-              `width: 90px; border-left: 1px solid #6b6b6b;">` +
-              `    <div class="ratingValue">` +
-              `        <strong title="Audience score from RottenTomatoes">` +
-              `            <span itemprop="ratingValue">98%</span>` +
-              `        </strong>` +
+              ` style="background: none; text-align: center; padding: 0px 10px 0px 5px; ` +
+              `width: 100px; display: flex; align-items: center; border-left: 1px solid #6b6b6b;">` +
+              `<svg id="upright-logo" style="height: 32px;"></svg>` +
+              `    <div>` +
+              `        <div class="ratingValue">` +
+              `            <strong title="Audience score from RottenTomatoes">` +
+              `                <span itemprop="ratingValue">98%</span>` +
+              `            </strong>` +
+              `        </div>` +
+              `        <a href="${rottenURL}">` +
+              `            <span class="small" itemprop="ratingCount">885,228</span>` +
+              `        </a>` +
               `    </div>` +
-              `    <a href="${rottenURL}">` +
-              `        <span class="small" itemprop="ratingCount">885,228</span>` +
-              `    </a>` +
               `</div>`
           );
         });
@@ -283,7 +307,18 @@ describe('ImdbPage', function () {
         document = await getTestDocument();
         const imdbPage = new ImdbPage(document, 'https://url');
         imdbPage.injectRatings(
-          new MovieData('title', 2002, rottenURL, null, null, null, null)
+          new MovieData(
+            'title',
+            2002,
+            rottenURL,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          )
         );
       });
 
@@ -335,7 +370,17 @@ describe('ImdbPage', function () {
         const imdbPage = new ImdbPage(document, 'https://url');
 
         imdbPage.injectRatings(
-          new MovieData('title', 2002, rottenURL, 66, 666, 66, 666)
+          new MovieData(
+            'title',
+            2002,
+            rottenURL,
+            66,
+            666,
+            66,
+            666,
+            null,
+            '<svg></svg>'
+          )
         );
 
         return document;

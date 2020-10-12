@@ -45,6 +45,8 @@ describe('Background script', function () {
           885688,
           90,
           71,
+          null,
+          '<svg id="upright-logo"></svg>',
           null
         )
       );
@@ -72,6 +74,8 @@ describe('Background script', function () {
           309,
           null,
           null,
+          null,
+          '<svg id="upright-logo"></svg>',
           null
         )
       );

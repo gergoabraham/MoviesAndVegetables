@@ -59,6 +59,12 @@ describe('rottenPage', function () {
         movieData.should.contain({ userRating: 98 });
       });
 
+      it('read the user rating popcorn freshness', function () {
+        movieData.should.contain({
+          userRatingLogo: '<svg id="upright-logo"></svg>',
+        });
+      });
+
       it(`read the number of users' votes`, function () {
         movieData.should.contain({ numberOfUserVotes: 885688 });
       });
@@ -104,6 +110,12 @@ describe('rottenPage', function () {
         movieData.should.contain({ numberOfUserVotes: null });
       });
 
+      it('read the user rating popcorn freshness', function () {
+        movieData.should.contain({
+          userRatingLogo: null,
+        });
+      });
+
       it('read the critics rating', function () {
         movieData.should.contain({ criticsRating: null });
       });
@@ -143,6 +155,12 @@ describe('rottenPage', function () {
 
       it(`read the number of users' votes`, function () {
         movieData.should.contain({ numberOfUserVotes: 309 });
+      });
+
+      it('read the user rating popcorn freshness', function () {
+        movieData.should.contain({
+          userRatingLogo: '<svg id="upright-logo"></svg>',
+        });
       });
 
       it('read the critics rating', function () {
