@@ -19,7 +19,14 @@ describe('Content script on RottenTomatoes', function () {
 
       await ContentScriptRottenTomatoes.injectImdbScores();
 
-      document.getElementById('mv-imdb-scores').should.exist;
+      const imdbScores = document.getElementById('mv-imdb-scores');
+
+      imdbScores.should.exist;
+
+      const scoreValues = imdbScores.querySelectorAll('span');
+
+      scoreValues[0].textContent.should.equal('80');
+      scoreValues[1].textContent.should.equal('9.3');
     });
   });
 });

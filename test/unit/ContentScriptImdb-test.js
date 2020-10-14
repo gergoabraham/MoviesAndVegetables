@@ -19,8 +19,14 @@ describe('Content script on IMDb', function () {
 
       await ContentScriptImdb.injectRottenTomatoesScores();
 
-      document.getElementById('mv-audience-score').should.exist;
-      document.getElementById('mv-tomatometer').should.exist;
+      const audienceScore = document.getElementById('mv-audience-score');
+      const tomatoMeter = document.getElementById('mv-tomatometer');
+
+      audienceScore.should.exist;
+      audienceScore.querySelector('span').textContent.should.equal('98%');
+
+      tomatoMeter.should.exist;
+      tomatoMeter.querySelector('span').textContent.should.equal('90%');
     });
   });
 });
