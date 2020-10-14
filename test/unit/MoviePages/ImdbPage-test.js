@@ -10,13 +10,20 @@ const { JSDOM } = require('jsdom');
 const sinon = require('sinon');
 
 describe('ImdbPage', function () {
-  const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
+  const rottenURL = 'https://www.rottentomatoes.com/m/blabla';
 
-  async function getTestDocument(
-    filename = 'imdb.title.tt0111161 - listed in top250.html'
-  ) {
-    const dom = await JSDOM.fromFile(FakeHtmlPath + filename);
-    return dom.window.document;
+  async function getTestDOM(url) {
+    const response = await fetch(url);
+    const fileContent = await response.text();
+
+    return new JSDOM(fileContent).window.document;
+  }
+
+  async function readMovieDataByImdbPage(url) {
+    const document = await getTestDOM(url);
+    const imdbPage = new ImdbPage(document, url);
+
+    return imdbPage.getMovieData();
   }
 
   it('can be instantiated', function () {
@@ -31,62 +38,25 @@ describe('ImdbPage', function () {
 
   describe('getMovieData', function () {
     context(`on a movie with ratings`, function () {
-      let movieData;
-
-      before(async function () {
-        const document = await getTestDocument();
-        const imdbPage = new ImdbPage(
-          document,
-          `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`
+      it('read all stuff', async function () {
+        const movieData = await readMovieDataByImdbPage(
+          'https://www.imdb.com/title/tt0111161/'
         );
 
-        movieData = await imdbPage.getMovieData();
-      });
-
-      it(`read the title`, function () {
-        movieData.should.contain({ title: 'The Shawshank Redemption' });
-      });
-
-      it(`read the release year`, function () {
-        movieData.should.contain({ year: 1994 });
-      });
-
-      it(`add the url received on instantiating`, function () {
-        movieData.should.contain({
-          url: `https://www.imdb.com/title/tt0111161/`,
-        });
-      });
-
-      it(`read the user rating`, function () {
-        movieData.should.contain({ userRating: 9.3 });
-      });
-
-      it(`read the number of users' votes`, function () {
-        movieData.should.contain({ numberOfUserVotes: 2260000 });
-      });
-
-      it(`read the critics rating`, function () {
-        movieData.should.contain({ criticsRating: 80 });
-      });
-
-      it(`read the number of critics' votes`, function () {
-        movieData.should.contain({ numberOfCriticsVotes: 20 });
-      });
-
-      it('read toplistPosition', function () {
-        movieData.should.contain({ toplistPosition: 1 });
-      });
-
-      it('read imdb logo', function () {
-        movieData.should.contain({
-          userRatingLogo: '<svg id="home_img">This is the logo.</svg>',
-        });
-      });
-
-      it('read metacritics color', function () {
-        movieData.should.contain({
-          criticsRatingColor: '#66Cc33',
-        });
+        movieData.should.deep.equal(
+          new MovieData(
+            'The Shawshank Redemption',
+            1994,
+            'https://www.imdb.com/title/tt0111161/',
+            9.3,
+            2260000,
+            80,
+            20,
+            1,
+            '<svg id="home_img">This is the logo.</svg>',
+            '#66Cc33'
+          )
+        );
       });
     });
 
@@ -94,79 +64,53 @@ describe('ImdbPage', function () {
       let movieData;
 
       before(`let's check some unimportant data`, async function () {
-        const document = await getTestDocument(
-          'imdb.title.tt5637536 - no ratings yet.html'
-        );
-        const imdbPage = new ImdbPage(
-          document,
-          `https://www.imdb.com/title/tt5637536/`
-        );
+        const url = 'https://www.imdb.com/title/tt5637536/';
+        const document = await getTestDOM(url);
+        const imdbPage = new ImdbPage(document, url);
 
         movieData = await imdbPage.getMovieData();
         movieData.should.contain({ title: 'Avatar 5' });
         movieData.should.contain({ year: 2028 });
       });
 
-      it(`the user rating is null`, function () {
-        movieData.should.contain({ userRating: null });
-      });
+      it('read all stuff', async function () {
+        const movieData = await readMovieDataByImdbPage(
+          'https://www.imdb.com/title/tt5637536/'
+        );
 
-      it(`the number of users' votes is null`, function () {
-        movieData.should.contain({ numberOfUserVotes: null });
-      });
-
-      it('the user ratings logo is null', function () {
-        movieData.should.contain({ userRatingLogo: null });
-      });
-
-      it(`the critics rating is null`, function () {
-        movieData.should.contain({ criticsRating: null });
-      });
-
-      it(`the number of critics' votes is null because it's not fetched`, function () {
-        movieData.should.contain({ numberOfCriticsVotes: null });
-      });
-
-      it('the critic ratings color is null', function () {
-        movieData.should.contain({ criticsRatingColor: null });
-      });
-
-      it('toplistPosition is null', function () {
-        movieData.should.contain({ toplistPosition: null });
+        movieData.should.deep.equal(
+          new MovieData(
+            'Avatar 5',
+            2028,
+            'https://www.imdb.com/title/tt5637536/',
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          )
+        );
       });
     });
 
     context(`on a not top250 movie's imdb page`, function () {
-      let movieData;
-
-      before(async function () {
-        const document = await getTestDocument(
-          `imdb.title.tt5637536 - no ratings yet.html`
-        );
-        const imdbPage = new ImdbPage(
-          document,
-          `https://www.imdb.com/title/tt5637536/`
+      it('toplistPosition is null', async function () {
+        const movieData = await readMovieDataByImdbPage(
+          'https://www.imdb.com/title/tt5637536/'
         );
 
-        movieData = await imdbPage.getMovieData();
-      });
-
-      it('toplistPosition is null', function () {
         movieData.should.contain({ toplistPosition: null });
       });
     });
 
     context(`on a series' imdb page`, function () {
-      let imdbPage;
-
-      before(async function () {
-        const document = await getTestDocument(
-          'imdb.title.tt0149460 - series.html'
-        );
-        imdbPage = new ImdbPage(document, 'https://url');
-      });
-
       it('reject (for now, TODO)', async function () {
+        const url = 'https://www.imdb.com/title/tt0149460/';
+        const document = await getTestDOM(url);
+        const imdbPage = new ImdbPage(document, url);
+
         await imdbPage
           .getMovieData()
           .should.be.rejectedWith(Error, 'Not a movie');
@@ -180,8 +124,10 @@ describe('ImdbPage', function () {
         let titleReviewBar;
 
         before(async function () {
-          const document = await getTestDocument();
-          const imdbPage = new ImdbPage(document, 'https://url');
+          const url = 'https://www.imdb.com/title/tt0111161/';
+          const document = await getTestDOM(url);
+          const imdbPage = new ImdbPage(document, url);
+
           imdbPage.injectRatings(
             new MovieData(
               'Movie Title',
@@ -237,8 +183,10 @@ describe('ImdbPage', function () {
         let document;
 
         before(async function () {
-          document = await getTestDocument();
-          const imdbPage = new ImdbPage(document, 'https://url');
+          const url = 'https://www.imdb.com/title/tt0111161/';
+          document = await getTestDOM(url);
+          const imdbPage = new ImdbPage(document, url);
+
           imdbPage.injectRatings(
             new MovieData(
               'Movie Title',
@@ -300,8 +248,10 @@ describe('ImdbPage', function () {
       let document;
 
       before(async function () {
-        document = await getTestDocument();
-        const imdbPage = new ImdbPage(document, 'https://url');
+        const url = 'https://www.imdb.com/title/tt0111161/';
+        document = await getTestDOM(url);
+        const imdbPage = new ImdbPage(document, url);
+
         imdbPage.injectRatings(
           new MovieData(
             'Movie Title',
@@ -361,9 +311,9 @@ describe('ImdbPage', function () {
     });
 
     context('missing structures on imdb', function () {
-      async function injectDummyRatings(fileName) {
-        const document = await getTestDocument(fileName);
-        const imdbPage = new ImdbPage(document, 'https://url');
+      async function injectDummyRatings(url) {
+        const document = await getTestDOM(url);
+        const imdbPage = new ImdbPage(document, url);
 
         imdbPage.injectRatings(
           new MovieData(
@@ -386,7 +336,7 @@ describe('ImdbPage', function () {
       context('for Tomatometer', function () {
         it('no metacritics - but multiple items in review bar', async function () {
           const document = await injectDummyRatings(
-            'imdb.title.tt0067023- no metacritics.html'
+            'https://www.imdb.com/title/tt0067023/'
           );
           const titleReviewBar = getTitleReviewBar(document);
 
@@ -399,7 +349,7 @@ describe('ImdbPage', function () {
 
         it('no metacritics, no dividers in review bar', async function () {
           const document = await injectDummyRatings(
-            'imdb.title.tt0064010 - no metacritics, no divider.html'
+            'https://www.imdb.com/title/tt0064010/'
           );
           const titleReviewBar = getTitleReviewBar(document);
 
@@ -409,7 +359,7 @@ describe('ImdbPage', function () {
 
         it('no review bar', async function () {
           const document = await injectDummyRatings(
-            'imdb.title.tt5637536 - no ratings yet.html'
+            'https://www.imdb.com/title/tt5637536/'
           );
           const titleReviewBar = getTitleReviewBar(document);
 
@@ -423,7 +373,7 @@ describe('ImdbPage', function () {
 
         before(async function () {
           document = await injectDummyRatings(
-            'imdb.title.tt5637536 - no ratings yet.html'
+            'https://www.imdb.com/title/tt5637536/'
           );
         });
 
