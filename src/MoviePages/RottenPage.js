@@ -23,36 +23,30 @@ class RottenPage extends MoviePage {
 
     const title = metaDataJSON.name;
     const year = this.readYear();
-    const tomatoMeter = this.readTomatoMeter();
-    const numberOfCriticRatings = this.readNumberOfCriticsVotes(tomatoMeter);
-    const audienceScore = this.readAudienceScore();
-    const numberOfUserRatings = this.readNumberOfUserVotes(audienceScore);
 
-    let css;
-    if (audienceScore || tomatoMeter) {
-      css = await this.fetchCss();
-    }
+    const tomatometer = {};
+    tomatometer.value = this.readTomatoMeter();
+    tomatometer.count = this.readNumberOfCriticsVotes(tomatometer.value);
+    tomatometer.iconUrl = await this.readTomatometerLogoUrl(tomatometer.value);
 
-    const userRatingLogo = await this.readAudienceScoreLogoUrl(
-      css,
-      audienceScore
-    );
-    const criticsRatingLogo = await this.readTomatometerLogoUrl(
-      css,
-      tomatoMeter
+    const audienceScore = {};
+    audienceScore.value = this.readAudienceScore();
+    audienceScore.count = this.readNumberOfUserVotes(audienceScore.value);
+    audienceScore.iconUrl = await this.readAudienceScoreLogoUrl(
+      audienceScore.value
     );
 
     return new MovieData(
       title,
       year,
       this.url,
-      audienceScore,
-      numberOfUserRatings,
-      tomatoMeter,
-      numberOfCriticRatings,
+      audienceScore.value,
+      audienceScore.count,
+      tomatometer.value,
+      tomatometer.count,
       null,
-      userRatingLogo,
-      criticsRatingLogo
+      audienceScore.iconUrl,
+      tomatometer.iconUrl
     );
   }
 
@@ -102,27 +96,11 @@ class RottenPage extends MoviePage {
       : null;
   }
 
-  async fetchCss() {
-    const stylesheetLinkElements = this.document.querySelectorAll(
-      'link[as="style"]'
-    );
-    const styleSheetLinks = Array.from(stylesheetLinkElements).map(
-      (linkElement) => linkElement.href
-    );
-    const matchedStyleSheets = styleSheetLinks.filter((link) =>
-      link.match(/global.*\.css/)
-    );
-    const relativeUrl = matchedStyleSheets[0].match('/assets.+');
-    const styleSheetUrl = 'https://www.rottentomatoes.com' + relativeUrl;
-
-    const cssResponse = await fetch(styleSheetUrl);
-    return cssResponse.text();
-  }
-
-  async readAudienceScoreLogoUrl(css, audienceScore) {
+  async readAudienceScoreLogoUrl(audienceScore) {
     let audienceScoreLogo = null;
 
     if (audienceScore) {
+      const css = await this.fetchCachedCss();
       const freshness = this.readAudienceScoreFreshness();
       const iconUrl = this.findLogoUrl(css, freshness);
 
@@ -140,10 +118,11 @@ class RottenPage extends MoviePage {
     return freshnessIcon.className.match(/(upright|spilled)/)[0];
   }
 
-  async readTomatometerLogoUrl(css, tomatoMeter) {
+  async readTomatometerLogoUrl(tomatoMeter) {
     let tomatometerLogo = null;
 
     if (tomatoMeter) {
+      const css = await this.fetchCachedCss();
       const freshness = this.readTomatometerFreshness();
       const iconUrl = this.findLogoUrl(css, freshness);
 
@@ -168,6 +147,32 @@ class RottenPage extends MoviePage {
         'i'
       )
     )[1];
+  }
+
+  async fetchCachedCss() {
+    this.css = this.css || (await this.fetchCss());
+
+    return this.css;
+  }
+
+  async fetchCss() {
+    const stylesheetLinkElements = this.document.querySelectorAll(
+      'link[as="style"]'
+    );
+
+    const styleSheetLinks = Array.from(stylesheetLinkElements).map(
+      (linkElement) => linkElement.href
+    );
+
+    const matchedStyleSheets = styleSheetLinks.filter((link) =>
+      link.match(/global.*\.css/)
+    );
+
+    const relativeUrl = matchedStyleSheets[0].match('/assets.+');
+    const styleSheetUrl = 'https://www.rottentomatoes.com' + relativeUrl;
+    const cssResponse = await fetch(styleSheetUrl);
+
+    return cssResponse.text();
   }
 
   /**

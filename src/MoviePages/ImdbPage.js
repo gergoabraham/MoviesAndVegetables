@@ -26,25 +26,30 @@ class ImdbPage extends MoviePage {
 
     const title = metaDataJSON.name;
     const year = this.readYear();
-    const userRating = this.readUserRating();
-    const numberOfUserVotes = this.readNumberOfUserVotes();
-    const criticsRating = this.readCriticsRating();
-    const numberOfCriticVotes = await this.readNumberOfCriticsVotes();
+
+    const users = {};
+    users.rating = this.readUserRating();
+    users.count = this.readNumberOfUserVotes();
+    users.logo = this.getImdbLogo();
+
+    const critics = {};
+    critics.rating = this.readCriticsRating();
+    critics.count = await this.readNumberOfCriticsVotes();
+    critics.color = await this.getMetacriticsColor();
+
     const toplistPosition = this.getToplistPosition();
-    const imdbLogo = this.getImdbLogo();
-    const metacriticsColor = await this.getMetacriticsColor();
 
     return new MovieData(
       title,
       year,
       this.url,
-      userRating,
-      numberOfUserVotes,
-      criticsRating,
-      numberOfCriticVotes,
+      users.rating,
+      users.count,
+      critics.rating,
+      critics.count,
       toplistPosition,
-      imdbLogo,
-      metacriticsColor
+      users.logo,
+      critics.color
     );
   }
 
