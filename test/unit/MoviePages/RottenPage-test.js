@@ -61,7 +61,8 @@ describe('rottenPage', function () {
 
       it('read the user rating popcorn freshness', function () {
         movieData.should.contain({
-          userRatingLogo: '<svg id="upright-logo"></svg>',
+          userRatingLogo:
+            'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
         });
       });
 
@@ -71,6 +72,13 @@ describe('rottenPage', function () {
 
       it('read the critics rating', function () {
         movieData.should.contain({ criticsRating: 90 });
+      });
+
+      it('read the critics rating freshness logo', function () {
+        movieData.should.contain({
+          criticsRatingColor:
+            'https://www.rottentomatoes.com/assets/certified_fresh.svg',
+        });
       });
 
       it(`read the number of critics' votes`, function () {
@@ -120,6 +128,12 @@ describe('rottenPage', function () {
         movieData.should.contain({ criticsRating: null });
       });
 
+      it('read the critics rating freshness logo', function () {
+        movieData.should.contain({
+          criticsRatingColor: null,
+        });
+      });
+
       it(`read the number of critics' votes`, function () {
         movieData.should.contain({ numberOfCriticsVotes: null });
       });
@@ -159,12 +173,19 @@ describe('rottenPage', function () {
 
       it('read the user rating popcorn freshness', function () {
         movieData.should.contain({
-          userRatingLogo: '<svg id="upright-logo"></svg>',
+          userRatingLogo:
+            'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
         });
       });
 
       it('read the critics rating', function () {
         movieData.should.contain({ criticsRating: null });
+      });
+
+      it('read the critics rating freshness logo', function () {
+        movieData.should.contain({
+          criticsRatingColor: null,
+        });
       });
 
       it(`read the number of critics' votes`, function () {

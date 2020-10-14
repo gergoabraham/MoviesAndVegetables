@@ -46,8 +46,8 @@ describe('Background script', function () {
           90,
           71,
           null,
-          '<svg id="upright-logo"></svg>',
-          null
+          'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
+          'https://www.rottentomatoes.com/assets/certified_fresh.svg'
         )
       );
     });
@@ -75,7 +75,7 @@ describe('Background script', function () {
           null,
           null,
           null,
-          '<svg id="upright-logo"></svg>',
+          'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
           null
         )
       );

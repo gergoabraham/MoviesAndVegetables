@@ -27,7 +27,20 @@ class RottenPage extends MoviePage {
     const numberOfCriticRatings = this.readNumberOfCriticsVotes(tomatoMeter);
     const audienceScore = this.readAudienceScore();
     const numberOfUserRatings = this.readNumberOfUserVotes(audienceScore);
-    const userRatingLogo = await this.fetchAudienceScoreLogo(audienceScore);
+
+    let css;
+    if (audienceScore || tomatoMeter) {
+      css = await this.fetchCss();
+    }
+
+    const userRatingLogo = await this.readAudienceScoreLogoUrl(
+      css,
+      audienceScore
+    );
+    const criticsRatingLogo = await this.readTomatometerLogoUrl(
+      css,
+      tomatoMeter
+    );
 
     return new MovieData(
       title,
@@ -39,7 +52,7 @@ class RottenPage extends MoviePage {
       numberOfCriticRatings,
       null,
       userRatingLogo,
-      null
+      criticsRatingLogo
     );
   }
 
@@ -89,23 +102,6 @@ class RottenPage extends MoviePage {
       : null;
   }
 
-  async fetchAudienceScoreLogo(audienceScore) {
-    let audienceScoreLogo = null;
-
-    if (audienceScore) {
-      const css = await this.fetchCss();
-      const freshness = this.readFreshness();
-      const iconUrl = this.findAudienceScoreLogoUrl(css, freshness);
-
-      const logoResponse = await fetch(
-        'https://www.rottentomatoes.com' + iconUrl
-      );
-      audienceScoreLogo = await logoResponse.text();
-    }
-
-    return audienceScoreLogo;
-  }
-
   async fetchCss() {
     const stylesheetLinkElements = this.document.querySelectorAll(
       'link[as="style"]'
@@ -123,7 +119,20 @@ class RottenPage extends MoviePage {
     return cssResponse.text();
   }
 
-  readFreshness() {
+  async readAudienceScoreLogoUrl(css, audienceScore) {
+    let audienceScoreLogo = null;
+
+    if (audienceScore) {
+      const freshness = this.readAudienceScoreFreshness();
+      const iconUrl = this.findLogoUrl(css, freshness);
+
+      audienceScoreLogo = 'https://www.rottentomatoes.com' + iconUrl;
+    }
+
+    return audienceScoreLogo;
+  }
+
+  readAudienceScoreFreshness() {
     const freshnessIcon = this.document
       .getElementsByClassName('mop-ratings-wrap__half')[1]
       .querySelector('span.mop-ratings-wrap__icon.meter-tomato');
@@ -131,7 +140,28 @@ class RottenPage extends MoviePage {
     return freshnessIcon.className.match(/(upright|spilled)/)[0];
   }
 
-  findAudienceScoreLogoUrl(css, freshness) {
+  async readTomatometerLogoUrl(css, tomatoMeter) {
+    let tomatometerLogo = null;
+
+    if (tomatoMeter) {
+      const freshness = this.readTomatometerFreshness();
+      const iconUrl = this.findLogoUrl(css, freshness);
+
+      tomatometerLogo = 'https://www.rottentomatoes.com' + iconUrl;
+    }
+
+    return tomatometerLogo;
+  }
+
+  readTomatometerFreshness() {
+    const tomatometerIcon = this.document
+      .getElementsByClassName('mop-ratings-wrap__half')[0]
+      .querySelector('span.mop-ratings-wrap__icon.meter-tomato');
+
+    return tomatometerIcon.className.match(/(certified.fresh|fresh|rotten)/)[0];
+  }
+
+  findLogoUrl(css, freshness) {
     return css.match(
       new RegExp(
         `\\.icon\\.big\\.${freshness}[^{]*{background:transparent url\\(([^)]+)`,

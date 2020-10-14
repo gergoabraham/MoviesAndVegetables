@@ -169,24 +169,13 @@ class ImdbPage extends MoviePage {
    * @param  {MovieData} movieData
    */
   injectRatings(movieData) {
-    this.injectTomatoMeter(
-      this.document,
-      movieData.criticsRating,
-      movieData.url,
-      movieData.numberOfCriticsVotes
-    );
+    this.injectTomatoMeter(this.document, movieData);
 
-    this.injectAudienceScore(
-      this.document,
-      movieData.userRating,
-      movieData.url,
-      movieData.numberOfUserVotes,
-      movieData.userRatingLogo
-    );
+    this.injectAudienceScore(this.document, movieData);
   }
 
-  injectTomatoMeter(doc, percent, url, votes) {
-    const tomatoMeter = this.createTomatoMeterElement(url, percent, votes);
+  injectTomatoMeter(doc, movieData) {
+    const tomatoMeter = this.createTomatoMeterElement(movieData);
     const titleReviewBar = doc.getElementsByClassName('titleReviewBar')[0];
 
     if (!titleReviewBar) {
@@ -196,46 +185,54 @@ class ImdbPage extends MoviePage {
     }
   }
 
-  createTomatoMeterElement(url, percent, votes) {
-    return this.generateElement(
+  createTomatoMeterElement(movieData) {
+    let tomatometerHtml;
+
+    if (movieData.criticsRating) {
+      tomatometerHtml = this.createFilledTomatometerHtml(movieData);
+    } else {
+      tomatometerHtml = this.createEmptyTomatometerHtml(movieData);
+    }
+
+    return this.generateElement(tomatometerHtml);
+  }
+
+  createFilledTomatometerHtml(movieData) {
+    return (
       `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-        `    <a href="${url}">` +
-        `        <div class="metacriticScore ${this.getFavorableness(
-          percent
-        )} titleReviewBarSubItem" style="width: 40px">` +
-        `            <span${percent ? '' : ' style="color:black"'}>${
-          percent ? percent + '%' : '-'
-        }</span>` +
-        `        </div>` +
-        `</a>` +
-        `    <div class="titleReviewBarSubItem">` +
-        `        <div>` +
-        `            <a href="${url}">Tomatometer</a>` +
-        `        </div>` +
-        `        <div>` +
-        `            <span class="subText">Total Count: ${
-          votes ? this.groupThousands(votes) : 'N/A'
-        }</span>` +
-        `        </div>` +
-        `    </div>` +
-        `</div>`
+      `    <a href="${movieData.url}" title="${movieData.title} on RottenTomatoes">` +
+      `<img src="${movieData.criticsRatingColor}" height="27px" width="27px" style="vertical-align: baseline;">` +
+      `<div class="metacriticScore titleReviewBarSubItem" style="width: 40px; color: black">` +
+      `<span>${movieData.criticsRating}%</span>` +
+      `        </div><div class="titleReviewBarSubItem">` +
+      `            <div>Tomatometer</div>` +
+      `            <div><span class="subText">Total Count: ${this.groupThousands(
+        movieData.numberOfCriticsVotes
+      )}</span></div>` +
+      `        </div>` +
+      `    </a>` +
+      `</div>`
     );
   }
 
-  getFavorableness(percent) {
-    let favorableness;
-
-    if (percent === null) {
-      favorableness = 'tbd';
-    } else if (percent >= 61) {
-      favorableness = 'favorable';
-    } else if (percent >= 41) {
-      favorableness = 'mixed';
-    } else {
-      favorableness = 'unfavorable';
-    }
-
-    return `score_${favorableness}`;
+  createEmptyTomatometerHtml(movieData) {
+    return (
+      `<div class="titleReviewBarItem" id="mv-tomatometer">` +
+      `    <a href="${movieData.url}" title="${movieData.title} on RottenTomatoes">` +
+      `        <div class="metacriticScore score_tbd titleReviewBarSubItem" style="width: 40px">` +
+      `            <span style="color:black">-</span>` +
+      `        </div>` +
+      `</a>` +
+      `    <div class="titleReviewBarSubItem">` +
+      `        <div>` +
+      `            <a href="${movieData.url}">Tomatometer</a>` +
+      `        </div>` +
+      `        <div>` +
+      `            <span class="subText">Total Count: N/A</span>` +
+      `        </div>` +
+      `    </div>` +
+      `</div>`
+    );
   }
 
   addTomatometerWithNewReviewBar(doc, newTomatoMeter) {
@@ -277,14 +274,9 @@ class ImdbPage extends MoviePage {
     return element.getElementsByClassName('metacriticScore')[0];
   }
 
-  injectAudienceScore(doc, percent, url, votes, logo) {
+  injectAudienceScore(doc, movieData) {
     let ratingsWrapper = doc.getElementsByClassName('ratings_wrapper')[0];
-    const audienceScoreElement = this.createAudienceScoreElement(
-      percent,
-      url,
-      votes,
-      logo
-    );
+    const audienceScoreElement = this.createAudienceScoreElement(movieData);
 
     if (ratingsWrapper) {
       this.addAudienceScoreToExistingRatingsWrapper(
@@ -324,40 +316,33 @@ class ImdbPage extends MoviePage {
     return newRatingsWrapper;
   }
 
-  createAudienceScoreElement(percent, url, votes, logo) {
-    let audienceScoreElement;
+  createAudienceScoreElement(movieData) {
+    let audienceScoreHtml;
 
-    if (percent) {
-      audienceScoreElement = this.generateElement(
-        this.getFilledAudienceScoreHtml(percent, url, votes)
-      );
-
-      const icon = this.generateElement(logo);
-      icon.style.height = '32px';
-      audienceScoreElement.prepend(icon);
+    if (movieData.userRating) {
+      audienceScoreHtml = this.createFilledAudienceScoreHtml(movieData);
     } else {
-      audienceScoreElement = this.generateElement(
-        this.getEmptyAudienceScoreHtml(url)
-      );
+      audienceScoreHtml = this.createEmptyAudienceScoreHtml(movieData.url);
     }
 
-    return audienceScoreElement;
+    return this.generateElement(audienceScoreHtml);
   }
 
-  getFilledAudienceScoreHtml(percent, url, votes) {
+  createFilledAudienceScoreHtml(movieData) {
     return (
       `<div class="imdbRating" id="mv-audience-score"` +
       `     style="background:none;text-align:center;padding:0px 10px 0px 5px;` +
       `width:100px;display:flex; align-items: center;">` +
+      `<img src="${movieData.userRatingLogo}" height="27px" width="27px">` +
       `    <div>` +
       `        <div class="ratingValue">` +
       `            <strong title="Audience score from RottenTomatoes">` +
-      `                <span itemprop="ratingValue">${percent}%</span>` +
+      `                <span itemprop="ratingValue">${movieData.userRating}%</span>` +
       `            </strong>` +
       `        </div>` +
-      `        <a href="${url}">` +
+      `        <a href="${movieData.url}">` +
       `            <span class="small" itemprop="ratingCount">${this.groupThousands(
-        votes
+        movieData.numberOfUserVotes
       )}</span>` +
       `        </a>` +
       `    </div>` +
@@ -365,7 +350,7 @@ class ImdbPage extends MoviePage {
     );
   }
 
-  getEmptyAudienceScoreHtml(url) {
+  createEmptyAudienceScoreHtml(url) {
     return (
       `<div class="imdbRating" id="mv-audience-score"` +
       `     style="background:none;text-align:center;padding:2px 0 0 2px;` +

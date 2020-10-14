@@ -280,7 +280,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
             .match(
               /\.icon\.big\.certified-fresh[^{]*{background:transparent url\(([^)]+)/
             )[1]
-            .should.match(/^\/assets.+certified_fresh.+\.svg$/);
+            .should.match(/^\/assets.+certified_fresh.*\.svg$/);
         });
 
         it('contains relative svg link for .fresh', function () {
@@ -288,7 +288,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
             .match(
               /\.icon\.big\.fresh[^{]*{background:transparent url\(([^)]+)/
             )[1]
-            .should.match(/^\/assets.+fresh.+\.svg$/);
+            .should.match(/^\/assets.+fresh.*\.svg$/);
         });
 
         it('contains relative svg link for .rotten', function () {
@@ -296,11 +296,11 @@ contract('RottenContract', function (fetchDOM, fetchText) {
             .match(
               /\.icon\.big\.rotten[^{]*{background:transparent url\(([^)]+)/
             )[1]
-            .should.match(/^\/assets.+rotten.+\.svg$/);
+            .should.match(/^\/assets.+rotten.*\.svg$/);
         });
       });
 
-      context('tomatometer', function () {
+      context('audience score', function () {
         it('contains relative svg link for .upright', function () {
           css
             .match(
@@ -314,7 +314,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
             .match(
               /\.icon\.big\.spilled[^{]*{background:transparent url\(([^)]+)/
             )[1]
-            .should.match(/^\/assets.+aud_score-rotten.+\.svg$/);
+            .should.match(/^\/assets.+aud_score-rotten.*\.svg$/);
         });
       });
     });

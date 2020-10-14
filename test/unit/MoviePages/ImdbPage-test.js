@@ -184,7 +184,7 @@ describe('ImdbPage', function () {
           const imdbPage = new ImdbPage(document, 'https://url');
           imdbPage.injectRatings(
             new MovieData(
-              'title',
+              'Movie Title',
               2002,
               rottenURL,
               85,
@@ -192,7 +192,8 @@ describe('ImdbPage', function () {
               93,
               1268,
               null,
-              '<svg></svg>'
+              'user-rating-logo.svg',
+              'critics-score-logo.svg'
             )
           );
 
@@ -205,10 +206,10 @@ describe('ImdbPage', function () {
           );
           titleReviewBar.children[1].className.should.equal('divider');
 
+          titleReviewBar.children[2].id.should.equal('mv-tomatometer');
           titleReviewBar.children[2].className.should.equal(
             'titleReviewBarItem'
           );
-          titleReviewBar.children[2].id.should.equal('mv-tomatometer');
 
           titleReviewBar.children[3].className.should.equal('divider');
         });
@@ -218,19 +219,14 @@ describe('ImdbPage', function () {
 
           tomatoMeter.outerHTML.should.equal(
             `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-              `    <a href="${rottenURL}">` +
-              `        <div class="metacriticScore score_favorable titleReviewBarSubItem" style="width: 40px">` +
-              `            <span>93%</span>` +
+              `    <a href="${rottenURL}" title="Movie Title on RottenTomatoes">` +
+              `<img src="critics-score-logo.svg" height="27px" width="27px" style="vertical-align: baseline;"><div class="metacriticScore titleReviewBarSubItem" style="width: 40px; color: black">` +
+              `<span>93%</span>` +
+              `        </div><div class="titleReviewBarSubItem">` +
+              `            <div>Tomatometer</div>` +
+              `            <div><span class="subText">Total Count: 1,268</span></div>` +
               `        </div>` +
-              `</a>` +
-              `    <div class="titleReviewBarSubItem">` +
-              `        <div>` +
-              `            <a href="${rottenURL}">Tomatometer</a>` +
-              `        </div>` +
-              `        <div>` +
-              `            <span class="subText">Total Count: 1,268</span>` +
-              `        </div>` +
-              `    </div>` +
+              `    </a>` +
               `</div>`
           );
         });
@@ -245,7 +241,7 @@ describe('ImdbPage', function () {
           const imdbPage = new ImdbPage(document, 'https://url');
           imdbPage.injectRatings(
             new MovieData(
-              'title',
+              'Movie Title',
               2002,
               rottenURL,
               98,
@@ -253,8 +249,8 @@ describe('ImdbPage', function () {
               93,
               1268,
               null,
-              '<svg id="upright-logo"></svg>',
-              null
+              'user-rating-logo.svg',
+              'critics-score-logo.svg'
             )
           );
 
@@ -275,7 +271,7 @@ describe('ImdbPage', function () {
             `<div class="imdbRating" id="mv-audience-score"` +
               ` style="background: none; text-align: center; padding: 0px 10px 0px 5px; ` +
               `width: 100px; display: flex; align-items: center; border-left: 1px solid #6b6b6b;">` +
-              `<svg id="upright-logo" style="height: 32px;"></svg>` +
+              `<img src="user-rating-logo.svg" height="27px" width="27px">` +
               `    <div>` +
               `        <div class="ratingValue">` +
               `            <strong title="Audience score from RottenTomatoes">` +
@@ -308,7 +304,7 @@ describe('ImdbPage', function () {
         const imdbPage = new ImdbPage(document, 'https://url');
         imdbPage.injectRatings(
           new MovieData(
-            'title',
+            'Movie Title',
             2002,
             rottenURL,
             null,
@@ -327,7 +323,7 @@ describe('ImdbPage', function () {
 
         tomatoMeter.outerHTML.should.equal(
           `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-            `    <a href="${rottenURL}">` +
+            `    <a href="${rottenURL}" title="Movie Title on RottenTomatoes">` +
             `        <div class="metacriticScore score_tbd titleReviewBarSubItem" style="width: 40px">` +
             `            <span style="color:black">-</span>` +
             `        </div>` +
@@ -371,7 +367,7 @@ describe('ImdbPage', function () {
 
         imdbPage.injectRatings(
           new MovieData(
-            'title',
+            'Movie Title',
             2002,
             rottenURL,
             66,
@@ -379,7 +375,8 @@ describe('ImdbPage', function () {
             66,
             666,
             null,
-            '<svg></svg>'
+            'user-rating-logo.svg',
+            'critics-score-logo.svg'
           )
         );
 
@@ -453,62 +450,6 @@ describe('ImdbPage', function () {
             .getElementById('mv-audience-score')
             .style.borderLeft.should.equal('');
         });
-      });
-    });
-  });
-
-  describe('"private" methods', function () {
-    context('Favorableness', function () {
-      let imdbPage;
-      let document;
-
-      before(async function () {
-        document = await getTestDocument();
-        imdbPage = new ImdbPage(document, 'https://url');
-      });
-
-      it('change favorableness based on TomatoMeter', function () {
-        sinon.replace(
-          imdbPage,
-          'getFavorableness',
-          sinon.fake.returns('fakeFavorableness')
-        );
-
-        imdbPage.injectTomatoMeter(document, 93, 'someUrl');
-
-        imdbPage.getFavorableness.should.have.been.calledOnceWithExactly(93);
-
-        const tomatoMeter = document.getElementsByClassName('titleReviewBar')[0]
-          .children[2];
-        tomatoMeter.innerHTML.should
-          .contain('fakeFavorableness')
-          .but.not.contain('score_favorable');
-      });
-
-      it('give tbd style for null Tomatometer', function () {
-        const tbd = 'score_tbd';
-        imdbPage.getFavorableness(null).should.equal(tbd);
-      });
-
-      it('give unfavorable style for Tomatometer 0...40', function () {
-        const unfavorable = 'score_unfavorable';
-        imdbPage.getFavorableness(0).should.equal(unfavorable);
-        imdbPage.getFavorableness(33).should.equal(unfavorable);
-        imdbPage.getFavorableness(40).should.equal(unfavorable);
-      });
-
-      it('give mixed style for Tomatometer 41...60', function () {
-        const mixed = 'score_mixed';
-        imdbPage.getFavorableness(41).should.equal(mixed);
-        imdbPage.getFavorableness(50).should.equal(mixed);
-        imdbPage.getFavorableness(60).should.equal(mixed);
-      });
-
-      it('give favorable style for Tomatometer 61...100', function () {
-        const favorable = 'score_favorable';
-        imdbPage.getFavorableness(61).should.equal(favorable);
-        imdbPage.getFavorableness(80).should.equal(favorable);
-        imdbPage.getFavorableness(100).should.equal(favorable);
       });
     });
   });
