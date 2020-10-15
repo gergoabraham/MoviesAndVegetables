@@ -47,13 +47,19 @@ describe('rottenPage', function () {
             'The Shawshank Redemption',
             1994,
             'https://www.rottentomatoes.com/m/shawshank_redemption',
-            98,
-            885688,
-            90,
-            71,
             null,
-            'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
-            'https://www.rottentomatoes.com/assets/certified_fresh.svg'
+            {
+              score: 90,
+              count: 71,
+              custom:
+                'https://www.rottentomatoes.com/assets/certified_fresh.svg',
+            },
+            {
+              score: 98,
+              count: 885688,
+              custom:
+                'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
+            }
           )
         );
       });
@@ -70,10 +76,6 @@ describe('rottenPage', function () {
             'Avatar 5',
             2028,
             'https://www.rottentomatoes.com/m/avatar_5',
-            null,
-            null,
-            null,
-            null,
             null,
             null,
             null
@@ -93,13 +95,14 @@ describe('rottenPage', function () {
             "Amblin'",
             1968,
             'https://www.rottentomatoes.com/m/amblin',
-            60,
-            309,
             null,
             null,
-            null,
-            'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
-            null
+            {
+              score: 60,
+              count: 309,
+              custom:
+                'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
+            }
           )
         );
       });
@@ -120,13 +123,17 @@ describe('rottenPage', function () {
             'The Shawshank Redemption',
             1994,
             'https://www.imdb.com/title/tt0111161/',
-            9,
-            2181618,
-            80,
-            20,
             null,
-            '<svg id="home_img">This is the logo.</svg>',
-            '#66ffee'
+            {
+              score: 80,
+              count: 20,
+              custom: '#66ffee',
+            },
+            {
+              score: 9,
+              count: 2181618,
+              custom: '<svg id="home_img">This is the logo.</svg>',
+            }
           )
         );
       });
@@ -198,8 +205,6 @@ describe('rottenPage', function () {
             'https://www.imdb.com/title/tt0111161/',
             null,
             null,
-            null,
-            null,
             null
           )
         );
@@ -252,12 +257,17 @@ describe('rottenPage', function () {
             'The Shawshank Redemption',
             1994,
             'https://www.imdb.com/title/tt0111161/',
-            9,
-            2181618,
-            80,
-            20,
             33,
-            '<svg></svg>'
+            {
+              score: 80,
+              count: 20,
+              custom: '#66ffee',
+            },
+            {
+              score: 9,
+              count: 2181618,
+              custom: '<svg id="home_img">This is the logo.</svg>',
+            }
           )
         );
       });

@@ -41,13 +41,18 @@ describe('Background script', function () {
           'The Shawshank Redemption',
           1994,
           `https://www.rottentomatoes.com/m/shawshank_redemption`,
-          98,
-          885688,
-          90,
-          71,
           null,
-          'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
-          'https://www.rottentomatoes.com/assets/certified_fresh.svg'
+          {
+            score: 90,
+            count: 71,
+            custom: 'https://www.rottentomatoes.com/assets/certified_fresh.svg',
+          },
+          {
+            score: 98,
+            count: 885688,
+
+            custom: 'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
+          }
         )
       );
     });
@@ -70,13 +75,13 @@ describe('Background script', function () {
           "Amblin'",
           1968,
           `https://www.rottentomatoes.com/m/amblin`,
-          60,
-          309,
           null,
           null,
-          null,
-          'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
-          null
+          {
+            score: 60,
+            count: 309,
+            custom: 'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
+          }
         )
       );
     });
@@ -99,13 +104,13 @@ describe('Background script', function () {
           "Amblin'",
           1968,
           `https://www.imdb.com/title/tt0064010/`,
-          6.4,
-          1044,
           null,
           null,
-          null,
-          '<svg id="home_img">This is the logo.</svg>',
-          null
+          {
+            score: 6.4,
+            count: 1044,
+            custom: '<svg id="home_img">This is the logo.</svg>',
+          }
         )
       );
     });

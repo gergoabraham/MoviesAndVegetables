@@ -14,13 +14,15 @@
     "prefer-const": "error",
     "no-var": "error",
     "no-use-before-define": ["error", { "functions": false }],
-    "require-jsdoc": "off"
+    "require-jsdoc": "off",
+    "no-unexpected-multiline": "off"
   },
   "globals": {
     "exportToTestEnvironment": "readonly",
     "MoviePageFactory": "writable",
     "ImdbPage": "writable",
     "RottenPage": "writable",
+    "MovieRating": "writable",
     "MoviePage": "writable",
     "MovieData": "writable",
     "ContentScript": "writable",

@@ -26,30 +26,17 @@ class ImdbPage extends MoviePage {
 
     const title = metaDataJSON.name;
     const year = this.readYear();
-
-    const users = {};
-    users.rating = this.readUserRating();
-    users.count = this.readNumberOfUserVotes();
-    users.logo = this.getImdbLogo();
-
-    const critics = {};
-    critics.rating = this.readCriticsRating();
-    critics.count = await this.readNumberOfCriticsVotes();
-    critics.color = await this.getMetacriticsColor();
-
+    const criticsScore = await this.readCriticsScoreStuff();
+    const userScore = this.readUserScoreStuff(); // todo: rating? score? what?
     const toplistPosition = this.getToplistPosition();
 
     return new MovieData(
       title,
       year,
       this.url,
-      users.rating,
-      users.count,
-      critics.rating,
-      critics.count,
       toplistPosition,
-      users.logo,
-      critics.color
+      criticsScore,
+      userScore
     );
   }
 
@@ -57,25 +44,15 @@ class ImdbPage extends MoviePage {
     return Number(this.getTitleMetaTag().match(/\d{4}(?=\) - IMDb)/)[0]);
   }
 
-  readUserRating() {
-    const userRatingElement = this.getUserRatingElement();
+  async readCriticsScoreStuff() {
+    const metacriticsValue = this.readCriticsRating();
 
-    return userRatingElement
-      ? Number(userRatingElement.innerHTML.replace(',', '.'))
-      : null;
-  }
-
-  getUserRatingElement() {
-    return this.document.querySelector('span[itemprop="ratingValue"');
-  }
-
-  readNumberOfUserVotes() {
-    const numberOfUserVotesElement = this.document.querySelector(
-      'span[itemprop="ratingCount"'
-    );
-
-    return numberOfUserVotesElement
-      ? Number(numberOfUserVotesElement.textContent.replace(/[^0-9]/g, ``))
+    return metacriticsValue
+      ? new MovieRating(
+          metacriticsValue,
+          await this.readNumberOfCriticsVotes(),
+          await this.getMetacriticsColor()
+        )
       : null;
   }
 
@@ -88,20 +65,8 @@ class ImdbPage extends MoviePage {
   }
 
   async readNumberOfCriticsVotes() {
-    const criticsRatingElement = this.getCriticsRatingElement();
-
-    return criticsRatingElement
-      ? await this.fetchNumberOfCriticVotes(this.url)
-      : null;
-  }
-
-  getCriticsRatingElement() {
-    return this.document.querySelector('div.metacriticScore');
-  }
-
-  async fetchNumberOfCriticVotes(movieUrl) {
-    const criticUrl = movieUrl + 'criticreviews';
-    const criticsPage = await this.fetchPage(criticUrl);
+    const criticUrl = this.url + 'criticreviews';
+    const criticsPage = await this.fetchDOM(criticUrl);
 
     const numberOfCriticVotes = criticsPage.querySelector(
       'span[itemprop="ratingCount"'
@@ -110,37 +75,26 @@ class ImdbPage extends MoviePage {
     return Number(numberOfCriticVotes);
   }
 
-  getToplistPosition() {
-    const toplistPositionElement = this.document.querySelector(
-      'a[href="/chart/top?ref_=tt_awd"'
-    );
-    const toplistPosition = toplistPositionElement
-      ? Number(toplistPositionElement.textContent.match(/\d{1,3}/g)[0])
-      : null;
+  async fetchDOM(url) {
+    const response = await fetch(url);
+    const pageText = await response.text();
 
-    return toplistPosition;
-  }
-
-  getImdbLogo() {
-    return this.getUserRatingElement()
-      ? this.document.getElementById('home_img').outerHTML
-      : null;
+    return new DOMParser().parseFromString(pageText, 'text/html');
   }
 
   async getMetacriticsColor() {
-    let color = null;
     const criticsRating = this.getCriticsRatingElement();
 
-    if (criticsRating) {
-      const css = await this.fetchCss();
-      const favorableness = criticsRating.className.match(/score_\w+/)[0];
+    const css = await this.fetchCss();
+    const favorableness = criticsRating.className.match(/score_\w+/)[0];
 
-      color = css.match(
-        `\\.${favorableness}{background-color:(#[a-zA-Z0-9]{6})`
-      )[1];
-    }
+    return css.match(
+      `\\.${favorableness}{background-color:(#[a-zA-Z0-9]{6})`
+    )[1];
+  }
 
-    return color;
+  getCriticsRatingElement() {
+    return this.document.querySelector('div.metacriticScore');
   }
 
   async fetchCss() {
@@ -163,11 +117,49 @@ class ImdbPage extends MoviePage {
     return styleSheetLinks.filter((link) => link.match(/title-flat/))[0];
   }
 
-  async fetchPage(url) {
-    const response = await fetch(url);
-    const pageText = await response.text();
+  readUserScoreStuff() {
+    const userScoreValue = this.readUserRating();
 
-    return new DOMParser().parseFromString(pageText, 'text/html');
+    return userScoreValue
+      ? new MovieRating(
+          userScoreValue,
+          this.readNumberOfUserVotes(),
+          this.getImdbLogo()
+        )
+      : null;
+  }
+
+  readUserRating() {
+    const userRatingElement = this.document.querySelector(
+      'span[itemprop="ratingValue"]'
+    );
+
+    return userRatingElement
+      ? Number(userRatingElement.innerHTML.replace(',', '.'))
+      : null;
+  }
+
+  readNumberOfUserVotes() {
+    const numberOfUserVotesElement = this.document.querySelector(
+      'span[itemprop="ratingCount"]'
+    );
+
+    return Number(numberOfUserVotesElement.textContent.replace(/[^0-9]/g, ``));
+  }
+
+  getImdbLogo() {
+    return this.document.getElementById('home_img').outerHTML;
+  }
+
+  getToplistPosition() {
+    const toplistPositionElement = this.document.querySelector(
+      'a[href="/chart/top?ref_=tt_awd"'
+    );
+    const toplistPosition = toplistPositionElement
+      ? Number(toplistPositionElement.textContent.match(/\d{1,3}/g)[0])
+      : null;
+
+    return toplistPosition;
   }
 
   /**
@@ -193,7 +185,7 @@ class ImdbPage extends MoviePage {
   createTomatoMeterElement(movieData) {
     let tomatometerHtml;
 
-    if (movieData.criticsRating) {
+    if (movieData.criticsScore) {
       tomatometerHtml = this.createFilledTomatometerHtml(movieData);
     } else {
       tomatometerHtml = this.createEmptyTomatometerHtml(movieData);
@@ -206,13 +198,13 @@ class ImdbPage extends MoviePage {
     return (
       `<div class="titleReviewBarItem" id="mv-tomatometer">` +
       `    <a href="${movieData.url}" title="${movieData.title} on RottenTomatoes">` +
-      `<img src="${movieData.criticsRatingColor}" height="27px" width="27px" style="vertical-align: baseline;">` +
+      `<img src="${movieData.criticsScore.custom}" height="27px" width="27px" style="vertical-align: baseline;">` +
       `<div class="metacriticScore titleReviewBarSubItem" style="width: 40px; color: black">` +
-      `<span>${movieData.criticsRating}%</span>` +
+      `<span>${movieData.criticsScore.score}%</span>` +
       `        </div><div class="titleReviewBarSubItem">` +
       `            <div>Tomatometer</div>` +
       `            <div><span class="subText">Total Count: ${this.groupThousands(
-        movieData.numberOfCriticsVotes
+        movieData.criticsScore.count
       )}</span></div>` +
       `        </div>` +
       `    </a>` +
@@ -324,7 +316,7 @@ class ImdbPage extends MoviePage {
   createAudienceScoreElement(movieData) {
     let audienceScoreHtml;
 
-    if (movieData.userRating) {
+    if (movieData.userScore) {
       audienceScoreHtml = this.createFilledAudienceScoreHtml(movieData);
     } else {
       audienceScoreHtml = this.createEmptyAudienceScoreHtml(movieData.url);
@@ -338,16 +330,16 @@ class ImdbPage extends MoviePage {
       `<div class="imdbRating" id="mv-audience-score"` +
       `     style="background:none;text-align:center;padding:0px 10px 0px 5px;` +
       `width:100px;display:flex; align-items: center;">` +
-      `<img src="${movieData.userRatingLogo}" height="27px" width="27px">` +
+      `<img src="${movieData.userScore.custom}" height="27px" width="27px">` +
       `    <div>` +
       `        <div class="ratingValue">` +
       `            <strong title="Audience score from RottenTomatoes">` +
-      `                <span itemprop="ratingValue">${movieData.userRating}%</span>` +
+      `                <span itemprop="ratingValue">${movieData.userScore.score}%</span>` +
       `            </strong>` +
       `        </div>` +
       `        <a href="${movieData.url}">` +
       `            <span class="small" itemprop="ratingCount">${this.groupThousands(
-        movieData.numberOfUserVotes
+        movieData.userScore.count
       )}</span>` +
       `        </a>` +
       `    </div>` +

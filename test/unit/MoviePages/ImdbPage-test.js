@@ -48,13 +48,17 @@ describe('ImdbPage', function () {
             'The Shawshank Redemption',
             1994,
             'https://www.imdb.com/title/tt0111161/',
-            9.3,
-            2260000,
-            80,
-            20,
             1,
-            '<svg id="home_img">This is the logo.</svg>',
-            '#66Cc33'
+            {
+              score: 80,
+              count: 20,
+              custom: '#66Cc33',
+            },
+            {
+              score: 9.3,
+              count: 2260000,
+              custom: '<svg id="home_img">This is the logo.</svg>',
+            }
           )
         );
       });
@@ -83,10 +87,6 @@ describe('ImdbPage', function () {
             'Avatar 5',
             2028,
             'https://www.imdb.com/title/tt5637536/',
-            null,
-            null,
-            null,
-            null,
             null,
             null,
             null
@@ -119,29 +119,39 @@ describe('ImdbPage', function () {
   });
 
   describe('injectRatings', function () {
+    async function injectDefaultRatings(url) {
+      const document = await getTestDOM(url);
+      const imdbPage = new ImdbPage(document, url);
+
+      imdbPage.injectRatings(
+        new MovieData(
+          'Movie Title',
+          2002,
+          rottenURL,
+          null,
+          {
+            score: 93,
+            count: 1268,
+            custom: 'critics-score-logo.svg',
+          },
+          {
+            score: 98,
+            count: 885228,
+            custom: 'user-rating-logo.svg',
+          }
+        )
+      );
+
+      return document;
+    }
+
     context('all scores are present', function () {
       context('Tomatometer', function () {
         let titleReviewBar;
 
         before(async function () {
           const url = 'https://www.imdb.com/title/tt0111161/';
-          const document = await getTestDOM(url);
-          const imdbPage = new ImdbPage(document, url);
-
-          imdbPage.injectRatings(
-            new MovieData(
-              'Movie Title',
-              2002,
-              rottenURL,
-              85,
-              666,
-              93,
-              1268,
-              null,
-              'user-rating-logo.svg',
-              'critics-score-logo.svg'
-            )
-          );
+          const document = await injectDefaultRatings(url);
 
           titleReviewBar = document.getElementsByClassName('titleReviewBar')[0];
         });
@@ -184,23 +194,7 @@ describe('ImdbPage', function () {
 
         before(async function () {
           const url = 'https://www.imdb.com/title/tt0111161/';
-          document = await getTestDOM(url);
-          const imdbPage = new ImdbPage(document, url);
-
-          imdbPage.injectRatings(
-            new MovieData(
-              'Movie Title',
-              2002,
-              rottenURL,
-              98,
-              885228,
-              93,
-              1268,
-              null,
-              'user-rating-logo.svg',
-              'critics-score-logo.svg'
-            )
-          );
+          document = await injectDefaultRatings(url);
 
           ratingsWrapper = document.getElementsByClassName(
             'ratings_wrapper'
@@ -253,18 +247,7 @@ describe('ImdbPage', function () {
         const imdbPage = new ImdbPage(document, url);
 
         imdbPage.injectRatings(
-          new MovieData(
-            'Movie Title',
-            2002,
-            rottenURL,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null
-          )
+          new MovieData('Movie Title', 2002, rottenURL, null, null, null)
         );
       });
 
@@ -311,31 +294,9 @@ describe('ImdbPage', function () {
     });
 
     context('missing structures on imdb', function () {
-      async function injectDummyRatings(url) {
-        const document = await getTestDOM(url);
-        const imdbPage = new ImdbPage(document, url);
-
-        imdbPage.injectRatings(
-          new MovieData(
-            'Movie Title',
-            2002,
-            rottenURL,
-            66,
-            666,
-            66,
-            666,
-            null,
-            'user-rating-logo.svg',
-            'critics-score-logo.svg'
-          )
-        );
-
-        return document;
-      }
-
       context('for Tomatometer', function () {
         it('no metacritics - but multiple items in review bar', async function () {
-          const document = await injectDummyRatings(
+          const document = await injectDefaultRatings(
             'https://www.imdb.com/title/tt0067023/'
           );
           const titleReviewBar = getTitleReviewBar(document);
@@ -348,7 +309,7 @@ describe('ImdbPage', function () {
         });
 
         it('no metacritics, no dividers in review bar', async function () {
-          const document = await injectDummyRatings(
+          const document = await injectDefaultRatings(
             'https://www.imdb.com/title/tt0064010/'
           );
           const titleReviewBar = getTitleReviewBar(document);
@@ -358,7 +319,7 @@ describe('ImdbPage', function () {
         });
 
         it('no review bar', async function () {
-          const document = await injectDummyRatings(
+          const document = await injectDefaultRatings(
             'https://www.imdb.com/title/tt5637536/'
           );
           const titleReviewBar = getTitleReviewBar(document);
@@ -372,7 +333,7 @@ describe('ImdbPage', function () {
         let document;
 
         before(async function () {
-          document = await injectDummyRatings(
+          document = await injectDefaultRatings(
             'https://www.imdb.com/title/tt5637536/'
           );
         });
