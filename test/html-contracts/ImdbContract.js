@@ -80,7 +80,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
       });
     });
 
-    context('critics score - titleReviewBar', function () {
+    context('critic ratings - titleReviewBar', function () {
       context('full version', function () {
         let titleReviewBar;
 
@@ -101,7 +101,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
           );
         });
 
-        it('the first child contains the metacriticScore', async function () {
+        it('the first child contains the metascore', async function () {
           titleReviewBar.children[0].getElementsByClassName(
             'metacriticScore'
           )[0].should.exist;
@@ -112,7 +112,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
         });
       });
 
-      context('metacritic is missing', function () {
+      context('metascore is missing', function () {
         let titleReviewBar;
 
         before(async function () {
@@ -138,7 +138,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
           );
         });
 
-        it('the first child is NOT metacritics', async function () {
+        it('the first child is NOT metascore', async function () {
           should.not.exist(
             titleReviewBar.children[0].getElementsByClassName(
               'metacriticScore'
@@ -251,7 +251,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
       });
     });
 
-    context('critics rating', function () {
+    context('metascore', function () {
       it('value is a number', async function () {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/'
@@ -332,7 +332,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
         should.not.exist(document.querySelector('span[itemprop="ratingCount"'));
       });
 
-      it(`critics score doesn't exist`, function () {
+      it(`metascore doesn't exist`, function () {
         should.not.exist(document.querySelector('div.metacriticScore'));
       });
     });

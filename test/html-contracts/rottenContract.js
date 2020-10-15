@@ -184,7 +184,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
         should.not.exist(getTomatometerElement(document));
       });
 
-      it(`tomatometer vote count contains N/A`, function () {
+      it(`tomatometer count contains N/A`, function () {
         getTomatometerCountElement(document).textContent.should.contain('N/A');
       });
 
@@ -192,7 +192,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
         should.not.exist(getAudienceScoreElement(document));
       });
 
-      it(`audience score vote count contains "Not yet available"`, function () {
+      it(`audience score count contains "Not yet available"`, function () {
         getAudienceScoreCountElement(document).textContent.should.contain(
           'Not yet available'
         );
@@ -213,7 +213,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
         should.not.exist(getTomatometerElement(document));
       });
 
-      it(`tomatometer vote count contains N/A`, function () {
+      it(`tomatometer count contains N/A`, function () {
         getTomatometerCountElement(document).textContent.should.contain('N/A');
       });
 
@@ -225,7 +225,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
           .and.most(100);
       });
 
-      it(`audience score vote count exists`, function () {
+      it(`audience score count exists`, function () {
         const audienceScoreCount = getAudienceScoreCountElement(document)
           .innerHTML;
 

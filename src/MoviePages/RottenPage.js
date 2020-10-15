@@ -24,16 +24,16 @@ class RottenPage extends MoviePage {
     const title = metaDataJSON.name;
     const year = this.readYear();
 
-    const tomatometer = await this.readTomatometerStuff();
-    const audienceScore = await this.readAudienceScoreStuff();
+    const criticRatings = await this.readCriticRatings();
+    const userRatings = await this.readUserRatings();
 
     return new MovieData(
       title,
       year,
       this.url,
       null,
-      tomatometer,
-      audienceScore
+      criticRatings,
+      userRatings
     );
   }
 
@@ -41,23 +41,23 @@ class RottenPage extends MoviePage {
     return Number(this.getTitleMetaTag().match(/\d{4}(?=\)$)/));
   }
 
-  async readTomatometerStuff() {
-    const tomatometerValue = this.readTomatoMeter();
+  async readCriticRatings() {
+    const tomatometer = this.readTomatometer();
 
-    return tomatometerValue
-      ? new MovieRating(
-          tomatometerValue,
-          this.readNumberOfCriticsVotes(),
+    return tomatometer
+      ? new Ratings(
+          tomatometer,
+          this.readNumberOfCriticRatings(),
           await this.readTomatometerLogoUrl()
         )
       : null;
   }
 
-  readTomatoMeter() {
+  readTomatometer() {
     return this.readScore(0);
   }
 
-  readNumberOfCriticsVotes() {
+  readNumberOfCriticRatings() {
     return Number(
       this.document.body
         .getElementsByClassName('mop-ratings-wrap__half')[0]
@@ -79,13 +79,13 @@ class RottenPage extends MoviePage {
     return tomatometerIcon.className.match(/(certified.fresh|fresh|rotten)/)[0];
   }
 
-  async readAudienceScoreStuff() {
-    const audienceScoreValue = this.readAudienceScore();
+  async readUserRatings() {
+    const audienceScore = this.readAudienceScore();
 
-    return audienceScoreValue
-      ? new MovieRating(
-          audienceScoreValue,
-          this.readNumberOfUserVotes(),
+    return audienceScore
+      ? new Ratings(
+          audienceScore,
+          this.readNumberOfUserRatings(),
           await this.readAudienceScoreLogoUrl()
         )
       : null;
@@ -105,7 +105,7 @@ class RottenPage extends MoviePage {
       : null;
   }
 
-  readNumberOfUserVotes() {
+  readNumberOfUserRatings() {
     return Number(
       this.document.body
         .getElementsByClassName('mop-ratings-wrap__half')[1]
@@ -177,16 +177,16 @@ class RottenPage extends MoviePage {
    * @param  {MovieData} movieData
    */
   injectRatings(movieData) {
-    this.fixCenterAlignmentOfTomatoMeterAndAudienceScore();
+    this.fixCenterAlignmentOfTomatometerAndAudienceScore();
 
-    const imdbScoreElement = this.generateImdbRatingsRowElement(movieData);
+    const imdbRatingsElement = this.generateImdbRatingsRowElement(movieData);
     const scoreboardContainers = this.document.querySelectorAll(
       'section.mop-ratings-wrap__row.js-scoreboard-container'
     );
-    scoreboardContainers[0].after(imdbScoreElement);
+    scoreboardContainers[0].after(imdbRatingsElement);
   }
 
-  fixCenterAlignmentOfTomatoMeterAndAudienceScore() {
+  fixCenterAlignmentOfTomatometerAndAudienceScore() {
     const ratingsContainers = this.document.querySelectorAll(
       'div.mop-ratings-wrap__half'
     );
@@ -195,16 +195,16 @@ class RottenPage extends MoviePage {
 
   generateImdbRatingsRowElement(movieData) {
     const ratingsRowElement = this.generateEmptyRatingsRowElement();
-    const metaCriticsElement = this.generateMetacriticsElement(movieData);
-    const userRatingElement = this.generateUserRatingElement(movieData);
+    const metascoreElement = this.generateMetascoreElement(movieData);
+    const userRatingsElement = this.generateUserRatingsElement(movieData);
 
     ratingsRowElement
       .getElementsByClassName('mop-ratings-wrap__half')[0]
-      .appendChild(metaCriticsElement);
+      .appendChild(metascoreElement);
 
     ratingsRowElement
       .getElementsByClassName('mop-ratings-wrap__half')[1]
-      .appendChild(userRatingElement);
+      .appendChild(userRatingsElement);
 
     return ratingsRowElement;
   }
@@ -221,79 +221,102 @@ class RottenPage extends MoviePage {
     );
   }
 
-  generateMetacriticsElement(movieData) {
-    let metacriticsOuterHtml;
-    if (movieData.criticsScore) {
-      metacriticsOuterHtml =
-        `<a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
-        `      <h2 class="mop-ratings-wrap__score">` +
-        `        <span class="mop-ratings-wrap__percentage"` +
-        `              style="background-color: ${movieData.criticsScore.custom}; padding: 0px 8px;">${movieData.criticsScore.score}</span></h2>` +
-        `    <div class="mop-ratings-wrap__review-totals">` +
-        `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
-        `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
-        `      <small class="mop-ratings-wrap__text--small">${movieData.criticsScore.count}</small>` +
-        `    </div>` +
-        `  </a>`;
+  generateMetascoreElement(movieData) {
+    let metascoreOuterHtml;
+
+    if (movieData.criticRatings) {
+      metascoreOuterHtml = this.getFilledMetascoreHtml(movieData);
     } else {
-      metacriticsOuterHtml =
-        `      <a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
-        `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
-        ` >There are no<br>Metacritic reviews</div>` +
-        `    <div class="mop-ratings-wrap__review-totals">` +
-        `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
-        `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
-        `      <small class="mop-ratings-wrap__text--small">N/A</small>` +
-        `    </div></a>`;
+      metascoreOuterHtml = this.getEmptyMetascoreHtml(movieData);
     }
-    const metaCriticsElement = this.generateElement(metacriticsOuterHtml);
-    return metaCriticsElement;
+
+    return this.generateElement(metascoreOuterHtml);
   }
 
-  generateUserRatingElement(movieData) {
-    let userRatingElement;
+  getFilledMetascoreHtml(movieData) {
+    return (
+      `<a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
+      `      <h2 class="mop-ratings-wrap__score">` +
+      `        <span class="mop-ratings-wrap__percentage"` +
+      `              style="background-color: ${movieData.criticRatings.custom}; padding: 0px 8px;">${movieData.criticRatings.score}</span></h2>` +
+      `    <div class="mop-ratings-wrap__review-totals">` +
+      `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
+      `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
+      `      <small class="mop-ratings-wrap__text--small">${movieData.criticRatings.count}</small>` +
+      `    </div>` +
+      `  </a>`
+    );
+  }
 
-    if (movieData.userScore) {
-      const userratingOuterHtml =
-        `<a href="${movieData.url}" class="unstyled articleLink" title="Open ${movieData.title} on IMDb">` +
-        `    <h2 class="mop-ratings-wrap__score">` +
-        `        <span class="mop-ratings-wrap__percentage" style="vertical-align: middle;">${movieData.userScore.score.toLocaleString(
-          'en',
-          {
-            minimumFractionDigits: 1,
-            maximumFractionDigits: 1,
-          }
-        )}</span>` +
-        `    </h2>` +
-        `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
-        `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating${this.generateToplistPositionString(
-          movieData
-        )}</h3>` +
-        `      <strong class="mop-ratings-wrap__text--small">Number of votes: ${movieData.userScore.count.toLocaleString(
-          'en'
-        )}</strong>` +
-        `    </div>` +
-        `      </a>`;
-      userRatingElement = this.generateElement(userratingOuterHtml);
+  getEmptyMetascoreHtml(movieData) {
+    return (
+      `      <a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
+      `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
+      ` >There are no<br>Metacritic reviews</div>` +
+      `    <div class="mop-ratings-wrap__review-totals">` +
+      `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
+      `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
+      `      <small class="mop-ratings-wrap__text--small">N/A</small>` +
+      `    </div></a>`
+    );
+  }
 
-      const userRatingLogo = this.generateElement(movieData.userScore.custom);
-      userRatingLogo.style.verticalAlign = 'middle';
-      userRatingElement.firstElementChild.prepend(userRatingLogo);
+  generateUserRatingsElement(movieData) {
+    let userRatingsElement;
+
+    if (movieData.userRatings) {
+      userRatingsElement = this.generateFilledUserRatingsElement(movieData);
     } else {
-      const userratingOuterHtml =
-        `      <a href="${movieData.url}" class="unstyled articleLink" title="Open ${movieData.title} on IMDb">` +
-        `  <div class="audience-score__italics mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion mop-ratings-wrap__text--not-released">` +
-        `        <p class="mop-ratings-wrap__prerelease-text">Coming soon</p>` +
-        `    </div>` +
-        `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
-        `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
-        `      <strong class="mop-ratings-wrap__text--small">Number of votes: N/A</strong>` +
-        `    </div>` +
-        `      </a>`;
-      userRatingElement = this.generateElement(userratingOuterHtml);
+      userRatingsElement = this.generateEmptyUserRatingsElement(movieData);
     }
 
-    return userRatingElement;
+    return userRatingsElement;
+  }
+
+  generateFilledUserRatingsElement(movieData) {
+    const userratingOuterHtml =
+      `<a href="${movieData.url}" class="unstyled articleLink" title="Open ${movieData.title} on IMDb">` +
+      `    <h2 class="mop-ratings-wrap__score">` +
+      `        <span class="mop-ratings-wrap__percentage" style="vertical-align: middle;">${movieData.userRatings.score.toLocaleString(
+        'en',
+        {
+          minimumFractionDigits: 1,
+          maximumFractionDigits: 1,
+        }
+      )}</span>` +
+      `    </h2>` +
+      `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
+      `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating${this.generateToplistPositionString(
+        movieData
+      )}</h3>` +
+      `      <strong class="mop-ratings-wrap__text--small">User Ratings: ${movieData.userRatings.count.toLocaleString(
+        'en'
+      )}</strong>` +
+      `    </div>` +
+      `      </a>`;
+
+    const userRatingsElement = this.generateElement(userratingOuterHtml);
+
+    const userRatingsLogo = this.generateElement(movieData.userRatings.custom);
+    userRatingsLogo.style.verticalAlign = 'middle';
+    userRatingsElement.firstElementChild.prepend(userRatingsLogo);
+
+    return userRatingsElement;
+  }
+
+  generateEmptyUserRatingsElement(movieData) {
+    const userratingOuterHtml =
+      `      <a href="${movieData.url}" class="unstyled articleLink" title="Open ${movieData.title} on IMDb">` +
+      `  <div class="audience-score__italics mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion mop-ratings-wrap__text--not-released">` +
+      `        <p class="mop-ratings-wrap__prerelease-text">Coming soon</p>` +
+      `    </div>` +
+      `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
+      `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
+      `      <strong class="mop-ratings-wrap__text--small">User Ratings: N/A</strong>` +
+      `    </div>` +
+      `      </a>`;
+
+    return this.generateElement(userratingOuterHtml);
   }
 
   generateToplistPositionString(movieData) {

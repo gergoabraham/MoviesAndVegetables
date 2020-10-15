@@ -35,7 +35,7 @@ require('../src/ContentScriptImdb');
 require('../src/ContentScriptRotten');
 require('../src/ContentScript');
 require('../src/BackgroundScript');
-require('../src/MoviePages/MovieRating');
+require('../src/MoviePages/Ratings');
 require('../src/MoviePages/MovieData');
 require('../src/MoviePages/MoviePage');
 require('../src/MoviePages/ImdbPage');

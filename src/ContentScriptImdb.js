@@ -7,13 +7,13 @@
 'use strict';
 
 class ContentScriptImdb {
-  static async injectRottenTomatoesScores() {
-    await ContentScript.injectScores(RottenPage.NAME, ImdbPage.NAME);
+  static async injectRottenTomatoesRatings() {
+    await ContentScript.injectRatings(RottenPage.NAME, ImdbPage.NAME);
   }
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {
   exportToTestEnvironment(ContentScriptImdb);
 } else {
-  ContentScriptImdb.injectRottenTomatoesScores();
+  ContentScriptImdb.injectRottenTomatoesRatings();
 }

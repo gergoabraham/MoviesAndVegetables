@@ -6,7 +6,7 @@
 
 'use strict';
 
-class MovieRating {
+class Ratings {
   /**
    * @param  {number} score
    * @param  {number} count
@@ -20,5 +20,5 @@ class MovieRating {
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {
-  exportToTestEnvironment(MovieRating);
+  exportToTestEnvironment(Ratings);
 }

@@ -181,7 +181,7 @@ describe('rottenPage', function () {
             `    </h2>` +
             `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
             `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
-            `      <strong class="mop-ratings-wrap__text--small">Number of votes: 2,181,618</strong>` +
+            `      <strong class="mop-ratings-wrap__text--small">User Ratings: 2,181,618</strong>` +
             `    </div>` +
             `      </a>` +
             `</div>` +
@@ -210,7 +210,7 @@ describe('rottenPage', function () {
         );
       });
 
-      it('no critics score', function () {
+      it('no critic ratings', function () {
         document
           .getElementById('mv-imdb-scores')
           .getElementsByClassName('mop-ratings-wrap__half')[0]
@@ -237,7 +237,7 @@ describe('rottenPage', function () {
               `    </div>` +
               `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
               `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
-              `      <strong class="mop-ratings-wrap__text--small">Number of votes: N/A</strong>` +
+              `      <strong class="mop-ratings-wrap__text--small">User Ratings: N/A</strong>` +
               `    </div>` +
               `      </a>`
           );

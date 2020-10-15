@@ -17,7 +17,7 @@ describe('Content script on IMDb', function () {
       );
       global.document = dom.window.document;
 
-      await ContentScriptImdb.injectRottenTomatoesScores();
+      await ContentScriptImdb.injectRottenTomatoesRatings();
 
       const audienceScore = document.getElementById('mv-audience-score');
       const tomatoMeter = document.getElementById('mv-tomatometer');

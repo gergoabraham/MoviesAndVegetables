@@ -65,18 +65,6 @@ describe('ImdbPage', function () {
     });
 
     context(`on a movie without ratings`, function () {
-      let movieData;
-
-      before(`let's check some unimportant data`, async function () {
-        const url = 'https://www.imdb.com/title/tt5637536/';
-        const document = await getTestDOM(url);
-        const imdbPage = new ImdbPage(document, url);
-
-        movieData = await imdbPage.getMovieData();
-        movieData.should.contain({ title: 'Avatar 5' });
-        movieData.should.contain({ year: 2028 });
-      });
-
       it('read all stuff', async function () {
         const movieData = await readMovieDataByImdbPage(
           'https://www.imdb.com/title/tt5637536/'
@@ -228,7 +216,7 @@ describe('ImdbPage', function () {
           );
         });
 
-        it('increase the width of the User Score', function () {
+        it('increase the width of the User Ratings element', function () {
           ratingsWrapper.children[0].style.width.should.equal('95px');
         });
 
@@ -329,7 +317,7 @@ describe('ImdbPage', function () {
         });
       });
 
-      context('for Audiencescore - no user rating', function () {
+      context('for Audiencescore - no user ratings', function () {
         let document;
 
         before(async function () {
@@ -372,7 +360,7 @@ describe('ImdbPage', function () {
       imdbPage = new ImdbPage('doc', 'https://url');
     });
 
-    it('write number of votes with thousand grouping', function () {
+    it('write ratings count with thousand grouping', function () {
       imdbPage.groupThousands(3333333).should.equal('3,333,333');
     });
 

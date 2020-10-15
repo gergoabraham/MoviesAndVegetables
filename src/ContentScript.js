@@ -11,7 +11,7 @@ class ContentScript {
    * @param {string} remotePageName
    * @param {string} currentPageName
    */
-  static async injectScores(remotePageName, currentPageName) {
+  static async injectRatings(remotePageName, currentPageName) {
     const currentPage = MoviePageFactory.create(
       currentPageName,
       document,
