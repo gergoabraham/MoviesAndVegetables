@@ -163,12 +163,16 @@ describe('ImdbPage', function () {
 
           tomatoMeter.outerHTML.should.equal(
             `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-              `    <a href="${rottenURL}" title="Movie Title on RottenTomatoes">` +
-              `<img src="critics-score-logo.svg" height="27px" width="27px" style="vertical-align: baseline;"><div class="metacriticScore titleReviewBarSubItem" style="width: 40px; color: black">` +
-              `<span>93%</span>` +
-              `        </div><div class="titleReviewBarSubItem">` +
+              `    <a href="${rottenURL}" title="Open Movie Title on RottenTomatoes" style="text-decoration: none">` +
+              `        <img src="critics-score-logo.svg" height="27px" width="27px" style="vertical-align: baseline">` +
+              `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
+              `            <span>93%</span>` +
+              `        </div>` +
+              `        <div class="titleReviewBarSubItem">` +
               `            <div>Tomatometer</div>` +
-              `            <div><span class="subText">Total Count: 1,268</span></div>` +
+              `            <div>` +
+              `                <span class="subText">Total Count: 1,268</span>` +
+              `            </div>` +
               `        </div>` +
               `    </a>` +
               `</div>`
@@ -198,20 +202,20 @@ describe('ImdbPage', function () {
           const audienceScore = document.getElementById('mv-audience-score');
 
           audienceScore.outerHTML.should.equal(
-            `<div class="imdbRating" id="mv-audience-score"` +
-              ` style="background: none; text-align: center; padding: 0px 10px 0px 5px; ` +
-              `width: 100px; display: flex; align-items: center; border-left: 1px solid #6b6b6b;">` +
-              `<img src="user-rating-logo.svg" height="27px" width="27px">` +
-              `    <div>` +
-              `        <div class="ratingValue">` +
-              `            <strong title="Audience score from RottenTomatoes">` +
-              `                <span itemprop="ratingValue">98%</span>` +
-              `            </strong>` +
+            `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center; padding: 0px; width: 100px; border-left: 1px solid #6b6b6b;">` +
+              `    <a href="${rottenURL}" title="Open Movie Title on RottenTomatoes" style="text-decoration: none">` +
+              `        <div style="display: flex; align-items: center; justify-content: center; height: 40px;">` +
+              `            <img src="user-rating-logo.svg" height="32px" width="32px">` +
+              `            <div>` +
+              `                <div class="ratingValue">` +
+              `                    <strong style="color: white">` +
+              `                        <span itemprop="ratingValue">98%</span>` +
+              `                    </strong>` +
+              `                </div>` +
+              `                <span class="small" itemprop="ratingCount">885,228</span>` +
+              `            </div>` +
               `        </div>` +
-              `        <a href="${rottenURL}">` +
-              `            <span class="small" itemprop="ratingCount">885,228</span>` +
-              `        </a>` +
-              `    </div>` +
+              `    </a>` +
               `</div>`
           );
         });
@@ -244,19 +248,17 @@ describe('ImdbPage', function () {
 
         tomatoMeter.outerHTML.should.equal(
           `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-            `    <a href="${rottenURL}" title="Movie Title on RottenTomatoes">` +
-            `        <div class="metacriticScore score_tbd titleReviewBarSubItem" style="width: 40px">` +
-            `            <span style="color:black">-</span>` +
+            `    <a href="${rottenURL}" title="Open Movie Title on RottenTomatoes" style="text-decoration: none;">` +
+            `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
+            `            <span style="color: black;">-</span>` +
             `        </div>` +
-            `</a>` +
-            `    <div class="titleReviewBarSubItem">` +
-            `        <div>` +
-            `            <a href="${rottenURL}">Tomatometer</a>` +
+            `        <div class="titleReviewBarSubItem">` +
+            `            <div>Tomatometer</div>` +
+            `            <div>` +
+            `                <span class="subText">Total Count: N/A</span>` +
+            `            </div>` +
             `        </div>` +
-            `        <div>` +
-            `            <span class="subText">Total Count: N/A</span>` +
-            `        </div>` +
-            `    </div>` +
+            `    </a>` +
             `</div>`
         );
       });
@@ -265,15 +267,13 @@ describe('ImdbPage', function () {
         const audienceScore = document.getElementById('mv-audience-score');
 
         audienceScore.outerHTML.should.equal(
-          `<div class="imdbRating" id="mv-audience-score"` +
-            ` style="background: none; text-align: center; padding: 2px 0px 0px 2px; ` +
-            `width: 90px; border-left: 1px solid #6b6b6b;">` +
-            `    <div class="ratingValue">` +
-            `        <strong title="Audience score from RottenTomatoes">` +
-            `            <span itemprop="ratingValue">-</span>` +
-            `        </strong>` +
-            `    </div>` +
-            `    <a href="${rottenURL}">` +
+          `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center; padding-left: 0px; width: 90px; border-left: 1px solid #6b6b6b;">` +
+            `    <a href="${rottenURL}" title="Open Movie Title on RottenTomatoes" style="text-decoration: none;">` +
+            `        <div class="ratingValue">` +
+            `            <strong>` +
+            `                <span itemprop="ratingValue">-</span>` +
+            `            </strong>` +
+            `        </div>` +
             `        <span class="small" itemprop="ratingCount">N/A</span>` +
             `    </a>` +
             `</div>`

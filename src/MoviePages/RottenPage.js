@@ -235,7 +235,7 @@ class RottenPage extends MoviePage {
 
   getFilledMetascoreHtml(movieData) {
     return (
-      `<a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
+      `<a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open ${movieData.title} Critic Reviews on IMDb">` +
       `      <h2 class="mop-ratings-wrap__score">` +
       `        <span class="mop-ratings-wrap__percentage"` +
       `              style="background-color: ${movieData.criticRatings.custom}; padding: 0px 8px;">${movieData.criticRatings.score}</span></h2>` +
@@ -250,7 +250,7 @@ class RottenPage extends MoviePage {
 
   getEmptyMetascoreHtml(movieData) {
     return (
-      `      <a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
+      `      <a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open ${movieData.title} Critic Reviews on IMDb">` +
       `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
       ` >There are no<br>Metacritic reviews</div>` +
       `    <div class="mop-ratings-wrap__review-totals">` +
