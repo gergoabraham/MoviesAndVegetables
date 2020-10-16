@@ -98,23 +98,10 @@ class ImdbPage extends MoviePage {
   }
 
   async fetchCss() {
-    const styleSheetUrl = this.getStylesheetUrl();
+    const styleSheetUrl = this.getStylesheetUrl(/title-flat.*\.css$/);
 
     const response = await fetch(styleSheetUrl);
-    const css = await response.text();
-    return css;
-  }
-
-  getStylesheetUrl() {
-    const stylesheetLinkElements = this.document.querySelectorAll(
-      'link[rel="stylesheet"]'
-    );
-
-    const styleSheetLinks = Array.from(stylesheetLinkElements).map(
-      (linkElement) => linkElement.href
-    );
-
-    return styleSheetLinks.filter((link) => link.match(/title-flat/))[0];
+    return await response.text();
   }
 
   readUserRatings() {

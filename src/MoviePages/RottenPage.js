@@ -141,22 +141,12 @@ class RottenPage extends MoviePage {
   }
 
   async fetchCss() {
-    const stylesheetLinkElements = this.document.querySelectorAll(
-      'link[as="style"]'
-    );
+    const matchedStyleSheetUrl = this.getStylesheetUrl(/global.*\.css$/);
 
-    const styleSheetLinks = Array.from(stylesheetLinkElements).map(
-      (linkElement) => linkElement.href
-    );
-
-    const matchedStyleSheets = styleSheetLinks.filter((link) =>
-      link.match(/global.*\.css/)
-    );
-
-    const relativeUrl = matchedStyleSheets[0].match('/assets.+');
+    const relativeUrl = matchedStyleSheetUrl.match('/assets.+');
     const styleSheetUrl = this.convertToAbsoluteUrl(relativeUrl);
-    const cssResponse = await fetch(styleSheetUrl);
 
+    const cssResponse = await fetch(styleSheetUrl);
     return cssResponse.text();
   }
 

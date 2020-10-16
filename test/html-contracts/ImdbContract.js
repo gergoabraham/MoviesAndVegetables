@@ -344,14 +344,12 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
     before('get URL for latest stylesheet', async function () {
       const document = await fetchDOM('https://www.imdb.com/title/tt0111161/');
 
-      const stylesheetLinkElements = document.querySelectorAll(
-        'link[rel="stylesheet"]'
-      );
+      const stylesheetLinkElements = document.querySelectorAll('link');
       const styleSheetLinks = Array.from(stylesheetLinkElements).map(
         (linkElement) => linkElement.href
       );
       matchedStyleSheets = styleSheetLinks.filter((link) =>
-        link.match(/title-flat/)
+        link.match(/title-flat.*\.css$/)
       );
     });
 

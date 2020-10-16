@@ -54,6 +54,20 @@ class MoviePage {
     return new DOMParser().parseFromString(innerHTML, 'text/html').body
       .children[0];
   }
+
+  getStylesheetUrl(nameRegExp) {
+    const stylesheetLinkElements = this.document.querySelectorAll('link');
+
+    const styleSheetLinks = Array.from(stylesheetLinkElements).map(
+      (linkElement) => linkElement.href
+    );
+
+    const matchedStyleSheets = styleSheetLinks.filter((link) =>
+      link.match(nameRegExp)
+    );
+
+    return matchedStyleSheets[0];
+  }
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {

@@ -244,14 +244,12 @@ contract('RottenContract', function (fetchDOM, fetchText) {
         'https://www.rottentomatoes.com/m/shawshank_redemption'
       );
 
-      const stylesheetLinkElements = document.querySelectorAll(
-        'link[as="style"]'
-      );
+      const stylesheetLinkElements = document.querySelectorAll('link');
       const styleSheetLinks = Array.from(stylesheetLinkElements).map(
         (linkElement) => linkElement.href
       );
       matchedStyleSheets = styleSheetLinks.filter((link) =>
-        link.match(/global.*\.css/)
+        link.match(/global.*\.css$/)
       );
     });
 
