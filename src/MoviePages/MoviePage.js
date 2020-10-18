@@ -24,17 +24,17 @@ class MoviePage {
   }
 
   /**
-   * @return {MovieData}
+   * @return {Movie}
    */
   async getMovieData() {
     throw new Error(`Function not implemented.`);
   }
 
   /**
-   * @param  {MovieData} movieData
+   * @param  {Movie} movie
    */
   // eslint-disable-next-line no-unused-vars
-  injectRatings(movieData) {
+  injectRatings(movie) {
     throw new Error(`Function not implemented.`);
   }
 

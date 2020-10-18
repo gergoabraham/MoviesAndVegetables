@@ -38,14 +38,13 @@ describe('rottenPage', function () {
   describe(`getMovieData`, function () {
     context('on a movie with ratings', function () {
       it('read all stuff', async function () {
-        const movieData = await readMovieDataByRottenPage(
+        const movie = await readMovieDataByRottenPage(
           'https://www.rottentomatoes.com/m/shawshank_redemption'
         );
 
-        movieData.should.deep.equal(
-          new MovieData(
-            'The Shawshank Redemption',
-            1994,
+        movie.should.deep.equal(
+          new Movie(
+            { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.rottentomatoes.com/m/shawshank_redemption',
             null,
             {
@@ -67,14 +66,13 @@ describe('rottenPage', function () {
 
     context('on a movie without ratings', function () {
       it('read all stuff', async function () {
-        const movieData = await readMovieDataByRottenPage(
+        const movie = await readMovieDataByRottenPage(
           'https://www.rottentomatoes.com/m/avatar_5'
         );
 
-        movieData.should.deep.equal(
-          new MovieData(
-            'Avatar 5',
-            2028,
+        movie.should.deep.equal(
+          new Movie(
+            { title: 'Avatar 5', year: 2028 },
             'https://www.rottentomatoes.com/m/avatar_5',
             null,
             null,
@@ -86,14 +84,13 @@ describe('rottenPage', function () {
 
     context('on a movie with only audience score', function () {
       it('read all stuff', async function () {
-        const movieData = await readMovieDataByRottenPage(
+        const movie = await readMovieDataByRottenPage(
           'https://www.rottentomatoes.com/m/amblin'
         );
 
-        movieData.should.deep.equal(
-          new MovieData(
-            "Amblin'",
-            1968,
+        movie.should.deep.equal(
+          new Movie(
+            { title: "Amblin'", year: 1968 },
             'https://www.rottentomatoes.com/m/amblin',
             null,
             null,
@@ -119,9 +116,8 @@ describe('rottenPage', function () {
         const rottenPage = new RottenPage(document, url);
 
         rottenPage.injectRatings(
-          new MovieData(
-            'The Shawshank Redemption',
-            1994,
+          new Movie(
+            { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
             null,
             {
@@ -199,9 +195,8 @@ describe('rottenPage', function () {
         const rottenPage = new RottenPage(document, url);
 
         rottenPage.injectRatings(
-          new MovieData(
-            'The Shawshank Redemption',
-            1994,
+          new Movie(
+            { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
             null,
             null,
@@ -253,9 +248,8 @@ describe('rottenPage', function () {
         const rottenPage = new RottenPage(document, url);
 
         rottenPage.injectRatings(
-          new MovieData(
-            'The Shawshank Redemption',
-            1994,
+          new Movie(
+            { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
             33,
             {

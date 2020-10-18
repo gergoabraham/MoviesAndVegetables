@@ -28,18 +28,16 @@ describe('Background script', function () {
       // - google.search...btnI=true&q=The+Shawshank+Redemption+|
       //      1994+movie+RottenTomatoes.html
       // - rottentomatoes.m.shawshank_redemption.html
-      const movieData = {
-        title: 'The Shawshank Redemption',
-        year: 1994,
+      const movie = {
+        info: { title: 'The Shawshank Redemption', year: 1994 },
       };
 
       await BackgroundScript.getRemotePageData({
-        movieData,
+        movie,
         remotePageName: RottenPage.NAME,
       }).should.eventually.deep.equal(
-        new MovieData(
-          'The Shawshank Redemption',
-          1994,
+        new Movie(
+          { title: 'The Shawshank Redemption', year: 1994 },
           `https://www.rottentomatoes.com/m/shawshank_redemption`,
           null,
           {
@@ -62,18 +60,16 @@ describe('Background script', function () {
       // - google.search...btnI=true&q=Amblin'+1968+|
       //       movie+RottenTomatoes.html;
       // - rottentomatoes.m.amblin.html
-      const movieData = {
-        title: "Amblin'",
-        year: 1968,
+      const movie = {
+        info: { title: "Amblin'", year: 1968 },
       };
 
       await BackgroundScript.getRemotePageData({
-        movieData,
+        movie,
         remotePageName: RottenPage.NAME,
       }).should.eventually.deep.equal(
-        new MovieData(
-          "Amblin'",
-          1968,
+        new Movie(
+          { title: "Amblin'", year: 1968 },
           `https://www.rottentomatoes.com/m/amblin`,
           null,
           null,
@@ -91,18 +87,16 @@ describe('Background script', function () {
       // - google.search...btnI=true&q=Amblin'+1968+|
       //       movie+Imdb.html;
       // - imdb.title.tt0064010.html
-      const movieData = {
-        title: "Amblin'",
-        year: 1968,
+      const movie = {
+        info: { title: "Amblin'", year: 1968 },
       };
 
       await BackgroundScript.getRemotePageData({
-        movieData,
+        movie,
         remotePageName: ImdbPage.NAME,
       }).should.eventually.deep.equal(
-        new MovieData(
-          "Amblin'",
-          1968,
+        new Movie(
+          { title: "Amblin'", year: 1968 },
           `https://www.imdb.com/title/tt0064010/`,
           null,
           null,
@@ -121,15 +115,11 @@ describe('Background script', function () {
 
   describe('special cases', function () {
     it('remove "&" character from movie title in search url', function () {
-      const movieData = {
-        title: 'The Old Man & The Gun',
-        year: '2018',
+      const movie = {
+        info: { title: 'The Old Man & The Gun', year: '2018' },
       };
 
-      BackgroundScript.constructSearchUrl(
-        movieData,
-        RottenPage.NAME
-      ).should.equal(
+      BackgroundScript.constructSearchUrl(movie, RottenPage.NAME).should.equal(
         'https://www.google.com/search?btnI=true' +
           '&q=The+Old+Man++The+Gun+2018+movie+' +
           RottenPage.NAME

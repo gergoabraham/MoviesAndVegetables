@@ -24,7 +24,8 @@
     "RottenPage": "writable",
     "Ratings": "writable",
     "MoviePage": "writable",
-    "MovieData": "writable",
+    "MovieInfo": "writable",
+    "Movie": "writable",
     "ContentScript": "writable",
     "Logger": "writable"
   }

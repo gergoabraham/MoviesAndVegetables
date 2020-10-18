@@ -16,7 +16,7 @@ class RottenPage extends MoviePage {
   }
 
   /**
-   * @return  {MovieData} movieData
+   * @return  {Movie} movie
    */
   async getMovieData() {
     const metaDataJSON = this.readMetadataJSON();
@@ -27,9 +27,8 @@ class RottenPage extends MoviePage {
     const criticRatings = await this.readCriticRatings();
     const userRatings = await this.readUserRatings();
 
-    return new MovieData(
-      title,
-      year,
+    return new Movie(
+      new MovieInfo(title, year),
       this.url,
       null,
       criticRatings,
@@ -164,12 +163,12 @@ class RottenPage extends MoviePage {
   }
 
   /**
-   * @param  {MovieData} movieData
+   * @param  {Movie} movie
    */
-  injectRatings(movieData) {
+  injectRatings(movie) {
     this.fixCenterAlignmentOfTomatometerAndAudienceScore();
 
-    const imdbRatingsElement = this.generateImdbRatingsRowElement(movieData);
+    const imdbRatingsElement = this.generateImdbRatingsRowElement(movie);
     const scoreboardContainers = this.document.querySelectorAll(
       'section.mop-ratings-wrap__row.js-scoreboard-container'
     );
@@ -183,10 +182,10 @@ class RottenPage extends MoviePage {
     ratingsContainers.forEach((x) => (x.style.flexBasis = '100%'));
   }
 
-  generateImdbRatingsRowElement(movieData) {
+  generateImdbRatingsRowElement(movie) {
     const ratingsRowElement = this.generateEmptyRatingsRowElement();
-    const metascoreElement = this.generateMetascoreElement(movieData);
-    const userRatingsElement = this.generateUserRatingsElement(movieData);
+    const metascoreElement = this.generateMetascoreElement(movie);
+    const userRatingsElement = this.generateUserRatingsElement(movie);
 
     ratingsRowElement
       .getElementsByClassName('mop-ratings-wrap__half')[0]
@@ -211,36 +210,36 @@ class RottenPage extends MoviePage {
     );
   }
 
-  generateMetascoreElement(movieData) {
+  generateMetascoreElement(movie) {
     let metascoreOuterHtml;
 
-    if (movieData.criticRatings) {
-      metascoreOuterHtml = this.getFilledMetascoreHtml(movieData);
+    if (movie.criticRatings) {
+      metascoreOuterHtml = this.getFilledMetascoreHtml(movie);
     } else {
-      metascoreOuterHtml = this.getEmptyMetascoreHtml(movieData);
+      metascoreOuterHtml = this.getEmptyMetascoreHtml(movie);
     }
 
     return this.generateElement(metascoreOuterHtml);
   }
 
-  getFilledMetascoreHtml(movieData) {
+  getFilledMetascoreHtml(movie) {
     return (
-      `<a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open ${movieData.title} Critic Reviews on IMDb">` +
+      `<a href="${movie.url}criticreviews" class="unstyled articleLink" title="Open ${movie.info.title} Critic Reviews on IMDb">` +
       `      <h2 class="mop-ratings-wrap__score">` +
       `        <span class="mop-ratings-wrap__percentage"` +
-      `              style="background-color: ${movieData.criticRatings.custom}; padding: 0px 8px;">${movieData.criticRatings.score}</span></h2>` +
+      `              style="background-color: ${movie.criticRatings.custom}; padding: 0px 8px;">${movie.criticRatings.score}</span></h2>` +
       `    <div class="mop-ratings-wrap__review-totals">` +
       `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
       `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
-      `      <small class="mop-ratings-wrap__text--small">${movieData.criticRatings.count}</small>` +
+      `      <small class="mop-ratings-wrap__text--small">${movie.criticRatings.count}</small>` +
       `    </div>` +
       `  </a>`
     );
   }
 
-  getEmptyMetascoreHtml(movieData) {
+  getEmptyMetascoreHtml(movie) {
     return (
-      `      <a href="${movieData.url}criticreviews" class="unstyled articleLink" title="Open ${movieData.title} Critic Reviews on IMDb">` +
+      `      <a href="${movie.url}criticreviews" class="unstyled articleLink" title="Open ${movie.info.title} Critic Reviews on IMDb">` +
       `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
       ` >There are no<br>Metacritic reviews</div>` +
       `    <div class="mop-ratings-wrap__review-totals">` +
@@ -251,23 +250,23 @@ class RottenPage extends MoviePage {
     );
   }
 
-  generateUserRatingsElement(movieData) {
+  generateUserRatingsElement(movie) {
     let userRatingsElement;
 
-    if (movieData.userRatings) {
-      userRatingsElement = this.generateFilledUserRatingsElement(movieData);
+    if (movie.userRatings) {
+      userRatingsElement = this.generateFilledUserRatingsElement(movie);
     } else {
-      userRatingsElement = this.generateEmptyUserRatingsElement(movieData);
+      userRatingsElement = this.generateEmptyUserRatingsElement(movie);
     }
 
     return userRatingsElement;
   }
 
-  generateFilledUserRatingsElement(movieData) {
+  generateFilledUserRatingsElement(movie) {
     const userratingOuterHtml =
-      `<a href="${movieData.url}" class="unstyled articleLink" title="Open ${movieData.title} on IMDb">` +
+      `<a href="${movie.url}" class="unstyled articleLink" title="Open ${movie.info.title} on IMDb">` +
       `    <h2 class="mop-ratings-wrap__score">` +
-      `        <span class="mop-ratings-wrap__percentage" style="vertical-align: middle;">${movieData.userRatings.score.toLocaleString(
+      `        <span class="mop-ratings-wrap__percentage" style="vertical-align: middle;">${movie.userRatings.score.toLocaleString(
         'en',
         {
           minimumFractionDigits: 1,
@@ -277,9 +276,9 @@ class RottenPage extends MoviePage {
       `    </h2>` +
       `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
       `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating${this.generateToplistPositionString(
-        movieData
+        movie
       )}</h3>` +
-      `      <strong class="mop-ratings-wrap__text--small">User Ratings: ${movieData.userRatings.count.toLocaleString(
+      `      <strong class="mop-ratings-wrap__text--small">User Ratings: ${movie.userRatings.count.toLocaleString(
         'en'
       )}</strong>` +
       `    </div>` +
@@ -287,16 +286,16 @@ class RottenPage extends MoviePage {
 
     const userRatingsElement = this.generateElement(userratingOuterHtml);
 
-    const userRatingsLogo = this.generateElement(movieData.userRatings.custom);
+    const userRatingsLogo = this.generateElement(movie.userRatings.custom);
     userRatingsLogo.style.verticalAlign = 'middle';
     userRatingsElement.firstElementChild.prepend(userRatingsLogo);
 
     return userRatingsElement;
   }
 
-  generateEmptyUserRatingsElement(movieData) {
+  generateEmptyUserRatingsElement(movie) {
     const userratingOuterHtml =
-      `      <a href="${movieData.url}" class="unstyled articleLink" title="Open ${movieData.title} on IMDb">` +
+      `      <a href="${movie.url}" class="unstyled articleLink" title="Open ${movie.info.title} on IMDb">` +
       `  <div class="audience-score__italics mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion mop-ratings-wrap__text--not-released">` +
       `        <p class="mop-ratings-wrap__prerelease-text">Coming soon</p>` +
       `    </div>` +
@@ -309,10 +308,8 @@ class RottenPage extends MoviePage {
     return this.generateElement(userratingOuterHtml);
   }
 
-  generateToplistPositionString(movieData) {
-    return movieData.toplistPosition
-      ? ` #${movieData.toplistPosition}/250`
-      : ``;
+  generateToplistPositionString(movie) {
+    return movie.toplistPosition ? ` #${movie.toplistPosition}/250` : ``;
   }
 }
 

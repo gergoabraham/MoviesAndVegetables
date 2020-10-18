@@ -8,11 +8,11 @@
 
 class BackgroundScript {
   static async getRemotePageData(message) {
-    const { movieData, remotePageName } = message;
-    Logger.log('Actual page: ', movieData);
+    const { movie, remotePageName } = message;
+    Logger.log('Actual page: ', movie);
 
     const movieUrl = await BackgroundScript.findRemoteMoviePageUrl(
-      movieData,
+      movie,
       remotePageName
     );
     const remoteMovieData = await BackgroundScript.fetchMovieData(
@@ -24,9 +24,9 @@ class BackgroundScript {
     return remoteMovieData;
   }
 
-  static async findRemoteMoviePageUrl(movieData, remotePageName) {
+  static async findRemoteMoviePageUrl(movie, remotePageName) {
     const searchResponse = await BackgroundScript.fetchMovieSearch(
-      movieData,
+      movie,
       remotePageName
     );
     const isSearchRedirected = BackgroundScript.isSearchRedirected(
@@ -49,9 +49,9 @@ class BackgroundScript {
     return movieUrl;
   }
 
-  static async fetchMovieSearch(movieData, remotePageName) {
+  static async fetchMovieSearch(movie, remotePageName) {
     const searchURL = BackgroundScript.constructSearchUrl(
-      movieData,
+      movie,
       remotePageName
     );
     Logger.log('Search url: ', searchURL);
@@ -59,8 +59,8 @@ class BackgroundScript {
     return fetch(searchURL);
   }
 
-  static constructSearchUrl(movieData, remotePageName) {
-    const { title, year } = movieData;
+  static constructSearchUrl(movie, remotePageName) {
+    const { title, year } = movie.info;
     const titleWithoutSpecialCharacters = title.replace(/&/g, '');
 
     return (

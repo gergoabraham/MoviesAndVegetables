@@ -15,7 +15,7 @@ class ImdbPage extends MoviePage {
   }
 
   /**
-   * @return  {MovieData} movieData
+   * @return  {Movie} movie
    */
   async getMovieData() {
     const metaDataJSON = this.readMetadataJSON();
@@ -30,9 +30,8 @@ class ImdbPage extends MoviePage {
     const userRatings = this.readUserRatings();
     const toplistPosition = this.getToplistPosition();
 
-    return new MovieData(
-      title,
-      year,
+    return new Movie(
+      new MovieInfo(title, year),
       this.url,
       toplistPosition,
       criticRatings,
@@ -152,16 +151,16 @@ class ImdbPage extends MoviePage {
   }
 
   /**
-   * @param  {MovieData} movieData
+   * @param  {Movie} movie
    */
-  injectRatings(movieData) {
-    this.injectTomatoMeter(this.document, movieData);
+  injectRatings(movie) {
+    this.injectTomatoMeter(this.document, movie);
 
-    this.injectAudienceScore(this.document, movieData);
+    this.injectAudienceScore(this.document, movie);
   }
 
-  injectTomatoMeter(doc, movieData) {
-    const tomatoMeter = this.createTomatoMeterElement(movieData);
+  injectTomatoMeter(doc, movie) {
+    const tomatoMeter = this.createTomatoMeterElement(movie);
     const titleReviewBar = doc.getElementsByClassName('titleReviewBar')[0];
 
     if (!titleReviewBar) {
@@ -171,31 +170,31 @@ class ImdbPage extends MoviePage {
     }
   }
 
-  createTomatoMeterElement(movieData) {
+  createTomatoMeterElement(movie) {
     let tomatometerHtml;
 
-    if (movieData.criticRatings) {
-      tomatometerHtml = this.createFilledTomatometerHtml(movieData);
+    if (movie.criticRatings) {
+      tomatometerHtml = this.createFilledTomatometerHtml(movie);
     } else {
-      tomatometerHtml = this.createEmptyTomatometerHtml(movieData);
+      tomatometerHtml = this.createEmptyTomatometerHtml(movie);
     }
 
     return this.generateElement(tomatometerHtml);
   }
 
-  createFilledTomatometerHtml(movieData) {
+  createFilledTomatometerHtml(movie) {
     return (
       `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-      `    <a href="${movieData.url}" title="Open ${movieData.title} on RottenTomatoes" style="text-decoration: none">` +
-      `        <img src="${movieData.criticRatings.custom}" height="27px" width="27px" style="vertical-align: baseline">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on RottenTomatoes" style="text-decoration: none">` +
+      `        <img src="${movie.criticRatings.custom}" height="27px" width="27px" style="vertical-align: baseline">` +
       `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
-      `            <span>${movieData.criticRatings.score}%</span>` +
+      `            <span>${movie.criticRatings.score}%</span>` +
       `        </div>` +
       `        <div class="titleReviewBarSubItem">` +
       `            <div>Tomatometer</div>` +
       `            <div>` +
       `                <span class="subText">Total Count: ${this.groupThousands(
-        movieData.criticRatings.count
+        movie.criticRatings.count
       )}</span>` +
       `            </div>` +
       `        </div>` +
@@ -204,10 +203,10 @@ class ImdbPage extends MoviePage {
     );
   }
 
-  createEmptyTomatometerHtml(movieData) {
+  createEmptyTomatometerHtml(movie) {
     return (
       `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-      `    <a href="${movieData.url}" title="Open ${movieData.title} on RottenTomatoes" style="text-decoration: none;">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on RottenTomatoes" style="text-decoration: none;">` +
       `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
       `            <span style="color: black;">-</span>` +
       `        </div>` +
@@ -261,9 +260,9 @@ class ImdbPage extends MoviePage {
     return element.getElementsByClassName('metacriticScore')[0];
   }
 
-  injectAudienceScore(doc, movieData) {
+  injectAudienceScore(doc, movie) {
     let ratingsWrapper = doc.getElementsByClassName('ratings_wrapper')[0];
-    const audienceScoreElement = this.createAudienceScoreElement(movieData);
+    const audienceScoreElement = this.createAudienceScoreElement(movie);
 
     if (ratingsWrapper) {
       this.addAudienceScoreToExistingRatingsWrapper(
@@ -304,32 +303,32 @@ class ImdbPage extends MoviePage {
     return newRatingsWrapper;
   }
 
-  createAudienceScoreElement(movieData) {
+  createAudienceScoreElement(movie) {
     let audienceScoreHtml;
 
-    if (movieData.userRatings) {
-      audienceScoreHtml = this.createFilledAudienceScoreHtml(movieData);
+    if (movie.userRatings) {
+      audienceScoreHtml = this.createFilledAudienceScoreHtml(movie);
     } else {
-      audienceScoreHtml = this.createEmptyAudienceScoreHtml(movieData);
+      audienceScoreHtml = this.createEmptyAudienceScoreHtml(movie);
     }
 
     return this.generateElement(audienceScoreHtml);
   }
 
-  createFilledAudienceScoreHtml(movieData) {
+  createFilledAudienceScoreHtml(movie) {
     return (
       `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center; padding: 0px; width: 100px">` +
-      `    <a href="${movieData.url}" title="Open ${movieData.title} on RottenTomatoes" style="text-decoration: none">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on RottenTomatoes" style="text-decoration: none">` +
       `        <div style="display: flex; align-items: center; justify-content: center; height: 40px;">` +
-      `            <img src="${movieData.userRatings.custom}" height="32px" width="32px">` +
+      `            <img src="${movie.userRatings.custom}" height="32px" width="32px">` +
       `            <div>` +
       `                <div class="ratingValue">` +
       `                    <strong style="color: white">` +
-      `                        <span itemprop="ratingValue">${movieData.userRatings.score}%</span>` +
+      `                        <span itemprop="ratingValue">${movie.userRatings.score}%</span>` +
       `                    </strong>` +
       `                </div>` +
       `                <span class="small" itemprop="ratingCount">${this.groupThousands(
-        movieData.userRatings.count
+        movie.userRatings.count
       )}</span>` +
       `            </div>` +
       `        </div>` +
@@ -338,10 +337,10 @@ class ImdbPage extends MoviePage {
     );
   }
 
-  createEmptyAudienceScoreHtml(movieData) {
+  createEmptyAudienceScoreHtml(movie) {
     return (
       `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center;padding-left: 0px; width: 90px;">` +
-      `    <a href="${movieData.url}" title="Open ${movieData.title} on RottenTomatoes" style="text-decoration: none;">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on RottenTomatoes" style="text-decoration: none;">` +
       `        <div class="ratingValue">` +
       `            <strong>` +
       `                <span itemprop="ratingValue">-</span>` +

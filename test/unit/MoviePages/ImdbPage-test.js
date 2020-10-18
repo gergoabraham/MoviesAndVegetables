@@ -39,14 +39,13 @@ describe('ImdbPage', function () {
   describe('getMovieData', function () {
     context(`on a movie with ratings`, function () {
       it('read all stuff', async function () {
-        const movieData = await readMovieDataByImdbPage(
+        const movie = await readMovieDataByImdbPage(
           'https://www.imdb.com/title/tt0111161/'
         );
 
-        movieData.should.deep.equal(
-          new MovieData(
-            'The Shawshank Redemption',
-            1994,
+        movie.should.deep.equal(
+          new Movie(
+            { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
             1,
             {
@@ -66,14 +65,13 @@ describe('ImdbPage', function () {
 
     context(`on a movie without ratings`, function () {
       it('read all stuff', async function () {
-        const movieData = await readMovieDataByImdbPage(
+        const movie = await readMovieDataByImdbPage(
           'https://www.imdb.com/title/tt5637536/'
         );
 
-        movieData.should.deep.equal(
-          new MovieData(
-            'Avatar 5',
-            2028,
+        movie.should.deep.equal(
+          new Movie(
+            { title: 'Avatar 5', year: 2028 },
             'https://www.imdb.com/title/tt5637536/',
             null,
             null,
@@ -85,11 +83,11 @@ describe('ImdbPage', function () {
 
     context(`on a not top250 movie's imdb page`, function () {
       it('toplistPosition is null', async function () {
-        const movieData = await readMovieDataByImdbPage(
+        const movie = await readMovieDataByImdbPage(
           'https://www.imdb.com/title/tt5637536/'
         );
 
-        movieData.should.contain({ toplistPosition: null });
+        movie.should.contain({ toplistPosition: null });
       });
     });
 
@@ -112,9 +110,8 @@ describe('ImdbPage', function () {
       const imdbPage = new ImdbPage(document, url);
 
       imdbPage.injectRatings(
-        new MovieData(
-          'Movie Title',
-          2002,
+        new Movie(
+          { title: 'Movie Title', year: 2002 },
           rottenURL,
           null,
           {
@@ -239,7 +236,13 @@ describe('ImdbPage', function () {
         const imdbPage = new ImdbPage(document, url);
 
         imdbPage.injectRatings(
-          new MovieData('Movie Title', 2002, rottenURL, null, null, null)
+          new Movie(
+            { title: 'Movie Title', year: 2002 },
+            rottenURL,
+            null,
+            null,
+            null
+          )
         );
       });
 

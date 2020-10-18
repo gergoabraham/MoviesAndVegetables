@@ -18,10 +18,10 @@ class ContentScript {
       document.baseURI
     );
 
-    const movieData = await currentPage.getMovieData();
+    const movie = await currentPage.getMovieData();
 
     const response = await browser.runtime.sendMessage({
-      movieData,
+      movie,
       remotePageName,
     });
     currentPage.injectRatings(response);

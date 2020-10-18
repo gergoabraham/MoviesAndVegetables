@@ -6,18 +6,16 @@
 
 'use strict';
 
-class MovieData {
+class Movie {
   /**
-   * @param  {string} title
-   * @param  {number} year
+   * @param  {MovieInfo} info
    * @param  {string} url
    * @param  {number} toplistPosition
    * @param {Ratings} criticRatings
    * @param {Ratings} userRatings
    */
-  constructor(title, year, url, toplistPosition, criticRatings, userRatings) {
-    this.title = title;
-    this.year = year;
+  constructor(info, url, toplistPosition, criticRatings, userRatings) {
+    this.info = info;
     this.url = url;
     this.toplistPosition = toplistPosition;
     this.criticRatings = criticRatings;
@@ -26,5 +24,5 @@ class MovieData {
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {
-  exportToTestEnvironment(MovieData);
+  exportToTestEnvironment(Movie);
 }
