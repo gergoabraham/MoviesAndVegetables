@@ -35,6 +35,18 @@ describe('rottenPage', function () {
     );
   });
 
+  describe(`getMovieInfo`, function () {
+    it('read all stuff', async function () {
+      const url = 'https://www.rottentomatoes.com/m/shawshank_redemption';
+      const document = await getTestDOM(url);
+      const rottenPage = new RottenPage(document, url);
+
+      const movie = await rottenPage.getMovieInfo();
+
+      movie.should.deep.equal(new MovieInfo('The Shawshank Redemption', 1994));
+    });
+  });
+
   describe(`getMovieInfoWithRatings`, function () {
     context('on a movie with ratings', function () {
       it('read all stuff', async function () {

@@ -15,9 +15,9 @@ class ImdbPage extends MoviePage {
   }
 
   /**
-   * @return  {MovieInfoWithRatings} movie
+   * @return  {MovieInfo} movie
    */
-  async getMovieInfoWithRatings() {
+  async getMovieInfo() {
     const metaDataJSON = this.readMetadataJSON();
 
     if (metaDataJSON['@type'] != 'Movie') {
@@ -26,12 +26,20 @@ class ImdbPage extends MoviePage {
 
     const title = metaDataJSON.name;
     const year = this.readYear();
+
+    return new MovieInfo(title, year);
+  }
+
+  /**
+   * @return  {MovieInfoWithRatings} movie
+   */
+  async getMovieInfoWithRatings() {
     const criticRatings = await this.readCriticRatings();
     const userRatings = this.readUserRatings();
     const toplistPosition = this.getToplistPosition();
 
     return new MovieInfoWithRatings(
-      new MovieInfo(title, year),
+      await this.getMovieInfo(),
       this.url,
       toplistPosition,
       criticRatings,

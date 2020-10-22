@@ -16,19 +16,26 @@ class RottenPage extends MoviePage {
   }
 
   /**
-   * @return  {MovieInfoWithRatings} movie
+   * @return  {MovieInfo} movie
    */
-  async getMovieInfoWithRatings() {
+  async getMovieInfo() {
     const metaDataJSON = this.readMetadataJSON();
 
     const title = metaDataJSON.name;
     const year = this.readYear();
 
+    return new MovieInfo(title, year);
+  }
+
+  /**
+   * @return  {MovieInfoWithRatings} movie
+   */
+  async getMovieInfoWithRatings() {
     const criticRatings = await this.readCriticRatings();
     const userRatings = await this.readUserRatings();
 
     return new MovieInfoWithRatings(
-      new MovieInfo(title, year),
+      await this.getMovieInfo(),
       this.url,
       null,
       criticRatings,

@@ -36,6 +36,18 @@ describe('ImdbPage', function () {
     imdbPage.url.should.equal(`https://www.imdb.com/title/tt0111161/`);
   });
 
+  describe('getMovieInfo', function () {
+    it('read the basic stuff', async function () {
+      const url = 'https://www.imdb.com/title/tt0111161/';
+      const document = await getTestDOM(url);
+      const imdbPage = new ImdbPage(document, url);
+
+      const movie = await imdbPage.getMovieInfo();
+
+      movie.should.deep.equal(new MovieInfo('The Shawshank Redemption', 1994));
+    });
+  });
+
   describe('getMovieInfoWithRatings', function () {
     context(`on a movie with ratings`, function () {
       it('read all stuff', async function () {

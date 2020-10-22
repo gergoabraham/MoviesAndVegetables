@@ -25,6 +25,12 @@ describe('MoviePage', function () {
         );
       });
 
+      it('throw error on unimplemented getMovieInfo', async function () {
+        await unimplementedMoviePage
+          .getMovieInfo()
+          .should.be.rejectedWith(Error, 'Function not implemented');
+      });
+
       it('throw error on unimplemented getMovieInfoWithRatings', async function () {
         await unimplementedMoviePage
           .getMovieInfoWithRatings()
@@ -64,14 +70,19 @@ describe('MoviePage', function () {
 
       before(function () {
         class ImplementedMoviePage extends MoviePage {
+          getMovieInfo() {}
           getMovieInfoWithRatings() {}
           injectRatings() {}
         }
         implementedMoviePage = new ImplementedMoviePage('doc', 'https://url');
       });
 
-      it('be OK on implemented getMovieInfoWithRatings', function () {
-        implementedMoviePage.getMovieInfoWithRatings();
+      it('be OK on implemented getMovieInfo', async function () {
+        await implementedMoviePage.getMovieInfo();
+      });
+
+      it('be OK on implemented getMovieInfoWithRatings', async function () {
+        await implementedMoviePage.getMovieInfoWithRatings();
       });
 
       it('be OK on implemented injectRatings', function () {

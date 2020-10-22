@@ -24,6 +24,13 @@ class MoviePage {
   }
 
   /**
+   * @return {MovieInfo}
+   */
+  async getMovieInfo() {
+    throw new Error(`Function not implemented.`);
+  }
+
+  /**
    * @return {MovieInfoWithRatings}
    */
   async getMovieInfoWithRatings() {

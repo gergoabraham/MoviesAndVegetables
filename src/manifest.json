@@ -11,8 +11,7 @@
   "permissions": [
     "https://www.google.com/*",
     "https://www.rottentomatoes.com/*",
-    "https://www.imdb.com/*",
-    "https://m.media-amazon.com/images/G/01/imdb/css/*"
+    "https://www.imdb.com/*"
   ],
 
   "icons": {
