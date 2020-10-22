@@ -20,7 +20,7 @@ describe('rottenPage', function () {
     const document = await getTestDOM(url);
     const rottenPage = new RottenPage(document, url);
 
-    return rottenPage.getMovieData();
+    return rottenPage.getMovieInfoWithRatings();
   }
 
   it('can be instantiated', function () {
@@ -35,7 +35,7 @@ describe('rottenPage', function () {
     );
   });
 
-  describe(`getMovieData`, function () {
+  describe(`getMovieInfoWithRatings`, function () {
     context('on a movie with ratings', function () {
       it('read all stuff', async function () {
         const movie = await readMovieDataByRottenPage(
@@ -43,7 +43,7 @@ describe('rottenPage', function () {
         );
 
         movie.should.deep.equal(
-          new Movie(
+          new MovieInfoWithRatings(
             { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.rottentomatoes.com/m/shawshank_redemption',
             null,
@@ -71,7 +71,7 @@ describe('rottenPage', function () {
         );
 
         movie.should.deep.equal(
-          new Movie(
+          new MovieInfoWithRatings(
             { title: 'Avatar 5', year: 2028 },
             'https://www.rottentomatoes.com/m/avatar_5',
             null,
@@ -89,7 +89,7 @@ describe('rottenPage', function () {
         );
 
         movie.should.deep.equal(
-          new Movie(
+          new MovieInfoWithRatings(
             { title: "Amblin'", year: 1968 },
             'https://www.rottentomatoes.com/m/amblin',
             null,
@@ -116,7 +116,7 @@ describe('rottenPage', function () {
         const rottenPage = new RottenPage(document, url);
 
         rottenPage.injectRatings(
-          new Movie(
+          new MovieInfoWithRatings(
             { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
             null,
@@ -195,7 +195,7 @@ describe('rottenPage', function () {
         const rottenPage = new RottenPage(document, url);
 
         rottenPage.injectRatings(
-          new Movie(
+          new MovieInfoWithRatings(
             { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
             null,
@@ -248,7 +248,7 @@ describe('rottenPage', function () {
         const rottenPage = new RottenPage(document, url);
 
         rottenPage.injectRatings(
-          new Movie(
+          new MovieInfoWithRatings(
             { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
             33,

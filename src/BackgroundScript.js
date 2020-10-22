@@ -100,7 +100,7 @@ class BackgroundScript {
       moviePageResponse.url
     );
 
-    return remotePage.getMovieData();
+    return remotePage.getMovieInfoWithRatings();
   }
 
   static async getDOM(response) {

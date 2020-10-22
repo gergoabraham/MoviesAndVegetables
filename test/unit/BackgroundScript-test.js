@@ -36,7 +36,7 @@ describe('Background script', function () {
         movie,
         remotePageName: RottenPage.NAME,
       }).should.eventually.deep.equal(
-        new Movie(
+        new MovieInfoWithRatings(
           { title: 'The Shawshank Redemption', year: 1994 },
           `https://www.rottentomatoes.com/m/shawshank_redemption`,
           null,
@@ -68,7 +68,7 @@ describe('Background script', function () {
         movie,
         remotePageName: RottenPage.NAME,
       }).should.eventually.deep.equal(
-        new Movie(
+        new MovieInfoWithRatings(
           { title: "Amblin'", year: 1968 },
           `https://www.rottentomatoes.com/m/amblin`,
           null,
@@ -95,7 +95,7 @@ describe('Background script', function () {
         movie,
         remotePageName: ImdbPage.NAME,
       }).should.eventually.deep.equal(
-        new Movie(
+        new MovieInfoWithRatings(
           { title: "Amblin'", year: 1968 },
           `https://www.imdb.com/title/tt0064010/`,
           null,

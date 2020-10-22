@@ -6,7 +6,7 @@
 
 'use strict';
 
-class Movie {
+class MovieInfoWithRatings {
   /**
    * @param  {MovieInfo} info
    * @param  {string} url
@@ -24,5 +24,5 @@ class Movie {
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {
-  exportToTestEnvironment(Movie);
+  exportToTestEnvironment(MovieInfoWithRatings);
 }

@@ -23,7 +23,7 @@ describe('ImdbPage', function () {
     const document = await getTestDOM(url);
     const imdbPage = new ImdbPage(document, url);
 
-    return imdbPage.getMovieData();
+    return imdbPage.getMovieInfoWithRatings();
   }
 
   it('can be instantiated', function () {
@@ -36,7 +36,7 @@ describe('ImdbPage', function () {
     imdbPage.url.should.equal(`https://www.imdb.com/title/tt0111161/`);
   });
 
-  describe('getMovieData', function () {
+  describe('getMovieInfoWithRatings', function () {
     context(`on a movie with ratings`, function () {
       it('read all stuff', async function () {
         const movie = await readMovieDataByImdbPage(
@@ -44,7 +44,7 @@ describe('ImdbPage', function () {
         );
 
         movie.should.deep.equal(
-          new Movie(
+          new MovieInfoWithRatings(
             { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
             1,
@@ -70,7 +70,7 @@ describe('ImdbPage', function () {
         );
 
         movie.should.deep.equal(
-          new Movie(
+          new MovieInfoWithRatings(
             { title: 'Avatar 5', year: 2028 },
             'https://www.imdb.com/title/tt5637536/',
             null,
@@ -98,7 +98,7 @@ describe('ImdbPage', function () {
         const imdbPage = new ImdbPage(document, url);
 
         await imdbPage
-          .getMovieData()
+          .getMovieInfoWithRatings()
           .should.be.rejectedWith(Error, 'Not a movie');
       });
     });
@@ -110,7 +110,7 @@ describe('ImdbPage', function () {
       const imdbPage = new ImdbPage(document, url);
 
       imdbPage.injectRatings(
-        new Movie(
+        new MovieInfoWithRatings(
           { title: 'Movie Title', year: 2002 },
           rottenURL,
           null,
@@ -236,7 +236,7 @@ describe('ImdbPage', function () {
         const imdbPage = new ImdbPage(document, url);
 
         imdbPage.injectRatings(
-          new Movie(
+          new MovieInfoWithRatings(
             { title: 'Movie Title', year: 2002 },
             rottenURL,
             null,

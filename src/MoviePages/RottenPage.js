@@ -16,9 +16,9 @@ class RottenPage extends MoviePage {
   }
 
   /**
-   * @return  {Movie} movie
+   * @return  {MovieInfoWithRatings} movie
    */
-  async getMovieData() {
+  async getMovieInfoWithRatings() {
     const metaDataJSON = this.readMetadataJSON();
 
     const title = metaDataJSON.name;
@@ -27,7 +27,7 @@ class RottenPage extends MoviePage {
     const criticRatings = await this.readCriticRatings();
     const userRatings = await this.readUserRatings();
 
-    return new Movie(
+    return new MovieInfoWithRatings(
       new MovieInfo(title, year),
       this.url,
       null,
@@ -163,7 +163,7 @@ class RottenPage extends MoviePage {
   }
 
   /**
-   * @param  {Movie} movie
+   * @param  {MovieInfoWithRatings} movie
    */
   injectRatings(movie) {
     this.fixCenterAlignmentOfTomatometerAndAudienceScore();

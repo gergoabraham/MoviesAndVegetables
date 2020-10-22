@@ -25,7 +25,7 @@
     "Ratings": "writable",
     "MoviePage": "writable",
     "MovieInfo": "writable",
-    "Movie": "writable",
+    "MovieInfoWithRatings": "writable",
     "ContentScript": "writable",
     "Logger": "writable"
   }

@@ -18,7 +18,7 @@ class ContentScript {
       document.baseURI
     );
 
-    const movie = await currentPage.getMovieData();
+    const movie = await currentPage.getMovieInfoWithRatings();
 
     const response = await browser.runtime.sendMessage({
       movie,

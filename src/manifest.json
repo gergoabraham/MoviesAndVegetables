@@ -26,9 +26,9 @@
   "background": {
     "scripts": [
       "Utilities/Logger.js",
-      "MoviePages/Ratings.js",
-      "MoviePages/MovieInfo.js",
-      "MoviePages/Movie.js",
+      "MovieData/Ratings.js",
+      "MovieData/MovieInfo.js",
+      "MovieData/MovieInfoWithRatings.js",
       "MoviePages/MoviePage.js",
       "MoviePages/RottenPage.js",
       "MoviePages/ImdbPage.js",
@@ -41,9 +41,9 @@
     {
       "matches": ["*://*.imdb.com/title/*"],
       "js": [
-        "MoviePages/Ratings.js",
-        "MoviePages/MovieInfo.js",
-        "MoviePages/Movie.js",
+        "MovieData/Ratings.js",
+        "MovieData/MovieInfo.js",
+        "MovieData/MovieInfoWithRatings.js",
         "MoviePages/MoviePage.js",
         "MoviePages/RottenPage.js",
         "MoviePages/ImdbPage.js",
@@ -55,9 +55,9 @@
     {
       "matches": ["*://*.rottentomatoes.com/m/*"],
       "js": [
-        "MoviePages/Ratings.js",
-        "MoviePages/MovieInfo.js",
-        "MoviePages/Movie.js",
+        "MovieData/Ratings.js",
+        "MovieData/MovieInfo.js",
+        "MovieData/MovieInfoWithRatings.js",
         "MoviePages/MoviePage.js",
         "MoviePages/ImdbPage.js",
         "MoviePages/RottenPage.js",

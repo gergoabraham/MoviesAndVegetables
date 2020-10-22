@@ -15,9 +15,9 @@ class ImdbPage extends MoviePage {
   }
 
   /**
-   * @return  {Movie} movie
+   * @return  {MovieInfoWithRatings} movie
    */
-  async getMovieData() {
+  async getMovieInfoWithRatings() {
     const metaDataJSON = this.readMetadataJSON();
 
     if (metaDataJSON['@type'] != 'Movie') {
@@ -30,7 +30,7 @@ class ImdbPage extends MoviePage {
     const userRatings = this.readUserRatings();
     const toplistPosition = this.getToplistPosition();
 
-    return new Movie(
+    return new MovieInfoWithRatings(
       new MovieInfo(title, year),
       this.url,
       toplistPosition,
@@ -151,7 +151,7 @@ class ImdbPage extends MoviePage {
   }
 
   /**
-   * @param  {Movie} movie
+   * @param  {MovieInfoWithRatings} movie
    */
   injectRatings(movie) {
     this.injectTomatoMeter(this.document, movie);
