@@ -85,6 +85,7 @@ class ImdbPage extends MoviePage {
   async fetchDOM(url) {
     const response = await fetch(url);
     const pageText = await response.text();
+    Logger.logFetch(url, pageText);
 
     return new DOMParser().parseFromString(pageText, 'text/html');
   }
@@ -108,7 +109,10 @@ class ImdbPage extends MoviePage {
     const styleSheetUrl = this.getStylesheetUrl(/title-flat.*\.css$/);
 
     const response = await fetch(styleSheetUrl);
-    return await response.text();
+    const css = await response.text();
+    Logger.logFetch(styleSheetUrl, css);
+
+    return css;
   }
 
   readUserRatings() {

@@ -21,6 +21,7 @@ class BackgroundScript {
     );
 
     Logger.log('Remote page: ', remoteMovieData);
+    Logger.updateAndLogMovieStats();
     return remoteMovieData;
   }
 
@@ -37,6 +38,8 @@ class BackgroundScript {
     let movieUrl;
     if (isSearchRedirected) {
       movieUrl = BackgroundScript.skipRedirectNotice(searchResponse.url);
+
+      Logger.logFetch(searchResponse.url, await searchResponse.text());
       Logger.log('feeling lucky 😎', movieUrl);
     } else {
       movieUrl = await BackgroundScript.readMovieUrlFromSearchResults(
@@ -105,6 +108,8 @@ class BackgroundScript {
 
   static async getDOM(response) {
     const text = await response.text();
+    Logger.logFetch(response.url, text);
+
     return new DOMParser().parseFromString(text, 'text/html');
   }
 
