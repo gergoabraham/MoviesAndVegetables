@@ -7,6 +7,7 @@
 'use strict';
 
 class RottenPage extends MoviePage {
+  // web-ext thinks of class fields as syntax errors, but getters can be used
   static get NAME() {
     return 'RottenTomatoes';
   }
