@@ -65,18 +65,20 @@ class Logger {
   }
 
   static updateAndLogMovieStats() {
-    this.movieCount = this.movieCount + 1 || 1;
+    if (this.isAddonTemporary()) {
+      this.movieCount = this.movieCount + 1 || 1;
 
-    this.log(
-      `Fetched:\n` +
-        `\t${this.getMB(this.fetched.total)} ` +
-        `- total for ${this.movieCount} movies.\t` +
-        `${this.getKB(this.fetched.total / this.movieCount)} per movie\n\n` +
-        Logger.generateFetchedPerSiteLogTemplate('google') +
-        Logger.generateFetchedPerSiteLogTemplate('imdb') +
-        Logger.generateFetchedPerSiteLogTemplate('rottenTomatoes') +
-        Logger.generateFetchedPerSiteLogTemplate('css')
-    );
+      this.log(
+        `Fetched:\n` +
+          `\t${this.getMB(this.fetched.total)} ` +
+          `- total for ${this.movieCount} movies.\t` +
+          `${this.getKB(this.fetched.total / this.movieCount)} per movie\n\n` +
+          Logger.generateFetchedPerSiteLogTemplate('google') +
+          Logger.generateFetchedPerSiteLogTemplate('imdb') +
+          Logger.generateFetchedPerSiteLogTemplate('rottenTomatoes') +
+          Logger.generateFetchedPerSiteLogTemplate('css')
+      );
+    }
   }
 
   static generateFetchedPerSiteLogTemplate(type) {
