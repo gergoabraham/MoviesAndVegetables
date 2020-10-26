@@ -108,11 +108,7 @@ class ImdbPage extends MoviePage {
   async fetchCss() {
     const styleSheetUrl = this.getStylesheetUrl(/title-flat.*\.css$/);
 
-    const response = await fetch(styleSheetUrl);
-    const css = await response.text();
-    Logger.logFetch(styleSheetUrl, css);
-
-    return css;
+    return ImdbPage.fetchTextContent(styleSheetUrl);
   }
 
   readUserRatings() {

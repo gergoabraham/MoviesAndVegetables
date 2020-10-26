@@ -75,6 +75,22 @@ class MoviePage {
 
     return matchedStyleSheets[0];
   }
+
+  static async fetchTextContent(url) {
+    let textContent;
+
+    if (this[url]) {
+      textContent = this[url];
+    } else {
+      const response = await fetch(url);
+      textContent = await response.text();
+      this[url] = textContent;
+
+      Logger.logFetch(url, textContent);
+    }
+
+    return textContent;
+  }
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {

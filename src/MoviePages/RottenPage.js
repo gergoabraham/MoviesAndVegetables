@@ -152,11 +152,7 @@ class RottenPage extends MoviePage {
     const relativeUrl = matchedStyleSheetUrl.match('/assets.+');
     const styleSheetUrl = this.convertToAbsoluteUrl(relativeUrl);
 
-    const cssResponse = await fetch(styleSheetUrl);
-    const css = await cssResponse.text();
-    Logger.logFetch(styleSheetUrl, css);
-
-    return css;
+    return RottenPage.fetchTextContent(styleSheetUrl);
   }
 
   findLogoUrlInCss(css, freshness) {
