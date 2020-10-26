@@ -34,10 +34,10 @@ class Logger {
   static initFetchStats() {
     this.fetched = this.fetched || {
       total: 0,
-      css: 0,
-      imdb: 0,
-      rottenTomatoes: 0,
-      google: 0,
+      css: { total: 0, count: 0 },
+      imdb: { total: 0, count: 0 },
+      rottenTomatoes: { total: 0, count: 0 },
+      google: { total: 0, count: 0 },
     };
   }
 
@@ -47,16 +47,21 @@ class Logger {
 
   static updateFetchStatsPerSite(url, content) {
     if (url.match(/.+\.css$/)) {
-      this.fetched.css += content.length;
+      Logger.updateSiteStat('css', content);
     } else if (url.match(/\www\.google\.com/)) {
-      this.fetched.google += content.length;
+      Logger.updateSiteStat('google', content);
     } else if (url.match(/rottentomatoes\.com/)) {
-      this.fetched.rottenTomatoes += content.length;
+      Logger.updateSiteStat('rottenTomatoes', content);
     } else if (url.match(/imdb\.com/)) {
-      this.fetched.imdb += content.length;
+      Logger.updateSiteStat('imdb', content);
     } else {
       throw new TypeError('🍅 Unknown URL!');
     }
+  }
+
+  static updateSiteStat(type, content) {
+    this.fetched[type].total += content.length;
+    this.fetched[type].count++;
   }
 
   static updateAndLogMovieStats() {
@@ -65,7 +70,8 @@ class Logger {
     this.log(
       `Fetched:\n` +
         `\t${this.getMB(this.fetched.total)} ` +
-        `- total for ${this.movieCount} movies.\n\n` +
+        `- total for ${this.movieCount} movies.\t` +
+        `${this.getKB(this.fetched.total / this.movieCount)} per movie\n\n` +
         Logger.generateFetchedPerSiteLogTemplate('google') +
         Logger.generateFetchedPerSiteLogTemplate('imdb') +
         Logger.generateFetchedPerSiteLogTemplate('rottenTomatoes') +
@@ -74,13 +80,16 @@ class Logger {
   }
 
   static generateFetchedPerSiteLogTemplate(type) {
-    const bytes = this.fetched[type];
+    const bytes = this.fetched[type].total;
+    const count = this.fetched[type].count;
 
     return (
       `\t${this.getMB(bytes)}` +
-      `\t\tavg: ${this.getKB(bytes / this.movieCount)}` +
       `\t${((bytes / this.fetched.total) * 100).toFixed(0)}%` +
-      `\t${type}\n`
+      `\t${count}x` +
+      `\tavg: ${this.getKB(bytes / count || 0)}` +
+      `\t${type}` +
+      '\n'
     );
   }
 
