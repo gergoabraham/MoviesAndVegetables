@@ -56,22 +56,20 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            { title: 'The Shawshank Redemption', year: 1994 },
+            new MovieInfo('The Shawshank Redemption', 1994),
             'https://www.rottentomatoes.com/m/shawshank_redemption',
             RottenPage.NAME,
             null,
-            {
-              score: 90,
-              count: 71,
-              custom:
-                'https://www.rottentomatoes.com/assets/certified_fresh.svg',
-            },
-            {
-              score: 98,
-              count: 885688,
-              custom:
-                'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
-            }
+            new Ratings(
+              90,
+              71,
+              'https://www.rottentomatoes.com/assets/certified_fresh.svg'
+            ),
+            new Ratings(
+              98,
+              885688,
+              'https://www.rottentomatoes.com/assets/aud_score-fresh.svg'
+            )
           )
         );
       });
@@ -85,7 +83,7 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            { title: 'Avatar 5', year: 2028 },
+            new MovieInfo('Avatar 5', 2028),
             'https://www.rottentomatoes.com/m/avatar_5',
             RottenPage.NAME,
             null,
@@ -104,17 +102,16 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            { title: "Amblin'", year: 1968 },
+            new MovieInfo("Amblin'", 1968),
             'https://www.rottentomatoes.com/m/amblin',
             RottenPage.NAME,
             null,
             null,
-            {
-              score: 60,
-              count: 309,
-              custom:
-                'https://www.rottentomatoes.com/assets/aud_score-fresh.svg',
-            }
+            new Ratings(
+              60,
+              309,
+              'https://www.rottentomatoes.com/assets/aud_score-fresh.svg'
+            )
           )
         );
       });
@@ -132,20 +129,16 @@ describe('rottenPage', function () {
 
         rottenPage.injectRatings(
           new MovieInfoWithRatings(
-            { title: 'The Shawshank Redemption', year: 1994 },
+            new MovieInfo('The Shawshank Redemption', 1994),
             'https://www.imdb.com/title/tt0111161/',
             'OtherPage',
             null,
-            {
-              score: 80,
-              count: 20,
-              custom: '#66ffee',
-            },
-            {
-              score: 9,
-              count: 2181618,
-              custom: '<svg id="home_img">This is the logo.</svg>',
-            }
+            new Ratings(80, 20, '#66ffee'),
+            new Ratings(
+              9,
+              2181618,
+              '<svg id="home_img">This is the logo.</svg>'
+            )
           )
         );
       });
@@ -212,7 +205,7 @@ describe('rottenPage', function () {
 
         rottenPage.injectRatings(
           new MovieInfoWithRatings(
-            { title: 'The Shawshank Redemption', year: 1994 },
+            new MovieInfo('The Shawshank Redemption', 1994),
             'https://www.imdb.com/title/tt0111161/',
             'OtherPage',
             null,
@@ -266,20 +259,16 @@ describe('rottenPage', function () {
 
         rottenPage.injectRatings(
           new MovieInfoWithRatings(
-            { title: 'The Shawshank Redemption', year: 1994 },
+            new MovieInfo('The Shawshank Redemption', 1994),
             'https://www.imdb.com/title/tt0111161/',
             'OtherPage',
             33,
-            {
-              score: 80,
-              count: 20,
-              custom: '#66ffee',
-            },
-            {
-              score: 9,
-              count: 2181618,
-              custom: '<svg id="home_img">This is the logo.</svg>',
-            }
+            new Ratings(80, 20, '#66ffee'),
+            new Ratings(
+              9,
+              2181618,
+              '<svg id="home_img">This is the logo.</svg>'
+            )
           )
         );
       });

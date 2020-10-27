@@ -57,20 +57,16 @@ describe('ImdbPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            { title: 'The Shawshank Redemption', year: 1994 },
+            new MovieInfo('The Shawshank Redemption', 1994),
             'https://www.imdb.com/title/tt0111161/',
             ImdbPage.NAME,
             1,
-            {
-              score: 80,
-              count: 20,
-              custom: '#66Cc33',
-            },
-            {
-              score: 9.3,
-              count: 2260000,
-              custom: '<svg id="home_img">This is the logo.</svg>',
-            }
+            new Ratings(80, 20, '#66Cc33'),
+            new Ratings(
+              9.3,
+              2260000,
+              '<svg id="home_img">This is the logo.</svg>'
+            )
           )
         );
       });
@@ -84,7 +80,7 @@ describe('ImdbPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            { title: 'Avatar 5', year: 2028 },
+            new MovieInfo('Avatar 5', 2028),
             'https://www.imdb.com/title/tt5637536/',
             ImdbPage.NAME,
             null,
@@ -125,20 +121,12 @@ describe('ImdbPage', function () {
 
       imdbPage.injectRatings(
         new MovieInfoWithRatings(
-          { title: 'Movie Title', year: 2002 },
+          new MovieInfo('Movie Title', 2002),
           rottenURL,
           'Other Page',
           null,
-          {
-            score: 93,
-            count: 1268,
-            custom: 'critics-score-logo.svg',
-          },
-          {
-            score: 98,
-            count: 885228,
-            custom: 'user-rating-logo.svg',
-          }
+          new Ratings(93, 1268, 'critics-score-logo.svg'),
+          new Ratings(98, 885228, 'user-rating-logo.svg')
         )
       );
 
@@ -252,7 +240,7 @@ describe('ImdbPage', function () {
 
         imdbPage.injectRatings(
           new MovieInfoWithRatings(
-            { title: 'Movie Title', year: 2002 },
+            new MovieInfo('Movie Title', 2002),
             rottenURL,
             'Other Page',
             null,
