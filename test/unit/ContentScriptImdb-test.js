@@ -17,10 +17,16 @@ describe('Content script on IMDb', function () {
       );
       global.document = dom.window.document;
 
-      await ContentScriptImdb.injectRottenTomatoesScores();
+      await ContentScriptImdb.injectRottenTomatoesRatings();
 
-      document.getElementById('mv-audience-score').should.exist;
-      document.getElementById('mv-tomatometer').should.exist;
+      const audienceScore = document.getElementById('mv-audience-score');
+      const tomatoMeter = document.getElementById('mv-tomatometer');
+
+      audienceScore.should.exist;
+      audienceScore.querySelector('span').textContent.should.equal('98%');
+
+      tomatoMeter.should.exist;
+      tomatoMeter.querySelector('span').textContent.should.equal('90%');
     });
   });
 });

@@ -78,6 +78,13 @@ describe('FakeHtmlFetcher', function () {
 
       text.should.equal('Great job, Mr. Fake!');
     });
+
+    it('use specific extension instead of html', async function () {
+      const response = await fetch('https://www.fetch-fake.com/style.css');
+      const text = await response.text();
+
+      text.should.equal("Hey, I'm a css!");
+    });
   });
 
   context('input url handling', function () {

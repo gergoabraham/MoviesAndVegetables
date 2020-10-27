@@ -17,7 +17,7 @@ describe('Content script', function () {
       );
       global.document = dom.window.document;
 
-      await ContentScript.injectScores(RottenPage.NAME, ImdbPage.NAME);
+      await ContentScript.injectRatings(RottenPage.NAME, ImdbPage.NAME);
 
       document.getElementById('mv-audience-score').should.exist;
       document.getElementById('mv-tomatometer').should.exist;

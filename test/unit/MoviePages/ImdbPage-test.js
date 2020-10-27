@@ -10,13 +10,20 @@ const { JSDOM } = require('jsdom');
 const sinon = require('sinon');
 
 describe('ImdbPage', function () {
-  const rottenURL = 'https://www.rottentomatoes.com/m/shawshank_redemption';
+  const rottenURL = 'https://www.rottentomatoes.com/m/blabla';
 
-  async function getTestDocument(
-    filename = 'imdb.title.tt0111161 - listed in top250.html'
-  ) {
-    const dom = await JSDOM.fromFile(FakeHtmlPath + filename);
-    return dom.window.document;
+  async function getTestDOM(url) {
+    const response = await fetch(url);
+    const fileContent = await response.text();
+
+    return new JSDOM(fileContent).window.document;
+  }
+
+  async function readMovieDataByImdbPage(url) {
+    const document = await getTestDOM(url);
+    const imdbPage = new ImdbPage(document, url);
+
+    return imdbPage.getMovieInfoWithRatings();
   }
 
   it('can be instantiated', function () {
@@ -29,142 +36,110 @@ describe('ImdbPage', function () {
     imdbPage.url.should.equal(`https://www.imdb.com/title/tt0111161/`);
   });
 
-  describe('getMovieData', function () {
-    context(`on a movie with ratings`, function () {
-      let movieData;
+  describe('getMovieInfo', function () {
+    it('read the basic stuff', async function () {
+      const url = 'https://www.imdb.com/title/tt0111161/';
+      const document = await getTestDOM(url);
+      const imdbPage = new ImdbPage(document, url);
 
-      before(async function () {
-        const document = await getTestDocument();
-        const imdbPage = new ImdbPage(
-          document,
-          `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`
+      const movie = await imdbPage.getMovieInfo();
+
+      movie.should.deep.equal(new MovieInfo('The Shawshank Redemption', 1994));
+    });
+  });
+
+  describe('getMovieInfoWithRatings', function () {
+    context(`on a movie with ratings`, function () {
+      it('read all stuff', async function () {
+        const movie = await readMovieDataByImdbPage(
+          'https://www.imdb.com/title/tt0111161/'
         );
 
-        movieData = await imdbPage.getMovieData();
-      });
-
-      it(`read the title`, function () {
-        movieData.should.contain({ title: 'The Shawshank Redemption' });
-      });
-
-      it(`read the release year`, function () {
-        movieData.should.contain({ year: 1994 });
-      });
-
-      it(`add the url received on instantiating`, function () {
-        movieData.should.contain({
-          url: `https://www.imdb.com/title/tt0111161/`,
-        });
-      });
-
-      it(`read the user rating`, function () {
-        movieData.should.contain({ userRating: 9.3 });
-      });
-
-      it(`read the number of users' votes`, function () {
-        movieData.should.contain({ numberOfUserVotes: 2260000 });
-      });
-
-      it(`read the critics rating`, function () {
-        movieData.should.contain({ criticsRating: 80 });
-      });
-
-      it(`read the number of critics' votes`, function () {
-        movieData.should.contain({ numberOfCriticsVotes: 20 });
-      });
-
-      it('read toplistPosition', function () {
-        movieData.should.contain({ toplistPosition: 1 });
+        movie.should.deep.equal(
+          new MovieInfoWithRatings(
+            new MovieInfo('The Shawshank Redemption', 1994),
+            'https://www.imdb.com/title/tt0111161/',
+            ImdbPage.NAME,
+            1,
+            new Ratings(80, 20, '#66Cc33'),
+            new Ratings(
+              9.3,
+              2260000,
+              '<svg id="home_img">This is the logo.</svg>'
+            )
+          )
+        );
       });
     });
 
     context(`on a movie without ratings`, function () {
-      let movieData;
-
-      before(`let's check some unimportant data`, async function () {
-        const document = await getTestDocument(
-          'imdb.title.tt5637536 - no ratings yet.html'
-        );
-        const imdbPage = new ImdbPage(
-          document,
-          `https://www.imdb.com/title/tt5637536/`
+      it('read all stuff', async function () {
+        const movie = await readMovieDataByImdbPage(
+          'https://www.imdb.com/title/tt5637536/'
         );
 
-        movieData = await imdbPage.getMovieData();
-        movieData.should.contain({ title: 'Avatar 5' });
-        movieData.should.contain({ year: 2028 });
-      });
-
-      it(`the user rating is null`, function () {
-        movieData.should.contain({ userRating: null });
-      });
-
-      it(`the number of users' votes is null`, function () {
-        movieData.should.contain({ numberOfUserVotes: null });
-      });
-
-      it(`the critics rating is null`, function () {
-        movieData.should.contain({ criticsRating: null });
-      });
-
-      it(`the number of critics' votes is null because it's not fetched`, function () {
-        movieData.should.contain({ numberOfCriticsVotes: null });
-      });
-
-      it('toplistPosition is null', function () {
-        movieData.should.contain({ toplistPosition: null });
+        movie.should.deep.equal(
+          new MovieInfoWithRatings(
+            new MovieInfo('Avatar 5', 2028),
+            'https://www.imdb.com/title/tt5637536/',
+            ImdbPage.NAME,
+            null,
+            null,
+            null
+          )
+        );
       });
     });
 
     context(`on a not top250 movie's imdb page`, function () {
-      let movieData;
-
-      before(async function () {
-        const document = await getTestDocument(
-          `imdb.title.tt5637536 - no ratings yet.html`
-        );
-        const imdbPage = new ImdbPage(
-          document,
-          `https://www.imdb.com/title/tt5637536/`
+      it('toplistPosition is null', async function () {
+        const movie = await readMovieDataByImdbPage(
+          'https://www.imdb.com/title/tt5637536/'
         );
 
-        movieData = await imdbPage.getMovieData();
-      });
-
-      it('toplistPosition is null', function () {
-        movieData.should.contain({ toplistPosition: null });
+        movie.should.contain({ toplistPosition: null });
       });
     });
 
     context(`on a series' imdb page`, function () {
-      let imdbPage;
-
-      before(async function () {
-        const document = await getTestDocument(
-          'imdb.title.tt0149460 - series.html'
-        );
-        imdbPage = new ImdbPage(document, 'https://url');
-      });
-
       it('reject (for now, TODO)', async function () {
+        const url = 'https://www.imdb.com/title/tt0149460/';
+        const document = await getTestDOM(url);
+        const imdbPage = new ImdbPage(document, url);
+
         await imdbPage
-          .getMovieData()
+          .getMovieInfoWithRatings()
           .should.be.rejectedWith(Error, 'Not a movie');
       });
     });
   });
 
   describe('injectRatings', function () {
+    async function injectDefaultRatings(url) {
+      const document = await getTestDOM(url);
+      const imdbPage = new ImdbPage(document, url);
+
+      imdbPage.injectRatings(
+        new MovieInfoWithRatings(
+          new MovieInfo('Movie Title', 2002),
+          rottenURL,
+          'Other Page',
+          null,
+          new Ratings(93, 1268, 'critics-score-logo.svg'),
+          new Ratings(98, 885228, 'user-rating-logo.svg')
+        )
+      );
+
+      return document;
+    }
+
     context('all scores are present', function () {
       context('Tomatometer', function () {
         let titleReviewBar;
 
         before(async function () {
-          const document = await getTestDocument();
-          const imdbPage = new ImdbPage(document, 'https://url');
-          imdbPage.injectRatings(
-            new MovieData('title', 2002, rottenURL, 85, 666, 93, 1268)
-          );
+          const url = 'https://www.imdb.com/title/tt0111161/';
+          const document = await injectDefaultRatings(url);
 
           titleReviewBar = document.getElementsByClassName('titleReviewBar')[0];
         });
@@ -175,10 +150,10 @@ describe('ImdbPage', function () {
           );
           titleReviewBar.children[1].className.should.equal('divider');
 
+          titleReviewBar.children[2].id.should.equal('mv-tomatometer');
           titleReviewBar.children[2].className.should.equal(
             'titleReviewBarItem'
           );
-          titleReviewBar.children[2].id.should.equal('mv-tomatometer');
 
           titleReviewBar.children[3].className.should.equal('divider');
         });
@@ -188,19 +163,18 @@ describe('ImdbPage', function () {
 
           tomatoMeter.outerHTML.should.equal(
             `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-              `    <a href="${rottenURL}">` +
-              `        <div class="metacriticScore score_favorable titleReviewBarSubItem" style="width: 40px">` +
+              `    <a href="${rottenURL}" title="Open Movie Title on Other Page" style="text-decoration: none">` +
+              `        <img src="critics-score-logo.svg" height="27px" width="27px" style="vertical-align: baseline">` +
+              `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
               `            <span>93%</span>` +
               `        </div>` +
-              `</a>` +
-              `    <div class="titleReviewBarSubItem">` +
-              `        <div>` +
-              `            <a href="${rottenURL}">Tomatometer</a>` +
+              `        <div class="titleReviewBarSubItem">` +
+              `            <div>Tomatometer</div>` +
+              `            <div>` +
+              `                <span class="subText">Total Count: 1,268</span>` +
+              `            </div>` +
               `        </div>` +
-              `        <div>` +
-              `            <span class="subText">Total Count: 1,268</span>` +
-              `        </div>` +
-              `    </div>` +
+              `    </a>` +
               `</div>`
           );
         });
@@ -211,11 +185,8 @@ describe('ImdbPage', function () {
         let document;
 
         before(async function () {
-          document = await getTestDocument();
-          const imdbPage = new ImdbPage(document, 'https://url');
-          imdbPage.injectRatings(
-            new MovieData('title', 2002, rottenURL, 98, 885228, 93, 1268)
-          );
+          const url = 'https://www.imdb.com/title/tt0111161/';
+          document = await injectDefaultRatings(url);
 
           ratingsWrapper = document.getElementsByClassName(
             'ratings_wrapper'
@@ -231,22 +202,25 @@ describe('ImdbPage', function () {
           const audienceScore = document.getElementById('mv-audience-score');
 
           audienceScore.outerHTML.should.equal(
-            `<div class="imdbRating" id="mv-audience-score"` +
-              ` style="background: none; text-align: center; padding: 2px 0px 0px 2px; ` +
-              `width: 90px; border-left: 1px solid #6b6b6b;">` +
-              `    <div class="ratingValue">` +
-              `        <strong title="Audience score from RottenTomatoes">` +
-              `            <span itemprop="ratingValue">98%</span>` +
-              `        </strong>` +
-              `    </div>` +
-              `    <a href="${rottenURL}">` +
-              `        <span class="small" itemprop="ratingCount">885,228</span>` +
+            `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center; padding: 0px; width: 100px; border-left: 1px solid #6b6b6b;">` +
+              `    <a href="${rottenURL}" title="Open Movie Title on Other Page" style="text-decoration: none">` +
+              `        <div style="display: flex; align-items: center; justify-content: center; height: 40px;">` +
+              `            <img src="user-rating-logo.svg" height="32px" width="32px">` +
+              `            <div>` +
+              `                <div class="ratingValue">` +
+              `                    <strong style="color: white">` +
+              `                        <span itemprop="ratingValue">98%</span>` +
+              `                    </strong>` +
+              `                </div>` +
+              `                <span class="small" itemprop="ratingCount">885,228</span>` +
+              `            </div>` +
+              `        </div>` +
               `    </a>` +
               `</div>`
           );
         });
 
-        it('increase the width of the User Score', function () {
+        it('increase the width of the User Ratings element', function () {
           ratingsWrapper.children[0].style.width.should.equal('95px');
         });
 
@@ -260,10 +234,19 @@ describe('ImdbPage', function () {
       let document;
 
       before(async function () {
-        document = await getTestDocument();
-        const imdbPage = new ImdbPage(document, 'https://url');
+        const url = 'https://www.imdb.com/title/tt0111161/';
+        document = await getTestDOM(url);
+        const imdbPage = new ImdbPage(document, url);
+
         imdbPage.injectRatings(
-          new MovieData('title', 2002, rottenURL, null, null, null, null)
+          new MovieInfoWithRatings(
+            new MovieInfo('Movie Title', 2002),
+            rottenURL,
+            'Other Page',
+            null,
+            null,
+            null
+          )
         );
       });
 
@@ -272,19 +255,17 @@ describe('ImdbPage', function () {
 
         tomatoMeter.outerHTML.should.equal(
           `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-            `    <a href="${rottenURL}">` +
-            `        <div class="metacriticScore score_tbd titleReviewBarSubItem" style="width: 40px">` +
-            `            <span style="color:black">-</span>` +
+            `    <a href="${rottenURL}" title="Open Movie Title on Other Page" style="text-decoration: none;">` +
+            `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
+            `            <span style="color: black;">-</span>` +
             `        </div>` +
-            `</a>` +
-            `    <div class="titleReviewBarSubItem">` +
-            `        <div>` +
-            `            <a href="${rottenURL}">Tomatometer</a>` +
+            `        <div class="titleReviewBarSubItem">` +
+            `            <div>Tomatometer</div>` +
+            `            <div>` +
+            `                <span class="subText">Total Count: N/A</span>` +
+            `            </div>` +
             `        </div>` +
-            `        <div>` +
-            `            <span class="subText">Total Count: N/A</span>` +
-            `        </div>` +
-            `    </div>` +
+            `    </a>` +
             `</div>`
         );
       });
@@ -293,15 +274,13 @@ describe('ImdbPage', function () {
         const audienceScore = document.getElementById('mv-audience-score');
 
         audienceScore.outerHTML.should.equal(
-          `<div class="imdbRating" id="mv-audience-score"` +
-            ` style="background: none; text-align: center; padding: 2px 0px 0px 2px; ` +
-            `width: 90px; border-left: 1px solid #6b6b6b;">` +
-            `    <div class="ratingValue">` +
-            `        <strong title="Audience score from RottenTomatoes">` +
-            `            <span itemprop="ratingValue">-</span>` +
-            `        </strong>` +
-            `    </div>` +
-            `    <a href="${rottenURL}">` +
+          `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center; padding-left: 0px; width: 90px; border-left: 1px solid #6b6b6b;">` +
+            `    <a href="${rottenURL}" title="Open Movie Title on Other Page" style="text-decoration: none;">` +
+            `        <div class="ratingValue">` +
+            `            <strong>` +
+            `                <span itemprop="ratingValue">-</span>` +
+            `            </strong>` +
+            `        </div>` +
             `        <span class="small" itemprop="ratingCount">N/A</span>` +
             `    </a>` +
             `</div>`
@@ -310,21 +289,10 @@ describe('ImdbPage', function () {
     });
 
     context('missing structures on imdb', function () {
-      async function injectDummyRatings(fileName) {
-        const document = await getTestDocument(fileName);
-        const imdbPage = new ImdbPage(document, 'https://url');
-
-        imdbPage.injectRatings(
-          new MovieData('title', 2002, rottenURL, 66, 666, 66, 666)
-        );
-
-        return document;
-      }
-
       context('for Tomatometer', function () {
         it('no metacritics - but multiple items in review bar', async function () {
-          const document = await injectDummyRatings(
-            'imdb.title.tt0067023- no metacritics.html'
+          const document = await injectDefaultRatings(
+            'https://www.imdb.com/title/tt0067023/'
           );
           const titleReviewBar = getTitleReviewBar(document);
 
@@ -336,8 +304,8 @@ describe('ImdbPage', function () {
         });
 
         it('no metacritics, no dividers in review bar', async function () {
-          const document = await injectDummyRatings(
-            'imdb.title.tt0064010 - no metacritics, no divider.html'
+          const document = await injectDefaultRatings(
+            'https://www.imdb.com/title/tt0064010/'
           );
           const titleReviewBar = getTitleReviewBar(document);
 
@@ -346,8 +314,8 @@ describe('ImdbPage', function () {
         });
 
         it('no review bar', async function () {
-          const document = await injectDummyRatings(
-            'imdb.title.tt5637536 - no ratings yet.html'
+          const document = await injectDefaultRatings(
+            'https://www.imdb.com/title/tt5637536/'
           );
           const titleReviewBar = getTitleReviewBar(document);
 
@@ -356,12 +324,12 @@ describe('ImdbPage', function () {
         });
       });
 
-      context('for Audiencescore - no user rating', function () {
+      context('for Audiencescore - no user ratings', function () {
         let document;
 
         before(async function () {
-          document = await injectDummyRatings(
-            'imdb.title.tt5637536 - no ratings yet.html'
+          document = await injectDefaultRatings(
+            'https://www.imdb.com/title/tt5637536/'
           );
         });
 
@@ -392,62 +360,6 @@ describe('ImdbPage', function () {
     });
   });
 
-  describe('"private" methods', function () {
-    context('Favorableness', function () {
-      let imdbPage;
-      let document;
-
-      before(async function () {
-        document = await getTestDocument();
-        imdbPage = new ImdbPage(document, 'https://url');
-      });
-
-      it('change favorableness based on TomatoMeter', function () {
-        sinon.replace(
-          imdbPage,
-          'getFavorableness',
-          sinon.fake.returns('fakeFavorableness')
-        );
-
-        imdbPage.injectTomatoMeter(document, 93, 'someUrl');
-
-        imdbPage.getFavorableness.should.have.been.calledOnceWithExactly(93);
-
-        const tomatoMeter = document.getElementsByClassName('titleReviewBar')[0]
-          .children[2];
-        tomatoMeter.innerHTML.should
-          .contain('fakeFavorableness')
-          .but.not.contain('score_favorable');
-      });
-
-      it('give tbd style for null Tomatometer', function () {
-        const tbd = 'score_tbd';
-        imdbPage.getFavorableness(null).should.equal(tbd);
-      });
-
-      it('give unfavorable style for Tomatometer 0...40', function () {
-        const unfavorable = 'score_unfavorable';
-        imdbPage.getFavorableness(0).should.equal(unfavorable);
-        imdbPage.getFavorableness(33).should.equal(unfavorable);
-        imdbPage.getFavorableness(40).should.equal(unfavorable);
-      });
-
-      it('give mixed style for Tomatometer 41...60', function () {
-        const mixed = 'score_mixed';
-        imdbPage.getFavorableness(41).should.equal(mixed);
-        imdbPage.getFavorableness(50).should.equal(mixed);
-        imdbPage.getFavorableness(60).should.equal(mixed);
-      });
-
-      it('give favorable style for Tomatometer 61...100', function () {
-        const favorable = 'score_favorable';
-        imdbPage.getFavorableness(61).should.equal(favorable);
-        imdbPage.getFavorableness(80).should.equal(favorable);
-        imdbPage.getFavorableness(100).should.equal(favorable);
-      });
-    });
-  });
-
   describe('Numeric formatting', function () {
     let imdbPage;
 
@@ -455,7 +367,7 @@ describe('ImdbPage', function () {
       imdbPage = new ImdbPage('doc', 'https://url');
     });
 
-    it('write number of votes with thousand grouping', function () {
+    it('write ratings count with thousand grouping', function () {
       imdbPage.groupThousands(3333333).should.equal('3,333,333');
     });
 

@@ -9,17 +9,24 @@
 const { JSDOM } = require('jsdom');
 
 describe('rottenPage', function () {
-  async function getTestDocument(
-    filename = 'rottentomatoes.m.shawshank_redemption.html'
-  ) {
-    const dom = await JSDOM.fromFile(FakeHtmlPath + filename);
-    return dom.window.document;
+  async function getTestDOM(url) {
+    const response = await fetch(url);
+    const fileContent = await response.text();
+
+    return new JSDOM(fileContent).window.document;
+  }
+
+  async function readMovieDataByRottenPage(url) {
+    const document = await getTestDOM(url);
+    const rottenPage = new RottenPage(document, url);
+
+    return rottenPage.getMovieInfoWithRatings();
   }
 
   it('can be instantiated', function () {
     const rottenPage = new RottenPage(
       'input doc',
-      'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'
+      'https://www.rottentomatoes.com/m/shawshank_redemption'
     );
 
     rottenPage.document.should.equal('input doc');
@@ -28,133 +35,85 @@ describe('rottenPage', function () {
     );
   });
 
-  describe(`getMovieData`, function () {
+  describe(`getMovieInfo`, function () {
+    it('read all stuff', async function () {
+      const url = 'https://www.rottentomatoes.com/m/shawshank_redemption';
+      const document = await getTestDOM(url);
+      const rottenPage = new RottenPage(document, url);
+
+      const movie = await rottenPage.getMovieInfo();
+
+      movie.should.deep.equal(new MovieInfo('The Shawshank Redemption', 1994));
+    });
+  });
+
+  describe(`getMovieInfoWithRatings`, function () {
     context('on a movie with ratings', function () {
-      let movieData;
-
-      before(async function () {
-        const document = await getTestDocument();
-        const rottenPage = new RottenPage(
-          document,
-          'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'
+      it('read all stuff', async function () {
+        const movie = await readMovieDataByRottenPage(
+          'https://www.rottentomatoes.com/m/shawshank_redemption'
         );
-        movieData = await rottenPage.getMovieData();
-      });
 
-      it(`read the title`, function () {
-        movieData.should.contain({ title: 'The Shawshank Redemption' });
-      });
-
-      it(`read the release year`, function () {
-        movieData.should.contain({ year: 1994 });
-      });
-
-      it(`read the url of the page`, function () {
-        movieData.should.contain({
-          url: 'https://www.rottentomatoes.com/m/shawshank_redemption',
-        });
-      });
-
-      it('read the user rating', function () {
-        movieData.should.contain({ userRating: 98 });
-      });
-
-      it(`read the number of users' votes`, function () {
-        movieData.should.contain({ numberOfUserVotes: 885688 });
-      });
-
-      it('read the critics rating', function () {
-        movieData.should.contain({ criticsRating: 90 });
-      });
-
-      it(`read the number of critics' votes`, function () {
-        movieData.should.contain({ numberOfCriticsVotes: 71 });
-      });
-
-      it('not read toplistPosition', function () {
-        movieData.should.contain({ toplistPosition: null });
+        movie.should.deep.equal(
+          new MovieInfoWithRatings(
+            new MovieInfo('The Shawshank Redemption', 1994),
+            'https://www.rottentomatoes.com/m/shawshank_redemption',
+            RottenPage.NAME,
+            null,
+            new Ratings(
+              90,
+              71,
+              'https://www.rottentomatoes.com/assets/certified_fresh.svg'
+            ),
+            new Ratings(
+              98,
+              885688,
+              'https://www.rottentomatoes.com/assets/aud_score-fresh.svg'
+            )
+          )
+        );
       });
     });
 
     context('on a movie without ratings', function () {
-      let movieData;
-
-      before(`let's check some unimportant data`, async function () {
-        const document = await getTestDocument(
-          'rottentomatoes.m.avatar_5 - no ratings yet.html'
-        );
-        const rottenPage = new RottenPage(
-          document,
+      it('read all stuff', async function () {
+        const movie = await readMovieDataByRottenPage(
           'https://www.rottentomatoes.com/m/avatar_5'
         );
-        movieData = await rottenPage.getMovieData();
 
-        movieData.should.contain({ title: 'Avatar 5' });
-        movieData.should.contain({ year: 2028 });
-        movieData.should.contain({
-          url: 'https://www.rottentomatoes.com/m/avatar_5',
-        });
-      });
-
-      it('read the user rating', function () {
-        movieData.should.contain({ userRating: null });
-      });
-
-      it(`read the number of users' votes`, function () {
-        movieData.should.contain({ numberOfUserVotes: null });
-      });
-
-      it('read the critics rating', function () {
-        movieData.should.contain({ criticsRating: null });
-      });
-
-      it(`read the number of critics' votes`, function () {
-        movieData.should.contain({ numberOfCriticsVotes: null });
-      });
-
-      it('not read toplistPosition', function () {
-        movieData.should.contain({ toplistPosition: null });
+        movie.should.deep.equal(
+          new MovieInfoWithRatings(
+            new MovieInfo('Avatar 5', 2028),
+            'https://www.rottentomatoes.com/m/avatar_5',
+            RottenPage.NAME,
+            null,
+            null,
+            null
+          )
+        );
       });
     });
 
     context('on a movie with only audience score', function () {
-      let movieData;
-
-      before(`let's check some unimportant data`, async function () {
-        const document = await getTestDocument(
-          'rottentomatoes.m.amblin - only audience score.html'
-        );
-        const rottenPage = new RottenPage(
-          document,
+      it('read all stuff', async function () {
+        const movie = await readMovieDataByRottenPage(
           'https://www.rottentomatoes.com/m/amblin'
         );
-        movieData = await rottenPage.getMovieData();
 
-        movieData.should.contain({ title: "Amblin'" });
-        movieData.should.contain({ year: 1968 });
-        movieData.should.contain({
-          url: 'https://www.rottentomatoes.com/m/amblin',
-        });
-      });
-
-      it('read the user rating', function () {
-        movieData.should.contain({ userRating: 60 });
-      });
-
-      it(`read the number of users' votes`, function () {
-        movieData.should.contain({ numberOfUserVotes: 309 });
-      });
-
-      it('read the critics rating', function () {
-        movieData.should.contain({ criticsRating: null });
-      });
-
-      it(`read the number of critics' votes`, function () {
-        movieData.should.contain({ numberOfCriticsVotes: null });
-      });
-
-      it('not read toplistPosition', function () {
-        movieData.should.contain({ toplistPosition: null });
+        movie.should.deep.equal(
+          new MovieInfoWithRatings(
+            new MovieInfo("Amblin'", 1968),
+            'https://www.rottentomatoes.com/m/amblin',
+            RottenPage.NAME,
+            null,
+            null,
+            new Ratings(
+              60,
+              309,
+              'https://www.rottentomatoes.com/assets/aud_score-fresh.svg'
+            )
+          )
+        );
       });
     });
   });
@@ -164,23 +123,22 @@ describe('rottenPage', function () {
       let document;
 
       before(async function () {
-        document = await getTestDocument();
-
-        const rottenPage = new RottenPage(
-          document,
-          'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'
-        );
+        const url = 'https://www.rottentomatoes.com/m/shawshank_redemption';
+        document = await getTestDOM(url);
+        const rottenPage = new RottenPage(document, url);
 
         rottenPage.injectRatings(
-          new MovieData(
-            'The Shawshank Redemption',
-            1994,
+          new MovieInfoWithRatings(
+            new MovieInfo('The Shawshank Redemption', 1994),
             'https://www.imdb.com/title/tt0111161/',
-            9,
-            2181618,
-            80,
-            20,
-            null
+            'OtherPage',
+            null,
+            new Ratings(80, 20, '#66ffee'),
+            new Ratings(
+              9,
+              2181618,
+              '<svg id="home_img">This is the logo.</svg>'
+            )
           )
         );
       });
@@ -190,8 +148,8 @@ describe('rottenPage', function () {
           'div.mop-ratings-wrap__half'
         );
 
-        ratingsContainers[0].style.minWidth.should.equal('240px');
-        ratingsContainers[1].style.minWidth.should.equal('240px');
+        ratingsContainers[0].style.flexBasis.should.equal('100%');
+        ratingsContainers[1].style.flexBasis.should.equal('100%');
       });
 
       it('add IMDb scoreboard container', function () {
@@ -209,10 +167,10 @@ describe('rottenPage', function () {
         IMDbScores.outerHTML.should.equal(
           `<section id="mv-imdb-scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
             ` style="border-top:2px solid #2a2c32;margin-top:30px;padding-top:20px">` +
-            `  <div class="mop-ratings-wrap__half" style="min-width:240px">` +
-            `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
+            `  <div class="mop-ratings-wrap__half" style="flex-basis: 100%">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open The Shawshank Redemption Critic Reviews on OtherPage">` +
             `      <h2 class="mop-ratings-wrap__score">` +
-            `        <span class="mop-ratings-wrap__percentage">80</span></h2>` +
+            `        <span class="mop-ratings-wrap__percentage" style="background-color: #66ffee; padding: 0px 8px;">80</span></h2>` +
             `    <div class="mop-ratings-wrap__review-totals">` +
             `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
             `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
@@ -220,14 +178,15 @@ describe('rottenPage', function () {
             `    </div>` +
             `  </a>` +
             `</div>` +
-            `  <div class="mop-ratings-wrap__half audience-score" style="min-width:240px">` +
-            `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on IMDb">` +
+            `  <div class="mop-ratings-wrap__half audience-score" style="flex-basis: 100%">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on OtherPage">` +
             `    <h2 class="mop-ratings-wrap__score">` +
-            `        <span class="mop-ratings-wrap__percentage">9.0</span>` +
+            `<svg id="home_img" style="vertical-align: middle;">This is the logo.</svg>` +
+            `        <span class="mop-ratings-wrap__percentage" style="vertical-align: middle;">9.0</span>` +
             `    </h2>` +
             `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
             `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
-            `      <strong class="mop-ratings-wrap__text--small">Number of votes: 2,181,618</strong>` +
+            `      <strong class="mop-ratings-wrap__text--small">User Ratings: 2,181,618</strong>` +
             `    </div>` +
             `      </a>` +
             `</div>` +
@@ -240,20 +199,15 @@ describe('rottenPage', function () {
       let document;
 
       before(async function () {
-        document = await getTestDocument();
-
-        const rottenPage = new RottenPage(
-          document,
-          'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'
-        );
+        const url = 'https://www.rottentomatoes.com/m/shawshank_redemption';
+        document = await getTestDOM(url);
+        const rottenPage = new RottenPage(document, url);
 
         rottenPage.injectRatings(
-          new MovieData(
-            'The Shawshank Redemption',
-            1994,
+          new MovieInfoWithRatings(
+            new MovieInfo('The Shawshank Redemption', 1994),
             'https://www.imdb.com/title/tt0111161/',
-            null,
-            null,
+            'OtherPage',
             null,
             null,
             null
@@ -261,12 +215,12 @@ describe('rottenPage', function () {
         );
       });
 
-      it('no critics score', function () {
+      it('no critic ratings', function () {
         document
           .getElementById('mv-imdb-scores')
           .getElementsByClassName('mop-ratings-wrap__half')[0]
           .innerHTML.should.equal(
-            `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open Critic Reviews on IMDb">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open The Shawshank Redemption Critic Reviews on OtherPage">` +
               `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
               `>There are no<br>Metacritic reviews</div>    ` +
               `<div class="mop-ratings-wrap__review-totals">` +
@@ -282,13 +236,13 @@ describe('rottenPage', function () {
           .getElementById('mv-imdb-scores')
           .getElementsByClassName('mop-ratings-wrap__half')[1]
           .innerHTML.should.equal(
-            `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on IMDb">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on OtherPage">` +
               `  <div class="audience-score__italics mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion mop-ratings-wrap__text--not-released">` +
               `        <p class="mop-ratings-wrap__prerelease-text">Coming soon</p>` +
               `    </div>` +
               `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
               `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
-              `      <strong class="mop-ratings-wrap__text--small">Number of votes: N/A</strong>` +
+              `      <strong class="mop-ratings-wrap__text--small">User Ratings: N/A</strong>` +
               `    </div>` +
               `      </a>`
           );
@@ -299,23 +253,22 @@ describe('rottenPage', function () {
       let document;
 
       before(async function () {
-        document = await getTestDocument();
-
-        const rottenPage = new RottenPage(
-          document,
-          'https://www.rottentomatoes.com/m/shawshank_redemption#contentReviews'
-        );
+        const url = 'https://www.rottentomatoes.com/m/shawshank_redemption';
+        document = await getTestDOM(url);
+        const rottenPage = new RottenPage(document, url);
 
         rottenPage.injectRatings(
-          new MovieData(
-            'The Shawshank Redemption',
-            1994,
+          new MovieInfoWithRatings(
+            new MovieInfo('The Shawshank Redemption', 1994),
             'https://www.imdb.com/title/tt0111161/',
-            9,
-            2181618,
-            80,
-            20,
-            33
+            'OtherPage',
+            33,
+            new Ratings(80, 20, '#66ffee'),
+            new Ratings(
+              9,
+              2181618,
+              '<svg id="home_img">This is the logo.</svg>'
+            )
           )
         );
       });

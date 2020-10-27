@@ -24,17 +24,24 @@ class MoviePage {
   }
 
   /**
-   * @return {MovieData}
+   * @return {MovieInfo}
    */
-  async getMovieData() {
+  async getMovieInfo() {
     throw new Error(`Function not implemented.`);
   }
 
   /**
-   * @param  {MovieData} movieData
+   * @return {MovieInfoWithRatings}
+   */
+  async getMovieInfoWithRatings() {
+    throw new Error(`Function not implemented.`);
+  }
+
+  /**
+   * @param  {MovieInfoWithRatings} movie
    */
   // eslint-disable-next-line no-unused-vars
-  injectRatings(movieData) {
+  injectRatings(movie) {
     throw new Error(`Function not implemented.`);
   }
 
@@ -53,6 +60,36 @@ class MoviePage {
   generateElement(innerHTML) {
     return new DOMParser().parseFromString(innerHTML, 'text/html').body
       .children[0];
+  }
+
+  getStylesheetUrl(nameRegExp) {
+    const stylesheetLinkElements = this.document.querySelectorAll('link');
+
+    const styleSheetLinks = Array.from(stylesheetLinkElements).map(
+      (linkElement) => linkElement.href
+    );
+
+    const matchedStyleSheets = styleSheetLinks.filter((link) =>
+      link.match(nameRegExp)
+    );
+
+    return matchedStyleSheets[0];
+  }
+
+  static async fetchTextContent(url) {
+    let textContent;
+
+    if (this[url]) {
+      textContent = this[url];
+    } else {
+      const response = await fetch(url);
+      textContent = await response.text();
+      this[url] = textContent;
+
+      Logger.logFetch(url, textContent);
+    }
+
+    return textContent;
   }
 }
 

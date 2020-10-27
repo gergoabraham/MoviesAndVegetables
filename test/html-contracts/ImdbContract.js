@@ -8,7 +8,7 @@
 
 const contract = require('../tools/ContractTestDescription');
 
-contract('ImdbContract', function (fetchDOM) {
+contract('ImdbContract', function (fetchDOM, fetchText) {
   context('structure', function () {
     context('user score - ratings wrapper', async function () {
       context('full version', function () {
@@ -80,7 +80,7 @@ contract('ImdbContract', function (fetchDOM) {
       });
     });
 
-    context('critics score - titleReviewBar', function () {
+    context('critic ratings - titleReviewBar', function () {
       context('full version', function () {
         let titleReviewBar;
 
@@ -101,7 +101,7 @@ contract('ImdbContract', function (fetchDOM) {
           );
         });
 
-        it('the first child contains the metacriticScore', async function () {
+        it('the first child contains the metascore', async function () {
           titleReviewBar.children[0].getElementsByClassName(
             'metacriticScore'
           )[0].should.exist;
@@ -112,7 +112,7 @@ contract('ImdbContract', function (fetchDOM) {
         });
       });
 
-      context('metacritic is missing', function () {
+      context('metascore is missing', function () {
         let titleReviewBar;
 
         before(async function () {
@@ -127,7 +127,7 @@ contract('ImdbContract', function (fetchDOM) {
         });
 
         it("titleReviewBar's parent is plotSummaryWrapper", function () {
-          titleReviewBar.parentNode.className.should.contain(
+          titleReviewBar.parentElement.className.should.contain(
             'plot_summary_wrapper'
           );
         });
@@ -138,7 +138,7 @@ contract('ImdbContract', function (fetchDOM) {
           );
         });
 
-        it('the first child is NOT metacritics', async function () {
+        it('the first child is NOT metascore', async function () {
           should.not.exist(
             titleReviewBar.children[0].getElementsByClassName(
               'metacriticScore'
@@ -240,7 +240,18 @@ contract('ImdbContract', function (fetchDOM) {
       });
     });
 
-    context('critics rating', function () {
+    context('imdb logo', function () {
+      it('is an svg', async function () {
+        const document = await fetchDOM(
+          'https://www.imdb.com/title/tt0111161/'
+        );
+
+        const logo = document.getElementById('home_img');
+        logo.tagName.should.equal('svg');
+      });
+    });
+
+    context('metascore', function () {
       it('value is a number', async function () {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/'
@@ -251,6 +262,15 @@ contract('ImdbContract', function (fetchDOM) {
 
         isNaN(metacritic).should.equal(false);
         Number(metacritic).should.be.above(50).and.most(100);
+      });
+
+      it('critic favorableness is in the class list', async function () {
+        const document = await fetchDOM(
+          'https://www.imdb.com/title/tt0111161/'
+        );
+        const metacritic = document.querySelector('div.metacriticScore');
+
+        metacritic.className.match(/score_\w+/).length.should.equal(1);
       });
 
       it('count is a number in the critics page', async function () {
@@ -312,8 +332,60 @@ contract('ImdbContract', function (fetchDOM) {
         should.not.exist(document.querySelector('span[itemprop="ratingCount"'));
       });
 
-      it(`critics score doesn't exist`, function () {
+      it(`metascore doesn't exist`, function () {
         should.not.exist(document.querySelector('div.metacriticScore'));
+      });
+    });
+  });
+
+  context('style', function () {
+    let matchedStyleSheets;
+
+    before('get URL for latest stylesheet', async function () {
+      const document = await fetchDOM('https://www.imdb.com/title/tt0111161/');
+
+      const stylesheetLinkElements = document.querySelectorAll('link');
+      const styleSheetLinks = Array.from(stylesheetLinkElements).map(
+        (linkElement) => linkElement.href
+      );
+      matchedStyleSheets = styleSheetLinks.filter((link) =>
+        link.match(/title-flat.*\.css$/)
+      );
+    });
+
+    context('link', function () {
+      it('html contains the needed "title-flat" stylesheet link', async function () {
+        matchedStyleSheets.length.should.equal(1);
+      });
+
+      it('as an absolute link', function () {
+        matchedStyleSheets[0].match(/^https:\/\/.+$/).should.exist;
+      });
+    });
+
+    context('css', function () {
+      let css;
+
+      before(async function () {
+        css = await fetchText(matchedStyleSheets[0]);
+      });
+
+      it('contains background color for .score_favorable', function () {
+        css
+          .match(/\.score_favorable{background-color:#[a-f0-9]{6}}/gi)
+          .length.should.equal(1);
+      });
+
+      it('contains background color for .score_mixed', function () {
+        css
+          .match(/\.score_mixed{background-color:#[a-f0-9]{6}}/gi)
+          .length.should.equal(1);
+      });
+
+      it('contains background color for .score_unfavorable', function () {
+        css
+          .match(/\.score_unfavorable{background-color:#[a-f0-9]{6}}/gi)
+          .length.should.equal(1);
       });
     });
   });

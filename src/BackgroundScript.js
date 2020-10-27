@@ -8,11 +8,11 @@
 
 class BackgroundScript {
   static async getRemotePageData(message) {
-    const { movieData, remotePageName } = message;
-    Logger.log('Actual page: ', movieData);
+    const { movieInfo, remotePageName } = message;
+    Logger.log('Actual page: ', movieInfo);
 
     const movieUrl = await BackgroundScript.findRemoteMoviePageUrl(
-      movieData,
+      movieInfo,
       remotePageName
     );
     const remoteMovieData = await BackgroundScript.fetchMovieData(
@@ -21,12 +21,13 @@ class BackgroundScript {
     );
 
     Logger.log('Remote page: ', remoteMovieData);
+    Logger.updateAndLogMovieStats();
     return remoteMovieData;
   }
 
-  static async findRemoteMoviePageUrl(movieData, remotePageName) {
+  static async findRemoteMoviePageUrl(movieInfo, remotePageName) {
     const searchResponse = await BackgroundScript.fetchMovieSearch(
-      movieData,
+      movieInfo,
       remotePageName
     );
     const isSearchRedirected = BackgroundScript.isSearchRedirected(
@@ -37,6 +38,8 @@ class BackgroundScript {
     let movieUrl;
     if (isSearchRedirected) {
       movieUrl = BackgroundScript.skipRedirectNotice(searchResponse.url);
+
+      Logger.logFetch(searchResponse.url, await searchResponse.text());
       Logger.log('feeling lucky 😎', movieUrl);
     } else {
       movieUrl = await BackgroundScript.readMovieUrlFromSearchResults(
@@ -49,9 +52,9 @@ class BackgroundScript {
     return movieUrl;
   }
 
-  static async fetchMovieSearch(movieData, remotePageName) {
+  static async fetchMovieSearch(movieInfo, remotePageName) {
     const searchURL = BackgroundScript.constructSearchUrl(
-      movieData,
+      movieInfo,
       remotePageName
     );
     Logger.log('Search url: ', searchURL);
@@ -59,8 +62,8 @@ class BackgroundScript {
     return fetch(searchURL);
   }
 
-  static constructSearchUrl(movieData, remotePageName) {
-    const { title, year } = movieData;
+  static constructSearchUrl(movieInfo, remotePageName) {
+    const { title, year } = movieInfo;
     const titleWithoutSpecialCharacters = title.replace(/&/g, '');
 
     return (
@@ -100,11 +103,13 @@ class BackgroundScript {
       moviePageResponse.url
     );
 
-    return remotePage.getMovieData();
+    return remotePage.getMovieInfoWithRatings();
   }
 
   static async getDOM(response) {
     const text = await response.text();
+    Logger.logFetch(response.url, text);
+
     return new DOMParser().parseFromString(text, 'text/html');
   }
 

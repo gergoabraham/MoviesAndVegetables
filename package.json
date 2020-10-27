@@ -2,7 +2,7 @@
   "name": "movies-and-vegetables",
   "version": "0.3.0",
   "scripts": {
-    "tdd:unit": "mocha --watch test/unit/ --inline-diffs",
+    "tdd:unit": "mocha --watch test/unit/",
     "tdd:html-contracts": "mocha test/html-contracts --watch --timeout 5000",
     "tdd:tools": "mocha test/tools --watch --color --timeout 5000",
     "clear-html-cache": "rm test/tools/real-htmls-cache -r",
@@ -55,7 +55,8 @@
   },
   "mocha": {
     "recursive": true,
-    "file": "./test/setup.js"
+    "file": "./test/setup.js",
+    "inline-diffs": true
   },
   "prettier": {
     "singleQuote": true,

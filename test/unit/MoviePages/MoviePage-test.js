@@ -6,6 +6,8 @@
 
 'use strict';
 
+const sinon = require('sinon');
+
 describe('MoviePage', function () {
   context('abstract class', function () {
     it('throw error on instantiating parent class', function () {
@@ -25,9 +27,15 @@ describe('MoviePage', function () {
         );
       });
 
-      it('throw error on unimplemented getMovieData', async function () {
+      it('throw error on unimplemented getMovieInfo', async function () {
         await unimplementedMoviePage
-          .getMovieData()
+          .getMovieInfo()
+          .should.be.rejectedWith(Error, 'Function not implemented');
+      });
+
+      it('throw error on unimplemented getMovieInfoWithRatings', async function () {
+        await unimplementedMoviePage
+          .getMovieInfoWithRatings()
           .should.be.rejectedWith(Error, 'Function not implemented');
       });
 
@@ -64,18 +72,59 @@ describe('MoviePage', function () {
 
       before(function () {
         class ImplementedMoviePage extends MoviePage {
-          getMovieData() {}
+          getMovieInfo() {}
+          getMovieInfoWithRatings() {}
           injectRatings() {}
         }
         implementedMoviePage = new ImplementedMoviePage('doc', 'https://url');
       });
 
-      it('be OK on implemented getMovieData', function () {
-        implementedMoviePage.getMovieData();
+      it('be OK on implemented getMovieInfo', async function () {
+        await implementedMoviePage.getMovieInfo();
+      });
+
+      it('be OK on implemented getMovieInfoWithRatings', async function () {
+        await implementedMoviePage.getMovieInfoWithRatings();
       });
 
       it('be OK on implemented injectRatings', function () {
         implementedMoviePage.injectRatings();
+      });
+    });
+  });
+
+  context('utilities', function () {
+    context('fetchTextContent', function () {
+      beforeEach(function () {
+        const fakeFetch = sinon.fake.resolves({
+          text: async () => 'text content',
+        });
+
+        sinon.replace(global, 'fetch', fakeFetch);
+      });
+
+      it('fetches text content from the web the first time', async function () {
+        const textContent = await MoviePage.fetchTextContent('url1');
+
+        global.fetch.should.have.been.calledOnceWithExactly('url1');
+        textContent.should.equal('text content');
+      });
+
+      it('stores fetched values in "cache"', async function () {
+        await MoviePage.fetchTextContent('url2');
+        await MoviePage.fetchTextContent('url3');
+
+        MoviePage['url2'].should.equal('text content');
+        MoviePage['url3'].should.equal('text content');
+      });
+
+      it('second time it returns the value from the cache', async function () {
+        await MoviePage.fetchTextContent('url4');
+        await MoviePage.fetchTextContent('url4');
+        const textContent = await MoviePage.fetchTextContent('url4');
+
+        global.fetch.should.have.been.calledOnceWithExactly('url4');
+        textContent.should.equal('text content');
       });
     });
   });
