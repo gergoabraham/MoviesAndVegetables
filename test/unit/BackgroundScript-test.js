@@ -40,6 +40,7 @@ describe('Background script', function () {
         new MovieInfoWithRatings(
           { title: 'The Shawshank Redemption', year: 1994 },
           `https://www.rottentomatoes.com/m/shawshank_redemption`,
+          RottenPage.NAME,
           null,
           {
             score: 90,
@@ -73,6 +74,7 @@ describe('Background script', function () {
         new MovieInfoWithRatings(
           { title: "Amblin'", year: 1968 },
           `https://www.rottentomatoes.com/m/amblin`,
+          RottenPage.NAME,
           null,
           null,
           {
@@ -101,6 +103,7 @@ describe('Background script', function () {
         new MovieInfoWithRatings(
           { title: "Amblin'", year: 1968 },
           `https://www.imdb.com/title/tt0064010/`,
+          ImdbPage.NAME,
           null,
           null,
           {

@@ -58,6 +58,7 @@ describe('rottenPage', function () {
           new MovieInfoWithRatings(
             { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.rottentomatoes.com/m/shawshank_redemption',
+            RottenPage.NAME,
             null,
             {
               score: 90,
@@ -86,6 +87,7 @@ describe('rottenPage', function () {
           new MovieInfoWithRatings(
             { title: 'Avatar 5', year: 2028 },
             'https://www.rottentomatoes.com/m/avatar_5',
+            RottenPage.NAME,
             null,
             null,
             null
@@ -104,6 +106,7 @@ describe('rottenPage', function () {
           new MovieInfoWithRatings(
             { title: "Amblin'", year: 1968 },
             'https://www.rottentomatoes.com/m/amblin',
+            RottenPage.NAME,
             null,
             null,
             {
@@ -131,6 +134,7 @@ describe('rottenPage', function () {
           new MovieInfoWithRatings(
             { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
+            'OtherPage',
             null,
             {
               score: 80,
@@ -171,7 +175,7 @@ describe('rottenPage', function () {
           `<section id="mv-imdb-scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
             ` style="border-top:2px solid #2a2c32;margin-top:30px;padding-top:20px">` +
             `  <div class="mop-ratings-wrap__half" style="flex-basis: 100%">` +
-            `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open The Shawshank Redemption Critic Reviews on IMDb">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open The Shawshank Redemption Critic Reviews on OtherPage">` +
             `      <h2 class="mop-ratings-wrap__score">` +
             `        <span class="mop-ratings-wrap__percentage" style="background-color: #66ffee; padding: 0px 8px;">80</span></h2>` +
             `    <div class="mop-ratings-wrap__review-totals">` +
@@ -182,7 +186,7 @@ describe('rottenPage', function () {
             `  </a>` +
             `</div>` +
             `  <div class="mop-ratings-wrap__half audience-score" style="flex-basis: 100%">` +
-            `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on IMDb">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on OtherPage">` +
             `    <h2 class="mop-ratings-wrap__score">` +
             `<svg id="home_img" style="vertical-align: middle;">This is the logo.</svg>` +
             `        <span class="mop-ratings-wrap__percentage" style="vertical-align: middle;">9.0</span>` +
@@ -210,6 +214,7 @@ describe('rottenPage', function () {
           new MovieInfoWithRatings(
             { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
+            'OtherPage',
             null,
             null,
             null
@@ -222,7 +227,7 @@ describe('rottenPage', function () {
           .getElementById('mv-imdb-scores')
           .getElementsByClassName('mop-ratings-wrap__half')[0]
           .innerHTML.should.equal(
-            `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open The Shawshank Redemption Critic Reviews on IMDb">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/criticreviews" class="unstyled articleLink" title="Open The Shawshank Redemption Critic Reviews on OtherPage">` +
               `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
               `>There are no<br>Metacritic reviews</div>    ` +
               `<div class="mop-ratings-wrap__review-totals">` +
@@ -238,7 +243,7 @@ describe('rottenPage', function () {
           .getElementById('mv-imdb-scores')
           .getElementsByClassName('mop-ratings-wrap__half')[1]
           .innerHTML.should.equal(
-            `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on IMDb">` +
+            `    <a href="https://www.imdb.com/title/tt0111161/" class="unstyled articleLink" title="Open The Shawshank Redemption on OtherPage">` +
               `  <div class="audience-score__italics mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion mop-ratings-wrap__text--not-released">` +
               `        <p class="mop-ratings-wrap__prerelease-text">Coming soon</p>` +
               `    </div>` +
@@ -263,6 +268,7 @@ describe('rottenPage', function () {
           new MovieInfoWithRatings(
             { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
+            'OtherPage',
             33,
             {
               score: 80,

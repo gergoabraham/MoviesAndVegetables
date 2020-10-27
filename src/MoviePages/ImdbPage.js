@@ -9,7 +9,7 @@
 class ImdbPage extends MoviePage {
   // web-ext thinks of class fields as syntax errors, but getters can be used
   static get NAME() {
-    return 'Imdb';
+    return 'IMDb';
   }
   static get URL_PATTERN() {
     return /https:\/\/www\.imdb\.com\/title\/tt\d+\//;
@@ -42,6 +42,7 @@ class ImdbPage extends MoviePage {
     return new MovieInfoWithRatings(
       await this.getMovieInfo(),
       this.url,
+      ImdbPage.NAME,
       toplistPosition,
       criticRatings,
       userRatings
@@ -194,7 +195,7 @@ class ImdbPage extends MoviePage {
   createFilledTomatometerHtml(movie) {
     return (
       `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-      `    <a href="${movie.url}" title="Open ${movie.info.title} on RottenTomatoes" style="text-decoration: none">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none">` +
       `        <img src="${movie.criticRatings.custom}" height="27px" width="27px" style="vertical-align: baseline">` +
       `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
       `            <span>${movie.criticRatings.score}%</span>` +
@@ -215,7 +216,7 @@ class ImdbPage extends MoviePage {
   createEmptyTomatometerHtml(movie) {
     return (
       `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-      `    <a href="${movie.url}" title="Open ${movie.info.title} on RottenTomatoes" style="text-decoration: none;">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none;">` +
       `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
       `            <span style="color: black;">-</span>` +
       `        </div>` +
@@ -327,7 +328,7 @@ class ImdbPage extends MoviePage {
   createFilledAudienceScoreHtml(movie) {
     return (
       `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center; padding: 0px; width: 100px">` +
-      `    <a href="${movie.url}" title="Open ${movie.info.title} on RottenTomatoes" style="text-decoration: none">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none">` +
       `        <div style="display: flex; align-items: center; justify-content: center; height: 40px;">` +
       `            <img src="${movie.userRatings.custom}" height="32px" width="32px">` +
       `            <div>` +
@@ -349,7 +350,7 @@ class ImdbPage extends MoviePage {
   createEmptyAudienceScoreHtml(movie) {
     return (
       `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center;padding-left: 0px; width: 90px;">` +
-      `    <a href="${movie.url}" title="Open ${movie.info.title} on RottenTomatoes" style="text-decoration: none;">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none;">` +
       `        <div class="ratingValue">` +
       `            <strong>` +
       `                <span itemprop="ratingValue">-</span>` +

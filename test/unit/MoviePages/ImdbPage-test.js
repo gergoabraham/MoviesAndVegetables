@@ -59,6 +59,7 @@ describe('ImdbPage', function () {
           new MovieInfoWithRatings(
             { title: 'The Shawshank Redemption', year: 1994 },
             'https://www.imdb.com/title/tt0111161/',
+            ImdbPage.NAME,
             1,
             {
               score: 80,
@@ -85,6 +86,7 @@ describe('ImdbPage', function () {
           new MovieInfoWithRatings(
             { title: 'Avatar 5', year: 2028 },
             'https://www.imdb.com/title/tt5637536/',
+            ImdbPage.NAME,
             null,
             null,
             null
@@ -125,6 +127,7 @@ describe('ImdbPage', function () {
         new MovieInfoWithRatings(
           { title: 'Movie Title', year: 2002 },
           rottenURL,
+          'Other Page',
           null,
           {
             score: 93,
@@ -172,7 +175,7 @@ describe('ImdbPage', function () {
 
           tomatoMeter.outerHTML.should.equal(
             `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-              `    <a href="${rottenURL}" title="Open Movie Title on RottenTomatoes" style="text-decoration: none">` +
+              `    <a href="${rottenURL}" title="Open Movie Title on Other Page" style="text-decoration: none">` +
               `        <img src="critics-score-logo.svg" height="27px" width="27px" style="vertical-align: baseline">` +
               `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
               `            <span>93%</span>` +
@@ -212,7 +215,7 @@ describe('ImdbPage', function () {
 
           audienceScore.outerHTML.should.equal(
             `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center; padding: 0px; width: 100px; border-left: 1px solid #6b6b6b;">` +
-              `    <a href="${rottenURL}" title="Open Movie Title on RottenTomatoes" style="text-decoration: none">` +
+              `    <a href="${rottenURL}" title="Open Movie Title on Other Page" style="text-decoration: none">` +
               `        <div style="display: flex; align-items: center; justify-content: center; height: 40px;">` +
               `            <img src="user-rating-logo.svg" height="32px" width="32px">` +
               `            <div>` +
@@ -251,6 +254,7 @@ describe('ImdbPage', function () {
           new MovieInfoWithRatings(
             { title: 'Movie Title', year: 2002 },
             rottenURL,
+            'Other Page',
             null,
             null,
             null
@@ -263,7 +267,7 @@ describe('ImdbPage', function () {
 
         tomatoMeter.outerHTML.should.equal(
           `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-            `    <a href="${rottenURL}" title="Open Movie Title on RottenTomatoes" style="text-decoration: none;">` +
+            `    <a href="${rottenURL}" title="Open Movie Title on Other Page" style="text-decoration: none;">` +
             `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
             `            <span style="color: black;">-</span>` +
             `        </div>` +
@@ -283,7 +287,7 @@ describe('ImdbPage', function () {
 
         audienceScore.outerHTML.should.equal(
           `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center; padding-left: 0px; width: 90px; border-left: 1px solid #6b6b6b;">` +
-            `    <a href="${rottenURL}" title="Open Movie Title on RottenTomatoes" style="text-decoration: none;">` +
+            `    <a href="${rottenURL}" title="Open Movie Title on Other Page" style="text-decoration: none;">` +
             `        <div class="ratingValue">` +
             `            <strong>` +
             `                <span itemprop="ratingValue">-</span>` +

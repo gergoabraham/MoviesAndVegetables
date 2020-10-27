@@ -38,6 +38,7 @@ class RottenPage extends MoviePage {
     return new MovieInfoWithRatings(
       await this.getMovieInfo(),
       this.url,
+      RottenPage.NAME,
       null,
       criticRatings,
       userRatings
@@ -231,7 +232,7 @@ class RottenPage extends MoviePage {
 
   getFilledMetascoreHtml(movie) {
     return (
-      `<a href="${movie.url}criticreviews" class="unstyled articleLink" title="Open ${movie.info.title} Critic Reviews on IMDb">` +
+      `<a href="${movie.url}criticreviews" class="unstyled articleLink" title="Open ${movie.info.title} Critic Reviews on ${movie.pageName}">` +
       `      <h2 class="mop-ratings-wrap__score">` +
       `        <span class="mop-ratings-wrap__percentage"` +
       `              style="background-color: ${movie.criticRatings.custom}; padding: 0px 8px;">${movie.criticRatings.score}</span></h2>` +
@@ -246,7 +247,7 @@ class RottenPage extends MoviePage {
 
   getEmptyMetascoreHtml(movie) {
     return (
-      `      <a href="${movie.url}criticreviews" class="unstyled articleLink" title="Open ${movie.info.title} Critic Reviews on IMDb">` +
+      `      <a href="${movie.url}criticreviews" class="unstyled articleLink" title="Open ${movie.info.title} Critic Reviews on ${movie.pageName}">` +
       `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
       ` >There are no<br>Metacritic reviews</div>` +
       `    <div class="mop-ratings-wrap__review-totals">` +
@@ -271,7 +272,7 @@ class RottenPage extends MoviePage {
 
   generateFilledUserRatingsElement(movie) {
     const userratingOuterHtml =
-      `<a href="${movie.url}" class="unstyled articleLink" title="Open ${movie.info.title} on IMDb">` +
+      `<a href="${movie.url}" class="unstyled articleLink" title="Open ${movie.info.title} on ${movie.pageName}">` +
       `    <h2 class="mop-ratings-wrap__score">` +
       `        <span class="mop-ratings-wrap__percentage" style="vertical-align: middle;">${movie.userRatings.score.toLocaleString(
         'en',
@@ -302,7 +303,7 @@ class RottenPage extends MoviePage {
 
   generateEmptyUserRatingsElement(movie) {
     const userratingOuterHtml =
-      `      <a href="${movie.url}" class="unstyled articleLink" title="Open ${movie.info.title} on IMDb">` +
+      `      <a href="${movie.url}" class="unstyled articleLink" title="Open ${movie.info.title} on ${movie.pageName}">` +
       `  <div class="audience-score__italics mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion mop-ratings-wrap__text--not-released">` +
       `        <p class="mop-ratings-wrap__prerelease-text">Coming soon</p>` +
       `    </div>` +
