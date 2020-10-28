@@ -25,7 +25,7 @@ describe('End-to-end tests', async function () {
 
   context('on IMDb', function () {
     before(async function () {
-      await driver.get('https://www.imdb.com/title/tt6751668/');
+      await driver.get('https://www.imdb.com/title/tt0110912/');
     });
 
     it('should inject audience score', async function () {
