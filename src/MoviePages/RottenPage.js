@@ -34,13 +34,14 @@ class RottenPage extends MoviePage {
   async getMovieInfoWithRatings() {
     const criticRatings = await this.readCriticRatings();
     const userRatings = await this.readUserRatings();
+    const criticsConsensus = this.readCriticsConsensus();
 
     return new MovieInfoWithRatings(
       await this.getMovieInfo(),
       this.url,
       RottenPage.NAME,
       null,
-      null,
+      criticsConsensus,
       criticRatings,
       userRatings
     );
@@ -169,6 +170,19 @@ class RottenPage extends MoviePage {
 
   convertToAbsoluteUrl(relativeUrl) {
     return 'https://www.rottentomatoes.com' + relativeUrl;
+  }
+
+  readCriticsConsensus() {
+    const criticsConsensusElement = this.document.querySelector(
+      'p.mop-ratings-wrap__text--concensus'
+    );
+
+    return criticsConsensusElement
+      ? new Summary(
+          criticsConsensusElement.previousElementSibling.textContent,
+          criticsConsensusElement.textContent
+        )
+      : null;
   }
 
   /**

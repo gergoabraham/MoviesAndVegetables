@@ -39,7 +39,10 @@ describe('Background script', function () {
           `https://www.rottentomatoes.com/m/shawshank_redemption`,
           RottenPage.NAME,
           null,
-          null,
+          new Summary(
+            'Critics Consensus',
+            'The Shawshank Redemption is an uplifting movie.'
+          ),
           new Ratings(
             90,
             71,
