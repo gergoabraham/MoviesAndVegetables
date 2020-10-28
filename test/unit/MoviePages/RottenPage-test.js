@@ -60,6 +60,7 @@ describe('rottenPage', function () {
             'https://www.rottentomatoes.com/m/shawshank_redemption',
             RottenPage.NAME,
             null,
+            null,
             new Ratings(
               90,
               71,
@@ -88,6 +89,7 @@ describe('rottenPage', function () {
             RottenPage.NAME,
             null,
             null,
+            null,
             null
           )
         );
@@ -105,6 +107,7 @@ describe('rottenPage', function () {
             new MovieInfo("Amblin'", 1968),
             'https://www.rottentomatoes.com/m/amblin',
             RottenPage.NAME,
+            null,
             null,
             null,
             new Ratings(
@@ -132,6 +135,7 @@ describe('rottenPage', function () {
             new MovieInfo('The Shawshank Redemption', 1994),
             'https://www.imdb.com/title/tt0111161/',
             'OtherPage',
+            null,
             null,
             new Ratings(80, 20, '#66ffee'),
             new Ratings(
@@ -210,6 +214,7 @@ describe('rottenPage', function () {
             'OtherPage',
             null,
             null,
+            null,
             null
           )
         );
@@ -263,6 +268,7 @@ describe('rottenPage', function () {
             'https://www.imdb.com/title/tt0111161/',
             'OtherPage',
             33,
+            null,
             new Ratings(80, 20, '#66ffee'),
             new Ratings(
               9,

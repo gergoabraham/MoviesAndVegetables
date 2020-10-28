@@ -40,6 +40,7 @@ class RottenPage extends MoviePage {
       this.url,
       RottenPage.NAME,
       null,
+      null,
       criticRatings,
       userRatings
     );

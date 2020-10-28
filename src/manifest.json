@@ -26,6 +26,7 @@
     "scripts": [
       "Utilities/Logger.js",
       "MovieData/Ratings.js",
+      "MovieData/Summary.js",
       "MovieData/MovieInfo.js",
       "MovieData/MovieInfoWithRatings.js",
       "MoviePages/MoviePage.js",
@@ -41,6 +42,7 @@
       "matches": ["*://*.imdb.com/title/*"],
       "js": [
         "MovieData/Ratings.js",
+        "MovieData/Summary.js",
         "MovieData/MovieInfo.js",
         "MovieData/MovieInfoWithRatings.js",
         "MoviePages/MoviePage.js",
@@ -55,6 +57,7 @@
       "matches": ["*://*.rottentomatoes.com/m/*"],
       "js": [
         "MovieData/Ratings.js",
+        "MovieData/Summary.js",
         "MovieData/MovieInfo.js",
         "MovieData/MovieInfoWithRatings.js",
         "MoviePages/MoviePage.js",

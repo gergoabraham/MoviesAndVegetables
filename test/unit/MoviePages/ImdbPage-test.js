@@ -61,6 +61,7 @@ describe('ImdbPage', function () {
             'https://www.imdb.com/title/tt0111161/',
             ImdbPage.NAME,
             1,
+            null,
             new Ratings(80, 20, '#66Cc33'),
             new Ratings(
               9.3,
@@ -83,6 +84,7 @@ describe('ImdbPage', function () {
             new MovieInfo('Avatar 5', 2028),
             'https://www.imdb.com/title/tt5637536/',
             ImdbPage.NAME,
+            null,
             null,
             null,
             null
@@ -124,6 +126,7 @@ describe('ImdbPage', function () {
           new MovieInfo('Movie Title', 2002),
           rottenURL,
           'Other Page',
+          null,
           null,
           new Ratings(93, 1268, 'critics-score-logo.svg'),
           new Ratings(98, 885228, 'user-rating-logo.svg')
@@ -243,6 +246,7 @@ describe('ImdbPage', function () {
             new MovieInfo('Movie Title', 2002),
             rottenURL,
             'Other Page',
+            null,
             null,
             null,
             null
