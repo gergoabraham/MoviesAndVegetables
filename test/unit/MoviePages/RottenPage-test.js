@@ -139,7 +139,7 @@ describe('rottenPage', function () {
             'https://www.imdb.com/title/tt0111161/',
             'OtherPage',
             null,
-            null,
+            new Summary('Summary', 'This is the story in a nutshell.'),
             new Ratings(80, 20, '#66ffee'),
             new Ratings(
               9,
@@ -198,6 +198,27 @@ describe('rottenPage', function () {
             `      </a>` +
             `</div>` +
             `</section>`
+        );
+      });
+
+      it('add summary after IMDbScores', function () {
+        document
+          .getElementById('mv-imdb-scores')
+          .nextElementSibling.id.should.equal('mv-imdb-summary');
+      });
+
+      it('add summary with correct data and format', function () {
+        const summary = document.getElementById('mv-imdb-summary');
+
+        summary.outerHTML.should.equal(
+          `<div id="mv-imdb-summary" style="padding-top: 20px;">` +
+            `  <strong>Summary</strong>` +
+            `  <p` +
+            ` style="min-height: 0"` +
+            ` class="mop-ratings-wrap__text mop-ratings-wrap__text--concensus">` +
+            `    This is the story in a nutshell.` +
+            `  </p>` +
+            `</div>`
         );
       });
     });
