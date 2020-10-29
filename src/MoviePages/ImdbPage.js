@@ -38,13 +38,14 @@ class ImdbPage extends MoviePage {
     const criticRatings = await this.readCriticRatings();
     const userRatings = this.readUserRatings();
     const toplistPosition = this.getToplistPosition();
+    const summary = this.readSummary();
 
     return new MovieInfoWithRatings(
       await this.getMovieInfo(),
       this.url,
       ImdbPage.NAME,
       toplistPosition,
-      null,
+      summary,
       criticRatings,
       userRatings
     );
@@ -159,6 +160,15 @@ class ImdbPage extends MoviePage {
       : null;
 
     return toplistPosition;
+  }
+
+  readSummary() {
+    const plotSummaryElement = this.document.querySelector('div.summary_text');
+
+    const summary = plotSummaryElement
+      ? new Summary('Summary', plotSummaryElement.textContent.trim())
+      : null;
+    return summary;
   }
 
   /**

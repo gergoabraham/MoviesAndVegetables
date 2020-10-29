@@ -308,6 +308,20 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
       });
     });
 
+    context('plot summary', function () {
+      it('is there', async function () {
+        const document = await fetchDOM(
+          'https://www.imdb.com/title/tt0111161/'
+        );
+
+        document.querySelectorAll('div.summary_text').length.should.equal(1);
+        document
+          .querySelector('div.summary_text')
+          .innerHTML.trim()
+          .should.match(/^Two imprisoned men.+$/);
+      });
+    });
+
     context('missing scores', function () {
       let document;
 

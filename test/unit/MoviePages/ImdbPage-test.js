@@ -61,7 +61,7 @@ describe('ImdbPage', function () {
             'https://www.imdb.com/title/tt0111161/',
             ImdbPage.NAME,
             1,
-            null,
+            new Summary('Summary', 'Two imprisoned men having problems.'),
             new Ratings(80, 20, '#66Cc33'),
             new Ratings(
               9.3,
