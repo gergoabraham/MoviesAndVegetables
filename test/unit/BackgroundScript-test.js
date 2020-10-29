@@ -41,7 +41,7 @@ describe('Background script', function () {
           null,
           new Summary(
             'Critics Consensus',
-            'The Shawshank Redemption is an uplifting movie.'
+            '<em>The Shawshank Redemption</em> is an uplifting movie.'
           ),
           new Ratings(
             90,
@@ -73,7 +73,7 @@ describe('Background script', function () {
           `https://www.rottentomatoes.com/m/amblin`,
           RottenPage.NAME,
           null,
-          null,
+          new Summary('Critics Consensus', 'No consensus yet.'),
           null,
           new Ratings(
             60,

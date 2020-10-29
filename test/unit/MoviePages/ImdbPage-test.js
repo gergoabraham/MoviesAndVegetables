@@ -9,7 +9,7 @@
 const { JSDOM } = require('jsdom');
 const sinon = require('sinon');
 
-describe.only('ImdbPage', function () {
+describe('ImdbPage', function () {
   const rottenURL = 'https://www.rottentomatoes.com/m/blabla';
 
   async function getTestDOM(url) {

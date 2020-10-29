@@ -174,14 +174,11 @@ class RottenPage extends MoviePage {
 
   readCriticsConsensus() {
     const criticsConsensusElement = this.document.querySelector(
-      'p.mop-ratings-wrap__text--concensus'
-    );
+      'section.mop-ratings-wrap__row.js-scoreboard-container'
+    ).previousElementSibling;
 
     return criticsConsensusElement
-      ? new Summary(
-          criticsConsensusElement.previousElementSibling.textContent,
-          criticsConsensusElement.textContent
-        )
+      ? new Summary('Critics Consensus', criticsConsensusElement.innerHTML)
       : null;
   }
 

@@ -64,9 +64,9 @@ contract('RottenContract', function (fetchDOM, fetchText) {
           const document = await fetchDOM(
             'https://www.rottentomatoes.com/m/shawshank_redemption'
           );
-          ratingContainer = document.querySelectorAll(
+          ratingContainer = document.querySelector(
             'section.mop-ratings-wrap__row.js-scoreboard-container'
-          )[0];
+          );
         });
 
         it('there is a container for ratings', async function () {
@@ -147,6 +147,12 @@ contract('RottenContract', function (fetchDOM, fetchText) {
       return document.head
         .querySelector('meta[property="og:title"')
         .content.match(/\d{4}/)[0];
+    }
+
+    function getCriticsConsensusElement(document) {
+      return document.querySelector(
+        'section.mop-ratings-wrap__row.js-scoreboard-container'
+      ).previousElementSibling;
     }
 
     before(async function () {
@@ -290,22 +296,17 @@ contract('RottenContract', function (fetchDOM, fetchText) {
         const document = await fetchDOM(
           'https://www.rottentomatoes.com/m/shawshank_redemption'
         );
-
-        const criticsConsensus = document.querySelector(
-          'p.mop-ratings-wrap__text--concensus'
-        );
-
-        criticsConsensus.textContent.should.contain(
-          'The Shawshank Redemption is an uplifting'
+        getCriticsConsensusElement(document).innerHTML.should.contain(
+          '<em>The Shawshank Redemption</em> is an uplifting'
         );
       });
 
-      it("or doesn't exist", async function () {
+      it('or it says "No consensus yet."', async function () {
         const document = await fetchDOM(
           'https://www.rottentomatoes.com/m/amblin'
         );
-        should.not.exist(
-          document.querySelector('p.mop-ratings-wrap__text--concensus')
+        getCriticsConsensusElement(document).textContent.should.equal(
+          'No consensus yet.'
         );
       });
     });
