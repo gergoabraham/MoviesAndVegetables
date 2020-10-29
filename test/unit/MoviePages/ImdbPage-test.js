@@ -9,7 +9,7 @@
 const { JSDOM } = require('jsdom');
 const sinon = require('sinon');
 
-describe('ImdbPage', function () {
+describe.only('ImdbPage', function () {
   const rottenURL = 'https://www.rottentomatoes.com/m/blabla';
 
   async function getTestDOM(url) {
@@ -127,7 +127,7 @@ describe('ImdbPage', function () {
           rottenURL,
           'Other Page',
           null,
-          null,
+          new Summary('Summary Title', 'This is a hellova good movie!'),
           new Ratings(93, 1268, 'critics-score-logo.svg'),
           new Ratings(98, 885228, 'user-rating-logo.svg')
         )
@@ -137,13 +137,17 @@ describe('ImdbPage', function () {
     }
 
     context('all scores are present', function () {
+      let document;
+
+      before(async function () {
+        const url = 'https://www.imdb.com/title/tt0111161/';
+        document = await injectDefaultRatings(url);
+      });
+
       context('Tomatometer', function () {
         let titleReviewBar;
 
-        before(async function () {
-          const url = 'https://www.imdb.com/title/tt0111161/';
-          const document = await injectDefaultRatings(url);
-
+        before(function () {
           titleReviewBar = document.getElementsByClassName('titleReviewBar')[0];
         });
 
@@ -185,12 +189,8 @@ describe('ImdbPage', function () {
 
       context('AudienceScore', function () {
         let ratingsWrapper;
-        let document;
 
-        before(async function () {
-          const url = 'https://www.imdb.com/title/tt0111161/';
-          document = await injectDefaultRatings(url);
-
+        before(function () {
           ratingsWrapper = document.getElementsByClassName(
             'ratings_wrapper'
           )[0];
@@ -229,6 +229,31 @@ describe('ImdbPage', function () {
 
         it("modify ratings_wrapper's width to auto", function () {
           ratingsWrapper.style.width.should.equal('auto');
+        });
+      });
+
+      context('Critics consensus', function () {
+        it('add Critics Consensus below titleReviewBar', function () {
+          document
+            .getElementsByClassName('titleReviewBar')[0]
+            .nextElementSibling.id.should.equal('mv-critics-consensus');
+        });
+
+        it('add Critics Consensus with correct data and format', function () {
+          document
+            .querySelector('#mv-critics-consensus')
+            .innerHTML.should.equal(
+              `<a` +
+                ` href="${rottenURL}"` +
+                ` title="Open Movie Title on Other Page"` +
+                ` style="text-decoration: none; color: #333"` +
+                `>` +
+                `  <div style="padding: 0px 20px 18px 20px; display: flex; align-items: center">` +
+                `    <h4 style="padding-right: 20px">Summary Title:</h4>` +
+                `    <div>This is a hellova good movie!</div>` +
+                `  </div>` +
+                `</a>`
+            );
         });
       });
     });
