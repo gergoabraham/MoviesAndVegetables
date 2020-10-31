@@ -380,17 +380,12 @@ class ImdbPage extends MoviePage {
   injectCriticsConsensus(doc, movie) {
     if (movie.summary) {
       const consensus = this.generateElement(
-        `<div id="mv-critics-consensus">` +
-          `<a` +
-          ` href="${movie.url}"` +
-          ` title="Open ${movie.info.title} on ${movie.pageName}"` +
-          ` style="text-decoration: none; color: #333"` +
-          `>` +
-          `  <div style="padding: 0px 20px 18px 20px; display: flex; align-items: center">` +
-          `    <h4 style="padding-right: 20px">${movie.summary.title}:</h4>` +
-          `    <div>${movie.summary.content}</div>` +
-          `  </div>` +
-          `</a>` +
+        `<div` +
+          `  id="mv-critics-consensus"` +
+          `  title="${movie.summary.title} from ${movie.pageName}"` +
+          `  style="padding: 0px 20px 18px 20px; display: flex; align-items: center">` +
+          `  <h4 style="padding-right: 20px">${movie.summary.title}:</h4>` +
+          `  <div>${movie.summary.content}</div>` +
           `</div>`
       );
 

@@ -242,17 +242,14 @@ describe('ImdbPage', function () {
         it('add Critics Consensus with correct data and format', function () {
           document
             .querySelector('#mv-critics-consensus')
-            .innerHTML.should.equal(
-              `<a` +
-                ` href="${rottenURL}"` +
-                ` title="Open Movie Title on Other Page"` +
-                ` style="text-decoration: none; color: #333"` +
-                `>` +
-                `  <div style="padding: 0px 20px 18px 20px; display: flex; align-items: center">` +
-                `    <h4 style="padding-right: 20px">Summary Title:</h4>` +
-                `    <div>This is a hellova good movie!</div>` +
-                `  </div>` +
-                `</a>`
+            .outerHTML.should.equal(
+              `<div` +
+                ` id="mv-critics-consensus"` +
+                ` title="Summary Title from Other Page"` +
+                ` style="padding: 0px 20px 18px 20px; display: flex; align-items: center">` +
+                `  <h4 style="padding-right: 20px">Summary Title:</h4>` +
+                `  <div>This is a hellova good movie!</div>` +
+                `</div>`
             );
         });
       });
