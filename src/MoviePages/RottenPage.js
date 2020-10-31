@@ -339,7 +339,9 @@ class RottenPage extends MoviePage {
 
   generateImdbSummaryElement(movie) {
     return this.generateElement(
-      `<div id="mv-imdb-summary" style="padding-top: 20px;">` +
+      `<div id="mv-imdb-summary"` +
+        ` title="${movie.summary.title} from ${movie.pageName}"` +
+        ` style="padding-top: 20px;">` +
         `  <strong>${movie.summary.title}</strong>` +
         `  <p` +
         `    style="min-height: 0"` +

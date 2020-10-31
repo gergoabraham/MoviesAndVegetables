@@ -211,7 +211,9 @@ describe('rottenPage', function () {
         const summary = document.getElementById('mv-imdb-summary');
 
         summary.outerHTML.should.equal(
-          `<div id="mv-imdb-summary" style="padding-top: 20px;">` +
+          `<div id="mv-imdb-summary"` +
+            ` title="Summary from OtherPage"` +
+            ` style="padding-top: 20px;">` +
             `  <strong>Summary</strong>` +
             `  <p` +
             ` style="min-height: 0"` +
