@@ -172,7 +172,7 @@ describe('ImdbPage', function () {
             `<div class="titleReviewBarItem" id="mv-tomatometer" style="margin-bottom: 18px">` +
               `    <a href="${rottenURL}" title="Open Movie Title on Other Page" style="text-decoration: none">` +
               `        <img src="critics-score-logo.svg" height="27px" width="27px" style="vertical-align: baseline">` +
-              `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
+              `        <div class="metacriticScore titleReviewBarSubItem" style="color: black; width: auto;">` +
               `            <span>93%</span>` +
               `        </div>` +
               `        <div class="titleReviewBarSubItem">` +

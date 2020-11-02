@@ -208,7 +208,7 @@ class ImdbPage extends MoviePage {
       `<div class="titleReviewBarItem" id="mv-tomatometer" style="margin-bottom: 18px">` +
       `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none">` +
       `        <img src="${movie.criticRatings.custom}" height="27px" width="27px" style="vertical-align: baseline">` +
-      `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
+      `        <div class="metacriticScore titleReviewBarSubItem" style="color: black; width: auto;">` +
       `            <span>${movie.criticRatings.score}%</span>` +
       `        </div>` +
       `        <div class="titleReviewBarSubItem">` +
