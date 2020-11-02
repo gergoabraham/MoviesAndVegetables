@@ -114,6 +114,30 @@ describe('ImdbPage', function () {
           .should.be.rejectedWith(Error, 'Not a movie');
       });
     });
+
+    context(`on a movie with missing css`, function () {
+      it('read all stuff', async function () {
+        const movie = await readMovieDataByImdbPage(
+          'https://www.imdb.com/title/tt0111162/'
+        );
+
+        movie.should.deep.equal(
+          new MovieInfoWithRatings(
+            new MovieInfo('The Shawshank Redemption', 1994),
+            'https://www.imdb.com/title/tt0111162/',
+            ImdbPage.NAME,
+            1,
+            new Summary('Summary', 'Two imprisoned men having problems.'),
+            new Ratings(80, 20, null),
+            new Ratings(
+              9.3,
+              2260000,
+              '<svg id="home_img">This is the logo.</svg>'
+            )
+          )
+        );
+      });
+    });
   });
 
   describe('injectRatings', function () {

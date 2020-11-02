@@ -95,14 +95,22 @@ class ImdbPage extends MoviePage {
   }
 
   async getMetascoreColor() {
-    const metascoreElement = this.getMetascoreElement();
+    let color;
 
-    const css = await this.fetchCss();
-    const favorableness = metascoreElement.className.match(/score_\w+/)[0];
+    try {
+      const metascoreElement = this.getMetascoreElement();
 
-    return css.match(
-      `\\.${favorableness}{background-color:(#[a-zA-Z0-9]{6})`
-    )[1];
+      const css = await this.fetchCss();
+      const favorableness = metascoreElement.className.match(/score_\w+/)[0];
+
+      color = css.match(
+        `\\.${favorableness}{background-color:(#[a-zA-Z0-9]{6})`
+      )[1];
+    } catch (e) {
+      color = null;
+    }
+
+    return color;
   }
 
   getMetascoreElement() {
