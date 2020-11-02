@@ -8,10 +8,11 @@
 
 class MovieInfoWithRatings {
   /**
-   * @param  {MovieInfo} info
-   * @param  {string} url
-   * @param  {string} pageName
-   * @param  {number} toplistPosition
+   * @param {MovieInfo} info
+   * @param {string} url
+   * @param {string} pageName
+   * @param {number} toplistPosition
+   * @param {Summary} summary
    * @param {Ratings} criticRatings
    * @param {Ratings} userRatings
    */
@@ -20,6 +21,7 @@ class MovieInfoWithRatings {
     url,
     pageName,
     toplistPosition,
+    summary,
     criticRatings,
     userRatings
   ) {
@@ -27,6 +29,7 @@ class MovieInfoWithRatings {
     this.url = url;
     this.pageName = pageName;
     this.toplistPosition = toplistPosition;
+    this.summary = summary;
     this.criticRatings = criticRatings;
     this.userRatings = userRatings;
   }

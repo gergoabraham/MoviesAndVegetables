@@ -22,6 +22,7 @@
     "MoviePageFactory": "writable",
     "ImdbPage": "writable",
     "RottenPage": "writable",
+    "Summary": "writable",
     "Ratings": "writable",
     "MoviePage": "writable",
     "MovieInfo": "writable",

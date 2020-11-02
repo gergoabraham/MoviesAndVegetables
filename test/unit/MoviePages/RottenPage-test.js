@@ -60,6 +60,10 @@ describe('rottenPage', function () {
             'https://www.rottentomatoes.com/m/shawshank_redemption',
             RottenPage.NAME,
             null,
+            new Summary(
+              'Critics Consensus',
+              '<em>The Shawshank Redemption</em> is an uplifting movie.'
+            ),
             new Ratings(
               90,
               71,
@@ -88,6 +92,7 @@ describe('rottenPage', function () {
             RottenPage.NAME,
             null,
             null,
+            null,
             null
           )
         );
@@ -106,6 +111,7 @@ describe('rottenPage', function () {
             'https://www.rottentomatoes.com/m/amblin',
             RottenPage.NAME,
             null,
+            new Summary('Critics Consensus', 'No consensus yet.'),
             null,
             new Ratings(
               60,
@@ -133,6 +139,7 @@ describe('rottenPage', function () {
             'https://www.imdb.com/title/tt0111161/',
             'OtherPage',
             null,
+            new Summary('Summary', 'This is the story in a nutshell.'),
             new Ratings(80, 20, '#66ffee'),
             new Ratings(
               9,
@@ -193,6 +200,29 @@ describe('rottenPage', function () {
             `</section>`
         );
       });
+
+      it('add summary after IMDbScores', function () {
+        document
+          .getElementById('mv-imdb-scores')
+          .nextElementSibling.id.should.equal('mv-imdb-summary');
+      });
+
+      it('add summary with correct data and format', function () {
+        const summary = document.getElementById('mv-imdb-summary');
+
+        summary.outerHTML.should.equal(
+          `<div id="mv-imdb-summary"` +
+            ` title="Summary from OtherPage"` +
+            ` style="padding-top: 20px;">` +
+            `  <strong>Summary</strong>` +
+            `  <p` +
+            ` style="min-height: 0"` +
+            ` class="mop-ratings-wrap__text mop-ratings-wrap__text--concensus">` +
+            `    This is the story in a nutshell.` +
+            `  </p>` +
+            `</div>`
+        );
+      });
     });
 
     context('no ratings yet', function () {
@@ -208,6 +238,7 @@ describe('rottenPage', function () {
             new MovieInfo('The Shawshank Redemption', 1994),
             'https://www.imdb.com/title/tt0111161/',
             'OtherPage',
+            null,
             null,
             null,
             null
@@ -263,6 +294,7 @@ describe('rottenPage', function () {
             'https://www.imdb.com/title/tt0111161/',
             'OtherPage',
             33,
+            null,
             new Ratings(80, 20, '#66ffee'),
             new Ratings(
               9,

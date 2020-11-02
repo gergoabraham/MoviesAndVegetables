@@ -34,12 +34,14 @@ class RottenPage extends MoviePage {
   async getMovieInfoWithRatings() {
     const criticRatings = await this.readCriticRatings();
     const userRatings = await this.readUserRatings();
+    const criticsConsensus = this.readCriticsConsensus();
 
     return new MovieInfoWithRatings(
       await this.getMovieInfo(),
       this.url,
       RottenPage.NAME,
       null,
+      criticsConsensus,
       criticRatings,
       userRatings
     );
@@ -170,17 +172,32 @@ class RottenPage extends MoviePage {
     return 'https://www.rottentomatoes.com' + relativeUrl;
   }
 
+  readCriticsConsensus() {
+    const criticsConsensusElement = this.document.querySelector(
+      'section.mop-ratings-wrap__row.js-scoreboard-container'
+    ).previousElementSibling;
+
+    return criticsConsensusElement
+      ? new Summary('Critics Consensus', criticsConsensusElement.innerHTML)
+      : null;
+  }
+
   /**
    * @param  {MovieInfoWithRatings} movie
    */
   injectRatings(movie) {
     this.fixCenterAlignmentOfTomatometerAndAudienceScore();
 
-    const imdbRatingsElement = this.generateImdbRatingsRowElement(movie);
-    const scoreboardContainers = this.document.querySelectorAll(
-      'section.mop-ratings-wrap__row.js-scoreboard-container'
-    );
-    scoreboardContainers[0].after(imdbRatingsElement);
+    const ratingsWrapElement = this.getRatingsWrapElement();
+    ratingsWrapElement.append(this.generateImdbRatingsRowElement(movie));
+
+    if (movie.summary) {
+      ratingsWrapElement.append(this.generateImdbSummaryElement(movie));
+    }
+  }
+
+  getRatingsWrapElement() {
+    return this.document.querySelector('section.mop-ratings-wrap__info');
   }
 
   fixCenterAlignmentOfTomatometerAndAudienceScore() {
@@ -318,6 +335,22 @@ class RottenPage extends MoviePage {
 
   generateToplistPositionString(movie) {
     return movie.toplistPosition ? ` #${movie.toplistPosition}/250` : ``;
+  }
+
+  generateImdbSummaryElement(movie) {
+    return this.generateElement(
+      `<div id="mv-imdb-summary"` +
+        ` title="${movie.summary.title} from ${movie.pageName}"` +
+        ` style="padding-top: 20px;">` +
+        `  <strong>${movie.summary.title}</strong>` +
+        `  <p` +
+        `    style="min-height: 0"` +
+        `    class="mop-ratings-wrap__text mop-ratings-wrap__text--concensus"` +
+        `  >` +
+        `    ${movie.summary.content}` +
+        `  </p>` +
+        `</div>`
+    );
   }
 }
 

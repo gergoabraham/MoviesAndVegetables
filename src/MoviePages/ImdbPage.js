@@ -38,12 +38,14 @@ class ImdbPage extends MoviePage {
     const criticRatings = await this.readCriticRatings();
     const userRatings = this.readUserRatings();
     const toplistPosition = this.getToplistPosition();
+    const summary = this.readSummary();
 
     return new MovieInfoWithRatings(
       await this.getMovieInfo(),
       this.url,
       ImdbPage.NAME,
       toplistPosition,
+      summary,
       criticRatings,
       userRatings
     );
@@ -160,13 +162,22 @@ class ImdbPage extends MoviePage {
     return toplistPosition;
   }
 
+  readSummary() {
+    const plotSummaryElement = this.document.querySelector('div.summary_text');
+
+    const summary = plotSummaryElement
+      ? new Summary('Summary', plotSummaryElement.textContent.trim())
+      : null;
+    return summary;
+  }
+
   /**
    * @param  {MovieInfoWithRatings} movie
    */
   injectRatings(movie) {
     this.injectTomatoMeter(this.document, movie);
-
     this.injectAudienceScore(this.document, movie);
+    this.injectCriticsConsensus(this.document, movie);
   }
 
   injectTomatoMeter(doc, movie) {
@@ -364,6 +375,22 @@ class ImdbPage extends MoviePage {
 
   groupThousands(number) {
     return new Intl.NumberFormat(window.navigator.language).format(number);
+  }
+
+  injectCriticsConsensus(doc, movie) {
+    if (movie.summary) {
+      const consensus = this.generateElement(
+        `<div` +
+          `  id="mv-critics-consensus"` +
+          `  title="${movie.summary.title} from ${movie.pageName}"` +
+          `  style="padding: 0px 20px 18px 20px; display: flex; align-items: center">` +
+          `  <h4 style="padding-right: 20px">${movie.summary.title}:</h4>` +
+          `  <div>${movie.summary.content}</div>` +
+          `</div>`
+      );
+
+      doc.getElementsByClassName('titleReviewBar')[0].after(consensus);
+    }
   }
 }
 

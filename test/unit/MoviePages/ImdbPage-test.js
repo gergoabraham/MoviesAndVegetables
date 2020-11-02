@@ -61,6 +61,7 @@ describe('ImdbPage', function () {
             'https://www.imdb.com/title/tt0111161/',
             ImdbPage.NAME,
             1,
+            new Summary('Summary', 'Two imprisoned men having problems.'),
             new Ratings(80, 20, '#66Cc33'),
             new Ratings(
               9.3,
@@ -83,6 +84,7 @@ describe('ImdbPage', function () {
             new MovieInfo('Avatar 5', 2028),
             'https://www.imdb.com/title/tt5637536/',
             ImdbPage.NAME,
+            null,
             null,
             null,
             null
@@ -125,6 +127,7 @@ describe('ImdbPage', function () {
           rottenURL,
           'Other Page',
           null,
+          new Summary('Summary Title', 'This is a hellova good movie!'),
           new Ratings(93, 1268, 'critics-score-logo.svg'),
           new Ratings(98, 885228, 'user-rating-logo.svg')
         )
@@ -134,13 +137,17 @@ describe('ImdbPage', function () {
     }
 
     context('all scores are present', function () {
+      let document;
+
+      before(async function () {
+        const url = 'https://www.imdb.com/title/tt0111161/';
+        document = await injectDefaultRatings(url);
+      });
+
       context('Tomatometer', function () {
         let titleReviewBar;
 
-        before(async function () {
-          const url = 'https://www.imdb.com/title/tt0111161/';
-          const document = await injectDefaultRatings(url);
-
+        before(function () {
           titleReviewBar = document.getElementsByClassName('titleReviewBar')[0];
         });
 
@@ -182,12 +189,8 @@ describe('ImdbPage', function () {
 
       context('AudienceScore', function () {
         let ratingsWrapper;
-        let document;
 
-        before(async function () {
-          const url = 'https://www.imdb.com/title/tt0111161/';
-          document = await injectDefaultRatings(url);
-
+        before(function () {
           ratingsWrapper = document.getElementsByClassName(
             'ratings_wrapper'
           )[0];
@@ -228,6 +231,28 @@ describe('ImdbPage', function () {
           ratingsWrapper.style.width.should.equal('auto');
         });
       });
+
+      context('Critics consensus', function () {
+        it('add Critics Consensus below titleReviewBar', function () {
+          document
+            .getElementsByClassName('titleReviewBar')[0]
+            .nextElementSibling.id.should.equal('mv-critics-consensus');
+        });
+
+        it('add Critics Consensus with correct data and format', function () {
+          document
+            .querySelector('#mv-critics-consensus')
+            .outerHTML.should.equal(
+              `<div` +
+                ` id="mv-critics-consensus"` +
+                ` title="Summary Title from Other Page"` +
+                ` style="padding: 0px 20px 18px 20px; display: flex; align-items: center">` +
+                `  <h4 style="padding-right: 20px">Summary Title:</h4>` +
+                `  <div>This is a hellova good movie!</div>` +
+                `</div>`
+            );
+        });
+      });
     });
 
     context('no ratings yet on remote page', function () {
@@ -243,6 +268,7 @@ describe('ImdbPage', function () {
             new MovieInfo('Movie Title', 2002),
             rottenURL,
             'Other Page',
+            null,
             null,
             null,
             null

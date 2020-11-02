@@ -39,6 +39,10 @@ describe('Background script', function () {
           `https://www.rottentomatoes.com/m/shawshank_redemption`,
           RottenPage.NAME,
           null,
+          new Summary(
+            'Critics Consensus',
+            '<em>The Shawshank Redemption</em> is an uplifting movie.'
+          ),
           new Ratings(
             90,
             71,
@@ -69,6 +73,7 @@ describe('Background script', function () {
           `https://www.rottentomatoes.com/m/amblin`,
           RottenPage.NAME,
           null,
+          new Summary('Critics Consensus', 'No consensus yet.'),
           null,
           new Ratings(
             60,
@@ -94,6 +99,7 @@ describe('Background script', function () {
           new MovieInfo("Amblin'", 1968),
           `https://www.imdb.com/title/tt0064010/`,
           ImdbPage.NAME,
+          null,
           null,
           null,
           new Ratings(6.4, 1044, '<svg id="home_img">This is the logo.</svg>')
