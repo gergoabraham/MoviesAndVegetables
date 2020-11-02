@@ -14,8 +14,8 @@ Do you like to check out a movie both on <b>IMDb</b> and <b>RottenTomatoes</b> w
 
 <b>With this extension, you can</b>
 
-- check out a movie's RottenTomatoes <b>Tomatometer</b> and <b>AudienceScore</b> on <b>IMDb</b>,
-- or its IMDb <b>User score</b> and <b>Metascore</b> on <b>RottenTomatoes</b>, and even the <b>TOP250 position</b>!
+- check out a movie's RottenTomatoes <b>Tomatometer</b>, <b>AudienceScore</b> and <b>Critics Consensus</b> on <b>IMDb</b>,
+- or its IMDb <b>User score</b>, <b>Metascore</b> and <b>plot summary</b> on <b>RottenTomatoes</b>, and even the <b>TOP250 position</b>!
 
 <a href="https://github.com/gergooo/MoviesAndVegetables/blob/master/CHANGELOG.md">[Click here for the CHANGELOG]</a>
 
