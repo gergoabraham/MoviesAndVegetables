@@ -204,10 +204,14 @@ class ImdbPage extends MoviePage {
   }
 
   createFilledTomatometerHtml(movie) {
+    const iconLogo = movie.criticRatings.custom
+      ? `<img src="${movie.criticRatings.custom}" height="27px" width="27px" style="vertical-align: baseline">`
+      : '';
+
     return (
       `<div class="titleReviewBarItem" id="mv-tomatometer" style="margin-bottom: 18px">` +
       `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none">` +
-      `        <img src="${movie.criticRatings.custom}" height="27px" width="27px" style="vertical-align: baseline">` +
+      `        ${iconLogo}` +
       `        <div class="metacriticScore titleReviewBarSubItem" style="color: black; width: auto;">` +
       `            <span>${movie.criticRatings.score}%</span>` +
       `        </div>` +
@@ -346,11 +350,15 @@ class ImdbPage extends MoviePage {
   }
 
   createFilledAudienceScoreHtml(movie) {
+    const iconLogo = movie.userRatings.custom
+      ? `<img src="${movie.userRatings.custom}" height="32px" width="32px">`
+      : '';
+
     return (
       `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center; padding: 0px; width: 100px">` +
       `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none">` +
       `        <div style="display: flex; align-items: center; justify-content: center; height: 40px;">` +
-      `            <img src="${movie.userRatings.custom}" height="32px" width="32px">` +
+      `            ${iconLogo}` +
       `            <div>` +
       `                <div class="ratingValue">` +
       `                    <strong style="color: white">` +

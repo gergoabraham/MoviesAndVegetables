@@ -77,8 +77,16 @@ class RottenPage extends MoviePage {
   }
 
   async readTomatometerLogoUrl() {
-    const freshness = this.readTomatometerFreshness();
-    return this.readLogoUrl(freshness);
+    let logoUrl;
+
+    try {
+      const freshness = this.readTomatometerFreshness();
+      logoUrl = await this.readLogoUrl(freshness);
+    } catch (e) {
+      logoUrl = null;
+    }
+
+    return logoUrl;
   }
 
   readTomatometerFreshness() {
@@ -125,8 +133,16 @@ class RottenPage extends MoviePage {
   }
 
   async readAudienceScoreLogoUrl() {
-    const freshness = this.readAudienceScoreFreshness();
-    return this.readLogoUrl(freshness);
+    let logoUrl;
+
+    try {
+      const freshness = this.readAudienceScoreFreshness();
+      logoUrl = await this.readLogoUrl(freshness);
+    } catch (e) {
+      logoUrl = null;
+    }
+
+    return logoUrl;
   }
 
   readAudienceScoreFreshness() {

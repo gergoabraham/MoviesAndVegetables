@@ -122,6 +122,49 @@ describe('rottenPage', function () {
         );
       });
     });
+
+    context('on a movie with missing icons', function () {
+      it('read all stuff', async function () {
+        const movie = await readMovieDataByRottenPage(
+          'https://www.rottentomatoes.com/m/parasite_2019'
+        );
+
+        movie.should.deep.equal(
+          new MovieInfoWithRatings(
+            new MovieInfo('Parasite', 2019),
+            'https://www.rottentomatoes.com/m/parasite_2019',
+            RottenPage.NAME,
+            null,
+            new Summary('Critics Consensus', 'No consensus yet.'),
+            new Ratings(99, 450, null),
+            new Ratings(90, 7274, null)
+          )
+        );
+      });
+    });
+
+    context('on a movie with missing CSS', async function () {
+      it('read all stuff', async function () {
+        const movie = await readMovieDataByRottenPage(
+          'https://www.rottentomatoes.com/m/shawshank_redemption_missing_css'
+        );
+
+        movie.should.deep.equal(
+          new MovieInfoWithRatings(
+            new MovieInfo('The Shawshank Redemption', 1994),
+            'https://www.rottentomatoes.com/m/shawshank_redemption_missing_css',
+            RottenPage.NAME,
+            null,
+            new Summary(
+              'Critics Consensus',
+              '<em>The Shawshank Redemption</em> is an uplifting movie.'
+            ),
+            new Ratings(90, 71, null),
+            new Ratings(98, 885688, null)
+          )
+        );
+      });
+    });
   });
 
   describe('injectRatings', function () {

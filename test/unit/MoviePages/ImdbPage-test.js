@@ -325,6 +325,40 @@ describe('ImdbPage', function () {
       });
     });
 
+    context('no icons on remote page', function () {
+      let document;
+
+      before(async function () {
+        const url = 'https://www.imdb.com/title/tt0111161/';
+        document = await getTestDOM(url);
+        const imdbPage = new ImdbPage(document, url);
+
+        imdbPage.injectRatings(
+          new MovieInfoWithRatings(
+            new MovieInfo('Movie Title', 2002),
+            rottenURL,
+            'Other Page',
+            null,
+            null,
+            new Ratings(93, 1268, null),
+            new Ratings(98, 885228, null)
+          )
+        );
+      });
+
+      it('no tomatometer icon', function () {
+        const tomatoMeter = document.getElementById('mv-tomatometer');
+
+        should.not.exist(tomatoMeter.querySelector('img'));
+      });
+
+      it('no AudienceScore icon', function () {
+        const audienceScore = document.getElementById('mv-audience-score');
+
+        should.not.exist(audienceScore.querySelector('img'));
+      });
+    });
+
     context('missing structures on imdb', function () {
       context('for Tomatometer', function () {
         it('no metacritics - but multiple items in review bar', async function () {
