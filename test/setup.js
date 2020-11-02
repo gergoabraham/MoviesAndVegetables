@@ -56,7 +56,7 @@ afterEach(() => {
 
 function setupGlobals() {
   global.window = {};
-  window.navigator = {};
+  window.navigator = { language: 'en' };
 
   global.browser = {
     runtime: {
