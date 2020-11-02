@@ -205,7 +205,7 @@ class ImdbPage extends MoviePage {
 
   createFilledTomatometerHtml(movie) {
     return (
-      `<div class="titleReviewBarItem" id="mv-tomatometer">` +
+      `<div class="titleReviewBarItem" id="mv-tomatometer" style="margin-bottom: 18px">` +
       `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none">` +
       `        <img src="${movie.criticRatings.custom}" height="27px" width="27px" style="vertical-align: baseline">` +
       `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
@@ -269,6 +269,15 @@ class ImdbPage extends MoviePage {
       titleReviewBar.prepend(newTomatoMeter);
       newTomatoMeter.after(newDivider);
     }
+
+    this.makeTitleReviewBarWrappable(titleReviewBar);
+  }
+
+  makeTitleReviewBarWrappable(titleReviewBar) {
+    titleReviewBar.style.height = 'auto';
+    titleReviewBar.style.paddingBottom = '0px';
+
+    titleReviewBar.lastElementChild.style.marginBottom = '18px';
   }
 
   createDividerElement(doc) {

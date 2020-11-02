@@ -169,7 +169,7 @@ describe('ImdbPage', function () {
           const tomatoMeter = titleReviewBar.children[2];
 
           tomatoMeter.outerHTML.should.equal(
-            `<div class="titleReviewBarItem" id="mv-tomatometer">` +
+            `<div class="titleReviewBarItem" id="mv-tomatometer" style="margin-bottom: 18px">` +
               `    <a href="${rottenURL}" title="Open Movie Title on Other Page" style="text-decoration: none">` +
               `        <img src="critics-score-logo.svg" height="27px" width="27px" style="vertical-align: baseline">` +
               `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
@@ -183,6 +183,17 @@ describe('ImdbPage', function () {
               `        </div>` +
               `    </a>` +
               `</div>`
+          );
+        });
+
+        it('change titleReviewBar height and padding - for wrappable titleReviewBar', function () {
+          titleReviewBar.style.height.should.equal('auto');
+          titleReviewBar.style.paddingBottom.should.equal('0px');
+        });
+
+        it("change last element's bottom margin - for wrappable titleReviewBar", function () {
+          titleReviewBar.lastElementChild.style.marginBottom.should.equal(
+            '18px'
           );
         });
       });
