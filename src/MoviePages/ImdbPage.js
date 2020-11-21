@@ -270,6 +270,7 @@ class ImdbPage extends MoviePage {
     const titleReviewBar = doc.createElement('div');
 
     titleReviewBar.className = 'titleReviewBar';
+
     return titleReviewBar;
   }
 
@@ -299,6 +300,7 @@ class ImdbPage extends MoviePage {
     const newDivider = doc.createElement('div');
 
     newDivider.className = 'divider';
+
     return newDivider;
   }
 

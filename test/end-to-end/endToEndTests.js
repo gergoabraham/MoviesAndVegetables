@@ -70,6 +70,7 @@ describe('End-to-end tests', async function () {
 
   function rebuildAddon() {
     cleanupArtifacts();
+
     return new Promise((resolve) => cmd.get('npm run build', resolve));
   }
 

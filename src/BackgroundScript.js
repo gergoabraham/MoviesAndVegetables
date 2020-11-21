@@ -23,6 +23,7 @@ class BackgroundScript {
 
     Logger.log('Remote page: ', remoteMovieData);
     Logger.updateAndLogMovieStats();
+
     return remoteMovieData;
   }
 

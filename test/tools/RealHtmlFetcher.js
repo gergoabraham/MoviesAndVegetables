@@ -28,6 +28,7 @@ class RealHtmlFetcher {
           const text = await response.text();
 
           this.writeToCache(fileName, text);
+
           return text;
         },
       };
@@ -48,6 +49,7 @@ class RealHtmlFetcher {
           throw new TypeError('body used already');
         } else {
           this.isBodyAlreadyUsed = true;
+
           return fs.readFileSync(this.CachePath + fileName).toString();
         }
       },

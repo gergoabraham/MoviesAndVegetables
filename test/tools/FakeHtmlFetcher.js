@@ -31,6 +31,7 @@ class FakeHtmlFetcher {
             throw new TypeError('body used already');
           } else {
             this.isBodyAlreadyUsed = true;
+
             return fileContent;
           }
         },
@@ -59,6 +60,7 @@ class FakeHtmlFetcher {
 
       urlToFilenameTable[url] = fileName;
     });
+
     return urlToFilenameTable;
   }
 
