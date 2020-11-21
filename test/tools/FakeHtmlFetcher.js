@@ -51,12 +51,13 @@ class FakeHtmlFetcher {
     const fileList = fs.readdirSync(FakeHtmlPath);
 
     fileList.forEach((fileName) => {
-      const url = fileName
-        .replace(/\.\.\./, '?')
-        .replace(/\.html/g, '')
-        .replace(/\.(?!\w{3,4}$)/g, '/') // dots that are not before a file extension
-        .replace(/^([^/]+)\//, `https://www.$1.com/`)
-        .replace(/ .+$/, '');
+      const url =
+        'https://www.' +
+        fileName
+          .replace(/\.\.\./g, '?')
+          .replace(/\.\./g, '/')
+          .replace(/\.html/g, '')
+          .replace(/ .+$/, '');
 
       urlToFilenameTable[url] = fileName;
     });
@@ -68,11 +69,10 @@ class FakeHtmlFetcher {
     const filename = url
       .replace(/^https:\/\//, '')
       .replace(/^www\./, '')
-      .replace(/\.com/, '')
-      .replace(/\//g, '.')
+      .replace(/\//g, '..')
       .replace(/\?/, '...');
 
-    return filename + (filename.match(/\.\w{3,4}$/) ? '' : '.html');
+    return filename + (filename.match(/\.css$/) ? '' : '.html');
   }
 
   static getDocumentUrl(fileContent, originalUrl) {

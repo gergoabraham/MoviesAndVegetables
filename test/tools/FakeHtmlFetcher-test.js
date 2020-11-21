@@ -58,7 +58,7 @@ describe('FakeHtmlFetcher', function () {
       await fetch('www.no-such-file.com').should.be.rejectedWith(
         'fetch() fake: no file matches the url.\n\n' +
           'url: www.no-such-file.com\n\n' +
-          'filename: no-such-file.html'
+          'filename: no-such-file.com.html'
       );
     });
 
