@@ -17,11 +17,19 @@ class MoviePage {
       throw new Error(`Class MoviePages shouldn't be instantiated.`);
     }
 
-    this.document = document;
+    this._document = document;
 
     const inputUrl = new URL(url);
 
-    this.url = inputUrl.origin + inputUrl.pathname;
+    this._url = inputUrl.origin + inputUrl.pathname;
+  }
+
+  static get NAME() {
+    throw new Error(`Function not implemented.`);
+  }
+
+  static get URL_PATTERN() {
+    throw new Error(`Function not implemented.`);
   }
 
   /**
@@ -46,25 +54,26 @@ class MoviePage {
     throw new Error(`Function not implemented.`);
   }
 
-  readMetadataJSON() {
-    const metadataRaw = this.document.head.querySelector(
+  _readMetadataJSON() {
+    const metadataRaw = this._document.head.querySelector(
       'script[type="application/ld+json"]'
     ).textContent;
 
     return JSON.parse(metadataRaw);
   }
 
-  getTitleMetaTag() {
-    return this.document.head.querySelector('meta[property="og:title"').content;
+  _getTitleMetaTag() {
+    return this._document.head.querySelector('meta[property="og:title"')
+      .content;
   }
 
-  generateElement(innerHTML) {
+  _generateElement(innerHTML) {
     return new DOMParser().parseFromString(innerHTML, 'text/html').body
       .children[0];
   }
 
-  getStylesheetUrl(nameRegExp) {
-    const stylesheetLinkElements = this.document.querySelectorAll('link');
+  _getStylesheetUrl(nameRegExp) {
+    const stylesheetLinkElements = this._document.querySelectorAll('link');
 
     const styleSheetLinks = Array.from(stylesheetLinkElements).map(
       (linkElement) => linkElement.href
@@ -77,7 +86,7 @@ class MoviePage {
     return matchedStyleSheets[0];
   }
 
-  static async fetchTextContent(url) {
+  static async _fetchTextContent(url) {
     let textContent;
 
     if (this[url]) {

@@ -32,8 +32,8 @@ describe('ImdbPage', function () {
       `https://www.imdb.com/title/tt0111161/?pf_rd_t=15506&pf_rd_i=top`
     );
 
-    imdbPage.document.should.equal('input doc');
-    imdbPage.url.should.equal(`https://www.imdb.com/title/tt0111161/`);
+    imdbPage._document.should.equal('input doc');
+    imdbPage._url.should.equal(`https://www.imdb.com/title/tt0111161/`);
   });
 
   describe('getMovieInfo', function () {
@@ -466,7 +466,7 @@ describe('ImdbPage', function () {
     });
 
     it('write ratings count with thousand grouping', function () {
-      imdbPage.groupThousands(3333333).should.equal('3,333,333');
+      imdbPage._groupThousands(3333333).should.equal('3,333,333');
     });
 
     it(`be based on browser's preferred language`, function () {
@@ -479,7 +479,7 @@ describe('ImdbPage', function () {
         sinon.fake.returns({ format: fakeFormat })
       );
 
-      imdbPage.groupThousands(666).should.equal('formatted number');
+      imdbPage._groupThousands(666).should.equal('formatted number');
 
       Intl.NumberFormat.should.have.been.calledOnceWithExactly('hu');
     });

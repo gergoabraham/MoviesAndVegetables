@@ -29,8 +29,8 @@ describe('rottenPage', function () {
       'https://www.rottentomatoes.com/m/shawshank_redemption'
     );
 
-    rottenPage.document.should.equal('input doc');
-    rottenPage.url.should.equal(
+    rottenPage._document.should.equal('input doc');
+    rottenPage._url.should.equal(
       'https://www.rottentomatoes.com/m/shawshank_redemption'
     );
   });

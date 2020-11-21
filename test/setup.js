@@ -62,7 +62,7 @@ function setupGlobals() {
 
   global.browser = {
     runtime: {
-      sendMessage: BackgroundScript.getRemotePageData,
+      sendMessage: BackgroundScript._getRemotePageData,
       id: 'addon-id',
     },
   };

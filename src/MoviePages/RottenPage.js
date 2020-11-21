@@ -20,10 +20,10 @@ class RottenPage extends MoviePage {
    * @return  {MovieInfo} movie
    */
   async getMovieInfo() {
-    const metaDataJSON = this.readMetadataJSON();
+    const metaDataJSON = this._readMetadataJSON();
 
     const title = metaDataJSON.name;
-    const year = this.readYear();
+    const year = this._readYear();
 
     return new MovieInfo(title, year);
   }
@@ -32,13 +32,13 @@ class RottenPage extends MoviePage {
    * @return  {MovieInfoWithRatings} movie
    */
   async getMovieInfoWithRatings() {
-    const criticRatings = await this.readCriticRatings();
-    const userRatings = await this.readUserRatings();
-    const criticsConsensus = this.readCriticsConsensus();
+    const criticRatings = await this._readCriticRatings();
+    const userRatings = await this._readUserRatings();
+    const criticsConsensus = this._readCriticsConsensus();
 
     return new MovieInfoWithRatings(
       await this.getMovieInfo(),
-      this.url,
+      this._url,
       RottenPage.NAME,
       null,
       criticsConsensus,
@@ -47,42 +47,42 @@ class RottenPage extends MoviePage {
     );
   }
 
-  readYear() {
-    return Number(this.getTitleMetaTag().match(/\d{4}(?=\)$)/));
+  _readYear() {
+    return Number(this._getTitleMetaTag().match(/\d{4}(?=\)$)/));
   }
 
-  async readCriticRatings() {
-    const tomatometer = this.readTomatometer();
+  async _readCriticRatings() {
+    const tomatometer = this._readTomatometer();
 
     return tomatometer
       ? new Ratings(
           tomatometer,
-          this.readNumberOfCriticRatings(),
-          await this.readTomatometerLogoUrl()
+          this._readNumberOfCriticRatings(),
+          await this._readTomatometerLogoUrl()
         )
       : null;
   }
 
-  readTomatometer() {
-    return this.readScore(0);
+  _readTomatometer() {
+    return this._readScore(0);
   }
 
-  readNumberOfCriticRatings() {
+  _readNumberOfCriticRatings() {
     return Number(
-      this.document.body
+      this._document.body
         .getElementsByClassName('mop-ratings-wrap__half')[0]
         .querySelectorAll('small.mop-ratings-wrap__text--small')[0]
         .textContent.replace(/[^0-9]/g, '')
     );
   }
 
-  async readTomatometerLogoUrl() {
+  async _readTomatometerLogoUrl() {
     let logoUrl;
 
     try {
-      const freshness = this.readTomatometerFreshness();
+      const freshness = this._readTomatometerFreshness();
 
-      logoUrl = await this.readLogoUrl(freshness);
+      logoUrl = await this._readLogoUrl(freshness);
     } catch (e) {
       logoUrl = null;
     }
@@ -90,32 +90,32 @@ class RottenPage extends MoviePage {
     return logoUrl;
   }
 
-  readTomatometerFreshness() {
-    const tomatometerIcon = this.document
+  _readTomatometerFreshness() {
+    const tomatometerIcon = this._document
       .getElementsByClassName('mop-ratings-wrap__half')[0]
       .querySelector('span.mop-ratings-wrap__icon.meter-tomato');
 
     return tomatometerIcon.className.match(/(certified.fresh|fresh|rotten)/)[0];
   }
 
-  async readUserRatings() {
-    const audienceScore = this.readAudienceScore();
+  async _readUserRatings() {
+    const audienceScore = this._readAudienceScore();
 
     return audienceScore
       ? new Ratings(
           audienceScore,
-          this.readNumberOfUserRatings(),
-          await this.readAudienceScoreLogoUrl()
+          this._readNumberOfUserRatings(),
+          await this._readAudienceScoreLogoUrl()
         )
       : null;
   }
 
-  readAudienceScore() {
-    return this.readScore(1);
+  _readAudienceScore() {
+    return this._readScore(1);
   }
 
-  readScore(i) {
-    const audienceScoreElement = this.document.body
+  _readScore(i) {
+    const audienceScoreElement = this._document.body
       .getElementsByClassName('mop-ratings-wrap__half')
       [i].getElementsByClassName('mop-ratings-wrap__percentage')[0];
 
@@ -124,22 +124,22 @@ class RottenPage extends MoviePage {
       : null;
   }
 
-  readNumberOfUserRatings() {
+  _readNumberOfUserRatings() {
     return Number(
-      this.document.body
+      this._document.body
         .getElementsByClassName('mop-ratings-wrap__half')[1]
         .querySelectorAll('strong.mop-ratings-wrap__text--small')[0]
         .textContent.replace(/[^0-9]/g, '')
     );
   }
 
-  async readAudienceScoreLogoUrl() {
+  async _readAudienceScoreLogoUrl() {
     let logoUrl;
 
     try {
-      const freshness = this.readAudienceScoreFreshness();
+      const freshness = this._readAudienceScoreFreshness();
 
-      logoUrl = await this.readLogoUrl(freshness);
+      logoUrl = await this._readLogoUrl(freshness);
     } catch (e) {
       logoUrl = null;
     }
@@ -147,37 +147,37 @@ class RottenPage extends MoviePage {
     return logoUrl;
   }
 
-  readAudienceScoreFreshness() {
-    const freshnessIcon = this.document
+  _readAudienceScoreFreshness() {
+    const freshnessIcon = this._document
       .getElementsByClassName('mop-ratings-wrap__half')[1]
       .querySelector('span.mop-ratings-wrap__icon.meter-tomato');
 
     return freshnessIcon.className.match(/(upright|spilled)/)[0];
   }
 
-  async readLogoUrl(freshness) {
-    const css = await this.fetchCachedCss();
-    const relativeIconUrl = this.findLogoUrlInCss(css, freshness);
+  async _readLogoUrl(freshness) {
+    const css = await this._fetchCachedCss();
+    const relativeIconUrl = this._findLogoUrlInCss(css, freshness);
 
-    return this.convertToAbsoluteUrl(relativeIconUrl);
+    return this._convertToAbsoluteUrl(relativeIconUrl);
   }
 
-  async fetchCachedCss() {
-    this.css = this.css || (await this.fetchCss());
+  async _fetchCachedCss() {
+    this.css = this.css || (await this._fetchCss());
 
     return this.css;
   }
 
-  async fetchCss() {
-    const matchedStyleSheetUrl = this.getStylesheetUrl(/global.*\.css$/);
+  async _fetchCss() {
+    const matchedStyleSheetUrl = this._getStylesheetUrl(/global.*\.css$/);
 
     const relativeUrl = matchedStyleSheetUrl.match('/assets.+');
-    const styleSheetUrl = this.convertToAbsoluteUrl(relativeUrl);
+    const styleSheetUrl = this._convertToAbsoluteUrl(relativeUrl);
 
-    return RottenPage.fetchTextContent(styleSheetUrl);
+    return RottenPage._fetchTextContent(styleSheetUrl);
   }
 
-  findLogoUrlInCss(css, freshness) {
+  _findLogoUrlInCss(css, freshness) {
     return css.match(
       new RegExp(
         `\\.icon\\.big\\.${freshness}[^{]*{background:transparent url\\(([^)]+)`,
@@ -186,12 +186,12 @@ class RottenPage extends MoviePage {
     )[1];
   }
 
-  convertToAbsoluteUrl(relativeUrl) {
+  _convertToAbsoluteUrl(relativeUrl) {
     return 'https://www.rottentomatoes.com' + relativeUrl;
   }
 
-  readCriticsConsensus() {
-    const criticsConsensusElement = this.document.querySelector(
+  _readCriticsConsensus() {
+    const criticsConsensusElement = this._document.querySelector(
       'section.mop-ratings-wrap__row.js-scoreboard-container'
     ).previousElementSibling;
 
@@ -204,33 +204,33 @@ class RottenPage extends MoviePage {
    * @param  {MovieInfoWithRatings} movie
    */
   injectRatings(movie) {
-    this.fixCenterAlignmentOfTomatometerAndAudienceScore();
+    this._fixCenterAlignmentOfTomatometerAndAudienceScore();
 
-    const ratingsWrapElement = this.getRatingsWrapElement();
+    const ratingsWrapElement = this._getRatingsWrapElement();
 
-    ratingsWrapElement.append(this.generateImdbRatingsRowElement(movie));
+    ratingsWrapElement.append(this._generateImdbRatingsRowElement(movie));
 
     if (movie.summary) {
-      ratingsWrapElement.append(this.generateImdbSummaryElement(movie));
+      ratingsWrapElement.append(this._generateImdbSummaryElement(movie));
     }
   }
 
-  getRatingsWrapElement() {
-    return this.document.querySelector('section.mop-ratings-wrap__info');
+  _getRatingsWrapElement() {
+    return this._document.querySelector('section.mop-ratings-wrap__info');
   }
 
-  fixCenterAlignmentOfTomatometerAndAudienceScore() {
-    const ratingsContainers = this.document.querySelectorAll(
+  _fixCenterAlignmentOfTomatometerAndAudienceScore() {
+    const ratingsContainers = this._document.querySelectorAll(
       'div.mop-ratings-wrap__half'
     );
 
     ratingsContainers.forEach((x) => (x.style.flexBasis = '100%'));
   }
 
-  generateImdbRatingsRowElement(movie) {
-    const ratingsRowElement = this.generateEmptyRatingsRowElement();
-    const metascoreElement = this.generateMetascoreElement(movie);
-    const userRatingsElement = this.generateUserRatingsElement(movie);
+  _generateImdbRatingsRowElement(movie) {
+    const ratingsRowElement = this._generateEmptyRatingsRowElement();
+    const metascoreElement = this._generateMetascoreElement(movie);
+    const userRatingsElement = this._generateUserRatingsElement(movie);
 
     ratingsRowElement
       .getElementsByClassName('mop-ratings-wrap__half')[0]
@@ -243,8 +243,8 @@ class RottenPage extends MoviePage {
     return ratingsRowElement;
   }
 
-  generateEmptyRatingsRowElement() {
-    return this.generateElement(
+  _generateEmptyRatingsRowElement() {
+    return this._generateElement(
       `<section id="mv-imdb-scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
         `  style="border-top:2px solid #2a2c32;margin-top:30px;padding-top:20px">` +
         `  <div class="mop-ratings-wrap__half" style="flex-basis: 100%">` +
@@ -255,19 +255,19 @@ class RottenPage extends MoviePage {
     );
   }
 
-  generateMetascoreElement(movie) {
+  _generateMetascoreElement(movie) {
     let metascoreOuterHtml;
 
     if (movie.criticRatings) {
-      metascoreOuterHtml = this.getFilledMetascoreHtml(movie);
+      metascoreOuterHtml = this._getFilledMetascoreHtml(movie);
     } else {
-      metascoreOuterHtml = this.getEmptyMetascoreHtml(movie);
+      metascoreOuterHtml = this._getEmptyMetascoreHtml(movie);
     }
 
-    return this.generateElement(metascoreOuterHtml);
+    return this._generateElement(metascoreOuterHtml);
   }
 
-  getFilledMetascoreHtml(movie) {
+  _getFilledMetascoreHtml(movie) {
     return (
       `<a href="${movie.url}criticreviews" class="unstyled articleLink" title="Open ${movie.info.title} Critic Reviews on ${movie.pageName}">` +
       `      <h2 class="mop-ratings-wrap__score">` +
@@ -282,7 +282,7 @@ class RottenPage extends MoviePage {
     );
   }
 
-  getEmptyMetascoreHtml(movie) {
+  _getEmptyMetascoreHtml(movie) {
     return (
       `      <a href="${movie.url}criticreviews" class="unstyled articleLink" title="Open ${movie.info.title} Critic Reviews on ${movie.pageName}">` +
       `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
@@ -295,19 +295,19 @@ class RottenPage extends MoviePage {
     );
   }
 
-  generateUserRatingsElement(movie) {
+  _generateUserRatingsElement(movie) {
     let userRatingsElement;
 
     if (movie.userRatings) {
-      userRatingsElement = this.generateFilledUserRatingsElement(movie);
+      userRatingsElement = this._generateFilledUserRatingsElement(movie);
     } else {
-      userRatingsElement = this.generateEmptyUserRatingsElement(movie);
+      userRatingsElement = this._generateEmptyUserRatingsElement(movie);
     }
 
     return userRatingsElement;
   }
 
-  generateFilledUserRatingsElement(movie) {
+  _generateFilledUserRatingsElement(movie) {
     const userratingOuterHtml =
       `<a href="${movie.url}" class="unstyled articleLink" title="Open ${movie.info.title} on ${movie.pageName}">` +
       `    <h2 class="mop-ratings-wrap__score">` +
@@ -320,7 +320,7 @@ class RottenPage extends MoviePage {
       )}</span>` +
       `    </h2>` +
       `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
-      `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating${this.generateToplistPositionString(
+      `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating${this._generateToplistPositionString(
         movie
       )}</h3>` +
       `      <strong class="mop-ratings-wrap__text--small">User Ratings: ${movie.userRatings.count.toLocaleString(
@@ -329,9 +329,9 @@ class RottenPage extends MoviePage {
       `    </div>` +
       `      </a>`;
 
-    const userRatingsElement = this.generateElement(userratingOuterHtml);
+    const userRatingsElement = this._generateElement(userratingOuterHtml);
 
-    const userRatingsLogo = this.generateElement(movie.userRatings.custom);
+    const userRatingsLogo = this._generateElement(movie.userRatings.custom);
 
     userRatingsLogo.style.verticalAlign = 'middle';
     userRatingsElement.firstElementChild.prepend(userRatingsLogo);
@@ -339,7 +339,7 @@ class RottenPage extends MoviePage {
     return userRatingsElement;
   }
 
-  generateEmptyUserRatingsElement(movie) {
+  _generateEmptyUserRatingsElement(movie) {
     const userratingOuterHtml =
       `      <a href="${movie.url}" class="unstyled articleLink" title="Open ${movie.info.title} on ${movie.pageName}">` +
       `  <div class="audience-score__italics mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion mop-ratings-wrap__text--not-released">` +
@@ -351,15 +351,15 @@ class RottenPage extends MoviePage {
       `    </div>` +
       `      </a>`;
 
-    return this.generateElement(userratingOuterHtml);
+    return this._generateElement(userratingOuterHtml);
   }
 
-  generateToplistPositionString(movie) {
+  _generateToplistPositionString(movie) {
     return movie.toplistPosition ? ` #${movie.toplistPosition}/250` : ``;
   }
 
-  generateImdbSummaryElement(movie) {
-    return this.generateElement(
+  _generateImdbSummaryElement(movie) {
+    return this._generateElement(
       `<div id="mv-imdb-summary"` +
         ` title="${movie.summary.title} from ${movie.pageName}"` +
         ` style="padding-top: 20px;">` +

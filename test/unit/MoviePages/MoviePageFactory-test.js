@@ -32,8 +32,8 @@ describe('MoviePageFactory', function () {
 
       (imdbPage instanceof RottenPage).should.be.false;
 
-      imdbPage.document.should.equal('doc');
-      imdbPage.url.should.equal('https://url/');
+      imdbPage._document.should.equal('doc');
+      imdbPage._url.should.equal('https://url/');
     });
 
     it('create RottenPage', function () {
@@ -48,8 +48,8 @@ describe('MoviePageFactory', function () {
 
       (rottenPage instanceof ImdbPage).should.be.false;
 
-      rottenPage.document.should.equal('doc');
-      rottenPage.url.should.equal('https://url.two/');
+      rottenPage._document.should.equal('doc');
+      rottenPage._url.should.equal('https://url.two/');
     });
   });
 });

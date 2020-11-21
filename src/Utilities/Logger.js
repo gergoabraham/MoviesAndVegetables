@@ -16,14 +16,14 @@ class Logger {
 
   static logFetch(url, content) {
     if (this.isAddonTemporary()) {
-      Logger.initFetchStats();
-      Logger.updateTotalFetched(content);
-      Logger.updateFetchStatsPerSite(url, content);
+      Logger._initFetchStats();
+      Logger._updateTotalFetched(content);
+      Logger._updateFetchStatsPerSite(url, content);
 
       this.log(
-        `Fetched ${url} with size ${this.getKB(
+        `Fetched ${url} with size ${this._getKB(
           content.length
-        )}. Fetched ${this.getMB(this.fetched.total)} so far.`
+        )}. Fetched ${this._getMB(this._fetched.total)} so far.`
       );
     }
   }
@@ -32,8 +32,8 @@ class Logger {
     return browser.runtime.id.match(/@temporary-addon/);
   }
 
-  static initFetchStats() {
-    this.fetched = this.fetched || {
+  static _initFetchStats() {
+    this._fetched = this._fetched || {
       total: 0,
       css: { total: 0, count: 0 },
       imdb: { total: 0, count: 0 },
@@ -42,65 +42,67 @@ class Logger {
     };
   }
 
-  static updateTotalFetched(content) {
-    this.fetched.total += content.length;
+  static _updateTotalFetched(content) {
+    this._fetched.total += content.length;
   }
 
-  static updateFetchStatsPerSite(url, content) {
+  static _updateFetchStatsPerSite(url, content) {
     if (url.match(/.+\.css$/)) {
-      Logger.updateSiteStat('css', content);
+      Logger._updateSiteStat('css', content);
     } else if (url.match(/\www\.google\.com/)) {
-      Logger.updateSiteStat('google', content);
+      Logger._updateSiteStat('google', content);
     } else if (url.match(/rottentomatoes\.com/)) {
-      Logger.updateSiteStat('rottenTomatoes', content);
+      Logger._updateSiteStat('rottenTomatoes', content);
     } else if (url.match(/imdb\.com/)) {
-      Logger.updateSiteStat('imdb', content);
+      Logger._updateSiteStat('imdb', content);
     } else {
       throw new TypeError('🍅 Unknown URL!');
     }
   }
 
-  static updateSiteStat(type, content) {
-    this.fetched[type].total += content.length;
-    this.fetched[type].count++;
+  static _updateSiteStat(type, content) {
+    this._fetched[type].total += content.length;
+    this._fetched[type].count++;
   }
 
   static updateAndLogMovieStats() {
     if (this.isAddonTemporary()) {
-      this.movieCount = this.movieCount + 1 || 1;
+      this._movieCount = this._movieCount + 1 || 1;
 
       this.log(
         `Fetched:\n` +
-          `\t${this.getMB(this.fetched.total)} ` +
-          `- total for ${this.movieCount} movies.\t` +
-          `${this.getKB(this.fetched.total / this.movieCount)} per movie\n\n` +
-          Logger.generateFetchedPerSiteLogTemplate('google') +
-          Logger.generateFetchedPerSiteLogTemplate('imdb') +
-          Logger.generateFetchedPerSiteLogTemplate('rottenTomatoes') +
-          Logger.generateFetchedPerSiteLogTemplate('css')
+          `\t${this._getMB(this._fetched.total)} ` +
+          `- total for ${this._movieCount} movies.\t` +
+          `${this._getKB(
+            this._fetched.total / this._movieCount
+          )} per movie\n\n` +
+          Logger._generateFetchedPerSiteLogTemplate('google') +
+          Logger._generateFetchedPerSiteLogTemplate('imdb') +
+          Logger._generateFetchedPerSiteLogTemplate('rottenTomatoes') +
+          Logger._generateFetchedPerSiteLogTemplate('css')
       );
     }
   }
 
-  static generateFetchedPerSiteLogTemplate(type) {
-    const bytes = this.fetched[type].total;
-    const count = this.fetched[type].count;
+  static _generateFetchedPerSiteLogTemplate(type) {
+    const bytes = this._fetched[type].total;
+    const count = this._fetched[type].count;
 
     return (
-      `\t${this.getMB(bytes)}` +
-      `\t${((bytes / this.fetched.total) * 100).toFixed(0)}%` +
+      `\t${this._getMB(bytes)}` +
+      `\t${((bytes / this._fetched.total) * 100).toFixed(0)}%` +
       `\t${count}x` +
-      `\tavg: ${this.getKB(bytes / count || 0)}` +
+      `\tavg: ${this._getKB(bytes / count || 0)}` +
       `\t${type}` +
       '\n'
     );
   }
 
-  static getKB(bytes) {
+  static _getKB(bytes) {
     return (bytes / 2 ** 10).toFixed(1) + ' KB';
   }
 
-  static getMB(bytes) {
+  static _getMB(bytes) {
     return (bytes / 2 ** 20).toFixed(1) + ' MB';
   }
 }

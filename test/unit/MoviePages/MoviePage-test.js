@@ -56,7 +56,7 @@ describe('MoviePage', function () {
         'https://url'
       );
 
-      childMoviePage.document.should.equal('input document');
+      childMoviePage._document.should.equal('input document');
     });
 
     it('shorten url on instantiating', function () {
@@ -65,7 +65,7 @@ describe('MoviePage', function () {
         'https://page.com/m/movie_title?stuff=toRemove&also=this'
       );
 
-      childMoviePage.url.should.equal('https://page.com/m/movie_title');
+      childMoviePage._url.should.equal('https://page.com/m/movie_title');
     });
 
     context('methods', function () {
@@ -105,24 +105,24 @@ describe('MoviePage', function () {
       });
 
       it('fetches text content from the web the first time', async function () {
-        const textContent = await MoviePage.fetchTextContent('url1');
+        const textContent = await MoviePage._fetchTextContent('url1');
 
         global.fetch.should.have.been.calledOnceWithExactly('url1');
         textContent.should.equal('text content');
       });
 
       it('stores fetched values in "cache"', async function () {
-        await MoviePage.fetchTextContent('url2');
-        await MoviePage.fetchTextContent('url3');
+        await MoviePage._fetchTextContent('url2');
+        await MoviePage._fetchTextContent('url3');
 
         MoviePage['url2'].should.equal('text content');
         MoviePage['url3'].should.equal('text content');
       });
 
       it('second time it returns the value from the cache', async function () {
-        await MoviePage.fetchTextContent('url4');
-        await MoviePage.fetchTextContent('url4');
-        const textContent = await MoviePage.fetchTextContent('url4');
+        await MoviePage._fetchTextContent('url4');
+        await MoviePage._fetchTextContent('url4');
+        const textContent = await MoviePage._fetchTextContent('url4');
 
         global.fetch.should.have.been.calledOnceWithExactly('url4');
         textContent.should.equal('text content');

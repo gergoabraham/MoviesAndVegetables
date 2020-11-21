@@ -16,10 +16,10 @@ describe('Background script', function () {
       runtime: { onMessage: { addListener: addMessageListenerSpy } },
     };
 
-    BackgroundScript.init();
+    BackgroundScript.start();
 
     addMessageListenerSpy.should.have.been.calledOnceWithExactly(
-      BackgroundScript.getRemotePageData
+      BackgroundScript._getRemotePageData
     );
   });
 
@@ -31,7 +31,7 @@ describe('Background script', function () {
       // - rottentomatoes.m.shawshank_redemption.html
       const movieInfo = new MovieInfo('The Shawshank Redemption', 1994);
 
-      await BackgroundScript.getRemotePageData({
+      await BackgroundScript._getRemotePageData({
         movieInfo,
         remotePageName: RottenPage.NAME,
       }).should.eventually.deep.equal(
@@ -65,7 +65,7 @@ describe('Background script', function () {
       // - rottentomatoes.m.amblin.html
       const movieInfo = new MovieInfo("Amblin'", 1968);
 
-      await BackgroundScript.getRemotePageData({
+      await BackgroundScript._getRemotePageData({
         movieInfo,
         remotePageName: RottenPage.NAME,
       }).should.eventually.deep.equal(
@@ -92,7 +92,7 @@ describe('Background script', function () {
       // - imdb.title.tt0064010.html
       const movieInfo = new MovieInfo("Amblin'", 1968);
 
-      await BackgroundScript.getRemotePageData({
+      await BackgroundScript._getRemotePageData({
         movieInfo,
         remotePageName: ImdbPage.NAME,
       }).should.eventually.deep.equal(
@@ -116,7 +116,7 @@ describe('Background script', function () {
     it('remove "&" character from movie title in search url', function () {
       const movieInfo = new MovieInfo('The Old Man & The Gun', '2018');
 
-      BackgroundScript.constructSearchUrl(
+      BackgroundScript._constructSearchUrl(
         movieInfo,
         RottenPage.NAME
       ).should.equal(
