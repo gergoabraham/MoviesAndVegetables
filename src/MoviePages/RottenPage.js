@@ -81,6 +81,7 @@ class RottenPage extends MoviePage {
 
     try {
       const freshness = this.readTomatometerFreshness();
+
       logoUrl = await this.readLogoUrl(freshness);
     } catch (e) {
       logoUrl = null;
@@ -137,6 +138,7 @@ class RottenPage extends MoviePage {
 
     try {
       const freshness = this.readAudienceScoreFreshness();
+
       logoUrl = await this.readLogoUrl(freshness);
     } catch (e) {
       logoUrl = null;
@@ -205,6 +207,7 @@ class RottenPage extends MoviePage {
     this.fixCenterAlignmentOfTomatometerAndAudienceScore();
 
     const ratingsWrapElement = this.getRatingsWrapElement();
+
     ratingsWrapElement.append(this.generateImdbRatingsRowElement(movie));
 
     if (movie.summary) {
@@ -220,6 +223,7 @@ class RottenPage extends MoviePage {
     const ratingsContainers = this.document.querySelectorAll(
       'div.mop-ratings-wrap__half'
     );
+
     ratingsContainers.forEach((x) => (x.style.flexBasis = '100%'));
   }
 
@@ -328,6 +332,7 @@ class RottenPage extends MoviePage {
     const userRatingsElement = this.generateElement(userratingOuterHtml);
 
     const userRatingsLogo = this.generateElement(movie.userRatings.custom);
+
     userRatingsLogo.style.verticalAlign = 'middle';
     userRatingsElement.firstElementChild.prepend(userRatingsLogo);
 

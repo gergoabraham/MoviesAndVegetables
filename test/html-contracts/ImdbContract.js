@@ -88,6 +88,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
           const document = await fetchDOM(
             'https://www.imdb.com/title/tt0111161/'
           );
+
           titleReviewBar = document.getElementsByClassName('titleReviewBar')[0];
         });
 
@@ -119,6 +120,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
           const document = await fetchDOM(
             'https://www.imdb.com/title/tt0064010/'
           );
+
           titleReviewBar = document.getElementsByClassName('titleReviewBar')[0];
         });
 
@@ -175,6 +177,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
         const document = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/'
         );
+
         metadata = readMetadata(document);
       });
 
@@ -206,6 +209,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
           'https://www.imdb.com/title/tt0149460/'
         );
         const metadata = readMetadata(document);
+
         metadata['@type'].should.equal('TVSeries');
       });
     });
@@ -247,6 +251,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
         );
 
         const logo = document.getElementById('home_img');
+
         logo.tagName.should.equal('svg');
       });
     });
@@ -362,6 +367,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
       const styleSheetLinks = Array.from(stylesheetLinkElements).map(
         (linkElement) => linkElement.href
       );
+
       matchedStyleSheets = styleSheetLinks.filter((link) =>
         link.match(/title-flat.*\.css$/)
       );

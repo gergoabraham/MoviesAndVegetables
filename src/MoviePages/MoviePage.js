@@ -20,6 +20,7 @@ class MoviePage {
     this.document = document;
 
     const inputUrl = new URL(url);
+
     this.url = inputUrl.origin + inputUrl.pathname;
   }
 
@@ -83,6 +84,7 @@ class MoviePage {
       textContent = this[url];
     } else {
       const response = await fetch(url);
+
       textContent = await response.text();
       this[url] = textContent;
 

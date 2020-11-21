@@ -24,6 +24,7 @@ class ContentScript {
       movieInfo,
       remotePageName,
     });
+
     currentPage.injectRatings(response);
   }
 }

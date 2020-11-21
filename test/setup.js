@@ -8,12 +8,14 @@
 
 /* ------------ Setting up assert library ------------ */
 const chai = require('chai');
+
 chai.use(require('sinon-chai'));
 chai.use(require('chai-as-promised'));
 should = chai.should();
 
 /* ------------ Setting up fakes ------------ */
 const { JSDOM } = require('jsdom');
+
 global.DOMParser = new JSDOM().window.DOMParser;
 
 require('./tools/FakeHtmlFetcher').activateAsGlobalFetch();

@@ -45,6 +45,7 @@ describe('FakeHtmlFetcher', function () {
       const response = await fetch(
         'https://www.fetch-fake.com/test-file-to-load'
       );
+
       await response.text();
       await response
         .text()
