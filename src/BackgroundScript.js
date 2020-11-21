@@ -68,13 +68,12 @@ class BackgroundScript {
 
   static _constructSearchUrl(movieInfo, remotePageName) {
     const { title, year } = movieInfo;
-    const titleWithoutSpecialCharacters = title.replace(/&/g, '');
 
     return (
       `https://www.google.com/search?btnI=true&` +
-      `q=${titleWithoutSpecialCharacters}+${year}` +
+      `q=${encodeURIComponent(title).replace(/%20/g, '+')}+${year}` +
       `+movie+${remotePageName}`
-    ).replace(/ /g, '+');
+    );
   }
 
   static _isSearchRedirected(remotePageName, responseOfSearch) {

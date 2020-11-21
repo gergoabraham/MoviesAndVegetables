@@ -121,7 +121,7 @@ describe('Background script', function () {
         RottenPage.NAME
       ).should.equal(
         'https://www.google.com/search?btnI=true' +
-          '&q=The+Old+Man++The+Gun+2018+movie+' +
+          '&q=The+Old+Man+%26+The+Gun+2018+movie+' +
           RottenPage.NAME
       );
     });
