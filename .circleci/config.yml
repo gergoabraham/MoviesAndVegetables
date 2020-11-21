@@ -42,7 +42,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npm run ci:unit-test
+      - run: npm run _ci:unit-test
 
   contract-test:
     docker:
@@ -75,7 +75,7 @@ jobs:
     steps:
       - attach_workspace:
           at: ./
-      - run: npm run ci:deploy-to-amo
+      - run: npm run _ci:deploy-to-amo
 
 workflows:
   version: 2
