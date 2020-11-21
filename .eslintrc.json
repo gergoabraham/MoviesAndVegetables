@@ -17,7 +17,8 @@
     "require-jsdoc": "off",
     "no-unexpected-multiline": "off",
     "newline-after-var": "warn",
-    "newline-before-return": "warn"
+    "newline-before-return": "warn",
+    "no-console": "warn"
   },
   "globals": {
     "exportToTestEnvironment": "readonly",

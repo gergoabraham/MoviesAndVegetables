@@ -9,6 +9,7 @@
 class Logger {
   static log(message, ...optionalParams) {
     if (this.isAddonTemporary()) {
+      // eslint-disable-next-line no-console
       console.log('🎥🍅', message, ...optionalParams);
     }
   }
