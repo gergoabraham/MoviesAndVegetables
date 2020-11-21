@@ -18,7 +18,8 @@
     "no-unexpected-multiline": "off",
     "newline-after-var": "warn",
     "newline-before-return": "warn",
-    "no-console": "warn"
+    "no-console": "warn",
+    "yoda": "warn"
   },
   "globals": {
     "exportToTestEnvironment": "readonly",
