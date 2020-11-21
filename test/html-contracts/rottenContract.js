@@ -64,6 +64,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
           const document = await fetchDOM(
             'https://www.rottentomatoes.com/m/shawshank_redemption'
           );
+
           ratingContainer = document.querySelector(
             'section.mop-ratings-wrap__row.js-scoreboard-container'
           );
@@ -296,6 +297,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
         const document = await fetchDOM(
           'https://www.rottentomatoes.com/m/shawshank_redemption'
         );
+
         getCriticsConsensusElement(document).innerHTML.should.contain(
           '<em>The Shawshank Redemption</em> is an uplifting'
         );
@@ -305,6 +307,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
         const document = await fetchDOM(
           'https://www.rottentomatoes.com/m/amblin'
         );
+
         getCriticsConsensusElement(document).textContent.should.equal(
           'No consensus yet.'
         );
@@ -324,6 +327,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
       const styleSheetLinks = Array.from(stylesheetLinkElements).map(
         (linkElement) => linkElement.href
       );
+
       matchedStyleSheets = styleSheetLinks.filter((link) =>
         link.match(/global.*\.css$/)
       );

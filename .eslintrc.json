@@ -15,7 +15,8 @@
     "no-var": "error",
     "no-use-before-define": ["error", { "functions": false }],
     "require-jsdoc": "off",
-    "no-unexpected-multiline": "off"
+    "no-unexpected-multiline": "off",
+    "newline-after-var": "warn"
   },
   "globals": {
     "exportToTestEnvironment": "readonly",

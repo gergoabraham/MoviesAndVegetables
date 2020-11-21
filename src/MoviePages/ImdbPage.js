@@ -89,6 +89,7 @@ class ImdbPage extends MoviePage {
   async fetchDOM(url) {
     const response = await fetch(url);
     const pageText = await response.text();
+
     Logger.logFetch(url, pageText);
 
     return new DOMParser().parseFromString(pageText, 'text/html');
@@ -176,6 +177,7 @@ class ImdbPage extends MoviePage {
     const summary = plotSummaryElement
       ? new Summary('Summary', plotSummaryElement.textContent.trim())
       : null;
+
     return summary;
   }
 
@@ -266,6 +268,7 @@ class ImdbPage extends MoviePage {
 
   createEmptyTitleReviewBar(doc) {
     const titleReviewBar = doc.createElement('div');
+
     titleReviewBar.className = 'titleReviewBar';
     return titleReviewBar;
   }
@@ -294,6 +297,7 @@ class ImdbPage extends MoviePage {
 
   createDividerElement(doc) {
     const newDivider = doc.createElement('div');
+
     newDivider.className = 'divider';
     return newDivider;
   }
@@ -330,14 +334,17 @@ class ImdbPage extends MoviePage {
 
   fixUserScoreWidth(ratingsWrapper) {
     const imdbRating = ratingsWrapper.children[0];
+
     imdbRating.style.width = '95px';
   }
 
   addAudienceScoreToNewRatingsWrapper(doc, audienceScoreElement) {
     const newRatingsWrapper = doc.createElement('div');
+
     newRatingsWrapper.className = 'ratings_wrapper';
 
     const titleBarWrapper = doc.getElementsByClassName('title_bar_wrapper')[0];
+
     titleBarWrapper.prepend(newRatingsWrapper);
 
     newRatingsWrapper.appendChild(audienceScoreElement);

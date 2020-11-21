@@ -11,6 +11,7 @@ const sinon = require('sinon');
 describe('Background script', function () {
   it('register message listener on startup', function () {
     const addMessageListenerSpy = sinon.spy();
+
     global.browser = {
       runtime: { onMessage: { addListener: addMessageListenerSpy } },
     };

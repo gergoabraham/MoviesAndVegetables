@@ -15,6 +15,7 @@ describe('Content script', function () {
         FakeHtmlPath + 'imdb.title.tt0111161 - listed in top250.html',
         { url: 'https://www.imdb.com/title/tt0111161/' }
       );
+
       global.document = dom.window.document;
 
       await ContentScript.injectRatings(RottenPage.NAME, ImdbPage.NAME);

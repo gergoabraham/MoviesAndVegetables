@@ -55,6 +55,7 @@ describe('MoviePage', function () {
         'input document',
         'https://url'
       );
+
       childMoviePage.document.should.equal('input document');
     });
 

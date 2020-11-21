@@ -30,6 +30,7 @@ describe('RealHtmlFetcher', function () {
 
   context('cache', function () {
     let response;
+
     context('first call of fetch()', function () {
       it("don't store page in cache after fetch()", async function () {
         removeCacheFolder();
@@ -142,6 +143,7 @@ describe('RealHtmlFetcher', function () {
   function removeCacheFolder() {
     if (fs.existsSync(realHtmlFetcher.CachePath)) {
       const folderContent = fs.readdirSync(realHtmlFetcher.CachePath);
+
       folderContent.forEach((x) =>
         fs.unlinkSync(realHtmlFetcher.CachePath + x)
       );

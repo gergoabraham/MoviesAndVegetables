@@ -173,6 +173,7 @@ describe('rottenPage', function () {
 
       before(async function () {
         const url = 'https://www.rottentomatoes.com/m/shawshank_redemption';
+
         document = await getTestDOM(url);
         const rottenPage = new RottenPage(document, url);
 
@@ -273,6 +274,7 @@ describe('rottenPage', function () {
 
       before(async function () {
         const url = 'https://www.rottentomatoes.com/m/shawshank_redemption';
+
         document = await getTestDOM(url);
         const rottenPage = new RottenPage(document, url);
 
@@ -328,6 +330,7 @@ describe('rottenPage', function () {
 
       before(async function () {
         const url = 'https://www.rottentomatoes.com/m/shawshank_redemption';
+
         document = await getTestDOM(url);
         const rottenPage = new RottenPage(document, url);
 

@@ -26,6 +26,7 @@ class RealHtmlFetcher {
       return {
         text: async () => {
           const text = await response.text();
+
           this.writeToCache(fileName, text);
           return text;
         },

@@ -165,6 +165,7 @@ describe('ImdbPage', function () {
 
       before(async function () {
         const url = 'https://www.imdb.com/title/tt0111161/';
+
         document = await injectDefaultRatings(url);
       });
 
@@ -295,6 +296,7 @@ describe('ImdbPage', function () {
 
       before(async function () {
         const url = 'https://www.imdb.com/title/tt0111161/';
+
         document = await getTestDOM(url);
         const imdbPage = new ImdbPage(document, url);
 
@@ -354,6 +356,7 @@ describe('ImdbPage', function () {
 
       before(async function () {
         const url = 'https://www.imdb.com/title/tt0111161/';
+
         document = await getTestDOM(url);
         const imdbPage = new ImdbPage(document, url);
 
@@ -469,6 +472,7 @@ describe('ImdbPage', function () {
     it(`be based on browser's preferred language`, function () {
       window.navigator = { language: 'hu' };
       const fakeFormat = sinon.fake.returns('formatted number');
+
       sinon.replace(
         Intl,
         'NumberFormat',

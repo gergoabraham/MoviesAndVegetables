@@ -9,6 +9,7 @@
 class BackgroundScript {
   static async getRemotePageData(message) {
     const { movieInfo, remotePageName } = message;
+
     Logger.log('Actual page: ', movieInfo);
 
     const movieUrl = await BackgroundScript.findRemoteMoviePageUrl(
@@ -36,6 +37,7 @@ class BackgroundScript {
     );
 
     let movieUrl;
+
     if (isSearchRedirected) {
       movieUrl = BackgroundScript.skipRedirectNotice(searchResponse.url);
 
@@ -57,6 +59,7 @@ class BackgroundScript {
       movieInfo,
       remotePageName
     );
+
     Logger.log('Search url: ', searchURL);
 
     return fetch(searchURL);
@@ -75,6 +78,7 @@ class BackgroundScript {
 
   static isSearchRedirected(remotePageName, responseOfSearch) {
     const urlPattern = MoviePageFactory.getMoviePageUrlPattern(remotePageName);
+
     return responseOfSearch.url.match(urlPattern);
   }
 
@@ -108,6 +112,7 @@ class BackgroundScript {
 
   static async getDOM(response) {
     const text = await response.text();
+
     Logger.logFetch(response.url, text);
 
     return new DOMParser().parseFromString(text, 'text/html');
