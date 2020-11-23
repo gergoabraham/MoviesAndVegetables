@@ -170,6 +170,10 @@ contract('RottenContract', function (fetchDOM, fetchText) {
       readReleaseYear(document).should.equal('1994');
     });
 
+    it('director is an array', function () {
+      readMetadata(document).director[0].name.should.equal('Frank Darabont');
+    });
+
     context('tomatometer', function () {
       it('value is a number', async function () {
         const tomatoMeter = getTomatometerElement(document).innerHTML;

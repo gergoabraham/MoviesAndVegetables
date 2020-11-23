@@ -65,6 +65,14 @@ class MoviePage {
     return JSON.parse(metadataRaw);
   }
 
+  _readDirectorFromMetadata(metaDataJSON) {
+    return metaDataJSON.director
+      ? metaDataJSON.director[0]
+        ? metaDataJSON.director[0].name
+        : metaDataJSON.director.name
+      : null;
+  }
+
   _getTitleMetaTag() {
     return this._document.head.querySelector('meta[property="og:title"')
       .content;

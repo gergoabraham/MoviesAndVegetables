@@ -43,7 +43,9 @@ describe('rottenPage', function () {
 
       const movie = await rottenPage.getMovieInfo();
 
-      movie.should.deep.equal(new MovieInfo('The Shawshank Redemption', 1994));
+      movie.should.deep.equal(
+        new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont')
+      );
     });
   });
 
@@ -56,7 +58,7 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('The Shawshank Redemption', 1994),
+            new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont'),
             'https://www.rottentomatoes.com/m/shawshank_redemption',
             RottenPage.NAME,
             null,
@@ -87,7 +89,7 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('Avatar 5', 2028),
+            new MovieInfo('Avatar 5', 2028, null),
             'https://www.rottentomatoes.com/m/avatar_5',
             RottenPage.NAME,
             null,
@@ -107,7 +109,7 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo("Amblin'", 1968),
+            new MovieInfo("Amblin'", 1968, null),
             'https://www.rottentomatoes.com/m/amblin',
             RottenPage.NAME,
             null,
@@ -131,7 +133,7 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('Parasite', 2019),
+            new MovieInfo('Parasite', 2019, null),
             'https://www.rottentomatoes.com/m/parasite_2019',
             RottenPage.NAME,
             null,
@@ -151,7 +153,7 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('The Shawshank Redemption', 1994),
+            new MovieInfo('The Shawshank Redemption', 1994, null),
             'https://www.rottentomatoes.com/m/shawshank_redemption_missing_css',
             RottenPage.NAME,
             null,

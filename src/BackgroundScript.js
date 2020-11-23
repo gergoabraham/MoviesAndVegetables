@@ -67,13 +67,22 @@ class BackgroundScript {
   }
 
   static _constructSearchUrl(movieInfo, remotePageName) {
-    const { title, year } = movieInfo;
+    const { title, year, director } = movieInfo;
+
+    const titleQueryParam = BackgroundScript._convertToQueryParam(title);
+    const directorQueryParam = director
+      ? `${BackgroundScript._convertToQueryParam(director)}+`
+      : '';
 
     return (
       `https://www.google.com/search?btnI=true&` +
-      `q=${encodeURIComponent(title).replace(/%20/g, '+')}+${year}` +
-      `+site%3A${MoviePageFactory.getPageHostName(remotePageName)}`
+      `q=${titleQueryParam}+${year}+${directorQueryParam}` +
+      `site%3A${MoviePageFactory.getPageHostName(remotePageName)}`
     );
+  }
+
+  static _convertToQueryParam(str) {
+    return encodeURIComponent(str).replace(/%20/g, '+');
   }
 
   static _isSearchRedirected(remotePageName, responseOfSearch) {

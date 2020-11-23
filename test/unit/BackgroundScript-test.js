@@ -28,14 +28,18 @@ describe('Background script', function () {
       // Uses the html files:
       // - google.com..search...btnI=true&q=The+Shawshank+Redemption+1994+site%3Awww.rottentomatoes.com.html
       // - rottentomatoes.m.shawshank_redemption.html
-      const movieInfo = new MovieInfo('The Shawshank Redemption', 1994);
+      const movieInfo = new MovieInfo(
+        'The Shawshank Redemption',
+        1994,
+        'Frank Darabont'
+      );
 
       await BackgroundScript._getRemotePageData({
         movieInfo,
         remotePageName: RottenPage.NAME,
       }).should.eventually.deep.equal(
         new MovieInfoWithRatings(
-          new MovieInfo('The Shawshank Redemption', 1994),
+          new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont'),
           `https://www.rottentomatoes.com/m/shawshank_redemption`,
           RottenPage.NAME,
           null,
@@ -68,7 +72,7 @@ describe('Background script', function () {
         remotePageName: RottenPage.NAME,
       }).should.eventually.deep.equal(
         new MovieInfoWithRatings(
-          new MovieInfo("Amblin'", 1968),
+          new MovieInfo("Amblin'", 1968, null),
           `https://www.rottentomatoes.com/m/amblin`,
           RottenPage.NAME,
           null,
@@ -94,7 +98,7 @@ describe('Background script', function () {
         remotePageName: ImdbPage.NAME,
       }).should.eventually.deep.equal(
         new MovieInfoWithRatings(
-          new MovieInfo("Amblin'", 1968),
+          new MovieInfo("Amblin'", 1968, null),
           `https://www.imdb.com/title/tt0064010/`,
           ImdbPage.NAME,
           null,

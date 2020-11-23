@@ -30,8 +30,9 @@ class ImdbPage extends MoviePage {
 
     const title = metaDataJSON.name;
     const year = this._readYear();
+    const director = this._readDirectorFromMetadata(metaDataJSON);
 
-    return new MovieInfo(title, year);
+    return new MovieInfo(title, year, director);
   }
 
   /**
