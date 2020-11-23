@@ -44,7 +44,9 @@ describe('ImdbPage', function () {
 
       const movie = await imdbPage.getMovieInfo();
 
-      movie.should.deep.equal(new MovieInfo('The Shawshank Redemption', 1994));
+      movie.should.deep.equal(
+        new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont')
+      );
     });
   });
 
@@ -57,7 +59,7 @@ describe('ImdbPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('The Shawshank Redemption', 1994),
+            new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont'),
             'https://www.imdb.com/title/tt0111161/',
             ImdbPage.NAME,
             1,
@@ -81,7 +83,7 @@ describe('ImdbPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('Avatar 5', 2028),
+            new MovieInfo('Avatar 5', 2028, null),
             'https://www.imdb.com/title/tt5637536/',
             ImdbPage.NAME,
             null,
@@ -123,7 +125,7 @@ describe('ImdbPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('The Shawshank Redemption', 1994),
+            new MovieInfo('The Shawshank Redemption', 1994, null),
             'https://www.imdb.com/title/tt0111162/',
             ImdbPage.NAME,
             1,

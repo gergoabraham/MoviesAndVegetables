@@ -26,17 +26,20 @@ describe('Background script', function () {
   describe('main search algorithm', function () {
     it(`search remote page using "feeling lucky" and return with the scores`, async function () {
       // Uses the html files:
-      // - google.search...btnI=true&q=The+Shawshank+Redemption+|
-      //      1994+movie+RottenTomatoes.html
+      // - google.com..search...btnI=true&q=The+Shawshank+Redemption+1994+site%3Awww.rottentomatoes.com.html
       // - rottentomatoes.m.shawshank_redemption.html
-      const movieInfo = new MovieInfo('The Shawshank Redemption', 1994);
+      const movieInfo = new MovieInfo(
+        'The Shawshank Redemption',
+        1994,
+        'Frank Darabont'
+      );
 
       await BackgroundScript._getRemotePageData({
         movieInfo,
         remotePageName: RottenPage.NAME,
       }).should.eventually.deep.equal(
         new MovieInfoWithRatings(
-          new MovieInfo('The Shawshank Redemption', 1994),
+          new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont'),
           `https://www.rottentomatoes.com/m/shawshank_redemption`,
           RottenPage.NAME,
           null,
@@ -60,8 +63,7 @@ describe('Background script', function () {
 
     it('return with the first result when "feeling lucky" doesn\'t work - one way', async function () {
       // Uses the html files:
-      // - google.search...btnI=true&q=Amblin'+1968+|
-      //       movie+RottenTomatoes.html;
+      // - google.com..search...btnI=true&q=Amblin'+1968+site%3Awww.rottentomatoes.com.html
       // - rottentomatoes.m.amblin.html
       const movieInfo = new MovieInfo("Amblin'", 1968);
 
@@ -70,7 +72,7 @@ describe('Background script', function () {
         remotePageName: RottenPage.NAME,
       }).should.eventually.deep.equal(
         new MovieInfoWithRatings(
-          new MovieInfo("Amblin'", 1968),
+          new MovieInfo("Amblin'", 1968, null),
           `https://www.rottentomatoes.com/m/amblin`,
           RottenPage.NAME,
           null,
@@ -87,8 +89,7 @@ describe('Background script', function () {
 
     it('return with the first result when "feeling lucky" doesn\'t work - other way', async function () {
       // Uses the html files:
-      // - google.search...btnI=true&q=Amblin'+1968+|
-      //       movie+Imdb.html;
+      // - google.com..search...btnI=true&q=Amblin'+1968+site%3Awww.imdb.com.html
       // - imdb.title.tt0064010.html
       const movieInfo = new MovieInfo("Amblin'", 1968);
 
@@ -97,7 +98,7 @@ describe('Background script', function () {
         remotePageName: ImdbPage.NAME,
       }).should.eventually.deep.equal(
         new MovieInfoWithRatings(
-          new MovieInfo("Amblin'", 1968),
+          new MovieInfo("Amblin'", 1968, null),
           `https://www.imdb.com/title/tt0064010/`,
           ImdbPage.NAME,
           null,
@@ -121,8 +122,8 @@ describe('Background script', function () {
         RottenPage.NAME
       ).should.equal(
         'https://www.google.com/search?btnI=true' +
-          '&q=The+Old+Man++The+Gun+2018+movie+' +
-          RottenPage.NAME
+          '&q=The+Old+Man+%26+The+Gun+2018+' +
+          `site%3A${RottenPage.HOST_NAME}`
       );
     });
   });

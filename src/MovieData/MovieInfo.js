@@ -10,10 +10,12 @@ class MovieInfo {
   /**
    * @param  {string} title
    * @param  {number} year
+   * @param  {string} director
    */
-  constructor(title, year) {
+  constructor(title, year, director) {
     this.title = title;
     this.year = year;
+    this.director = director;
   }
 }
 

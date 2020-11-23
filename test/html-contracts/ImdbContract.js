@@ -188,6 +188,10 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
       it('title is in the json', function () {
         metadata.name.should.equal('The Shawshank Redemption');
       });
+
+      it('director is an object (for one director)', function () {
+        metadata.director.name.should.equal('Frank Darabont');
+      });
     });
 
     context('release year', function () {

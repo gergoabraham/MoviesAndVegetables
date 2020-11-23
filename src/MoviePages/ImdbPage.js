@@ -14,6 +14,9 @@ class ImdbPage extends MoviePage {
   static get URL_PATTERN() {
     return /https:\/\/www\.imdb\.com\/title\/tt\d+\//;
   }
+  static get HOST_NAME() {
+    return 'www.imdb.com';
+  }
 
   /**
    * @return  {MovieInfo} movie
@@ -27,8 +30,9 @@ class ImdbPage extends MoviePage {
 
     const title = metaDataJSON.name;
     const year = this._readYear();
+    const director = this._readDirectorFromMetadata(metaDataJSON);
 
-    return new MovieInfo(title, year);
+    return new MovieInfo(title, year, director);
   }
 
   /**

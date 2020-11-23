@@ -31,6 +31,9 @@ class MoviePage {
   static get URL_PATTERN() {
     throw new Error(`Function not implemented.`);
   }
+  static get HOST_NAME() {
+    throw new Error(`Function not implemented.`);
+  }
 
   /**
    * @return {MovieInfo}
@@ -60,6 +63,14 @@ class MoviePage {
     ).textContent;
 
     return JSON.parse(metadataRaw);
+  }
+
+  _readDirectorFromMetadata(metaDataJSON) {
+    return metaDataJSON.director
+      ? metaDataJSON.director[0]
+        ? metaDataJSON.director[0].name
+        : metaDataJSON.director.name
+      : null;
   }
 
   _getTitleMetaTag() {

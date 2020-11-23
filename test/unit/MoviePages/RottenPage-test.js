@@ -43,7 +43,45 @@ describe('rottenPage', function () {
 
       const movie = await rottenPage.getMovieInfo();
 
-      movie.should.deep.equal(new MovieInfo('The Shawshank Redemption', 1994));
+      movie.should.deep.equal(
+        new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont')
+      );
+    });
+
+    context('release year - read oldest from multiple dates', function () {
+      const url = 'https://www.rottentomatoes.com/m/akira';
+      let document;
+
+      before(async function () {
+        document = await getTestDOM(url);
+      });
+
+      it('the first date from the table', async function () {
+        const rottenPage = new RottenPage(document, url);
+        const movie = await rottenPage.getMovieInfo();
+
+        movie.should.deep.equal(new MovieInfo('Akira', 1988, null));
+      });
+
+      it('the second date from the table', async function () {
+        document.querySelectorAll('li.meta-row .meta-value time')[1].dateTime =
+          'Sept. 23, 1966';
+
+        const rottenPage = new RottenPage(document, url);
+        const movie = await rottenPage.getMovieInfo();
+
+        movie.should.deep.equal(new MovieInfo('Akira', 1966, null));
+      });
+
+      it('from title', async function () {
+        document.head.querySelector('meta[property="og:title"]').content =
+          'Akira (1933)';
+
+        const rottenPage = new RottenPage(document, url);
+        const movie = await rottenPage.getMovieInfo();
+
+        movie.should.deep.equal(new MovieInfo('Akira', 1933, null));
+      });
     });
   });
 
@@ -56,7 +94,7 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('The Shawshank Redemption', 1994),
+            new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont'),
             'https://www.rottentomatoes.com/m/shawshank_redemption',
             RottenPage.NAME,
             null,
@@ -87,7 +125,7 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('Avatar 5', 2028),
+            new MovieInfo('Avatar 5', 2028, null),
             'https://www.rottentomatoes.com/m/avatar_5',
             RottenPage.NAME,
             null,
@@ -107,7 +145,7 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo("Amblin'", 1968),
+            new MovieInfo("Amblin'", 1968, null),
             'https://www.rottentomatoes.com/m/amblin',
             RottenPage.NAME,
             null,
@@ -131,7 +169,7 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('Parasite', 2019),
+            new MovieInfo('Parasite', 2019, null),
             'https://www.rottentomatoes.com/m/parasite_2019',
             RottenPage.NAME,
             null,
@@ -151,7 +189,7 @@ describe('rottenPage', function () {
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('The Shawshank Redemption', 1994),
+            new MovieInfo('The Shawshank Redemption', 1994, null),
             'https://www.rottentomatoes.com/m/shawshank_redemption_missing_css',
             RottenPage.NAME,
             null,

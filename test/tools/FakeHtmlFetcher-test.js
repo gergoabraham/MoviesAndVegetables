@@ -58,7 +58,7 @@ describe('FakeHtmlFetcher', function () {
       await fetch('www.no-such-file.com').should.be.rejectedWith(
         'fetch() fake: no file matches the url.\n\n' +
           'url: www.no-such-file.com\n\n' +
-          'filename: no-such-file.html'
+          'filename: no-such-file.com.html'
       );
     });
 
@@ -114,6 +114,15 @@ describe('FakeHtmlFetcher', function () {
       const text = await response.text();
 
       text.should.equal('Wow, parameters!');
+    });
+
+    it('handle site url in query params (x.com/z?a=site:www.example.com)', async function () {
+      const response = await fetch(
+        'https://www.fetch-fake.com/search?q=site%3Awww.example.com'
+      );
+      const text = await response.text();
+
+      text.should.equal('Wow, site url in query params!');
     });
   });
 

@@ -48,7 +48,9 @@ describe('RealHtmlFetcher', function () {
 
       it('store html in cache', async function () {
         fs.existsSync(realHtmlFetcher.CachePath).should.be.true;
-        fs.existsSync(realHtmlFetcher.CachePath + 'google.html').should.be.true;
+        fs.existsSync(
+          realHtmlFetcher.CachePath + 'google.com.html'
+        ).should.be.true;
       });
 
       it('second call of text() throws error', async function () {
@@ -61,7 +63,7 @@ describe('RealHtmlFetcher', function () {
     context('second call of fetch() for the same url', function () {
       it('text() returns with cached file', async function () {
         fs.appendFileSync(
-          realHtmlFetcher.CachePath + 'google.html',
+          realHtmlFetcher.CachePath + 'google.com.html',
           '>>> cached file content <<<'
         );
 
@@ -92,7 +94,8 @@ describe('RealHtmlFetcher', function () {
 
     it('load url with subpage/query parameter from cache', async function () {
       fs.appendFileSync(
-        realHtmlFetcher.CachePath + 'google.search...q=dark+knight+2008.html',
+        realHtmlFetcher.CachePath +
+          'google.com..search...q=dark+knight+2008.html',
         '>>> cached file content for url with query parameter <<<'
       );
 

@@ -12,7 +12,7 @@ describe('Content script on RottenTomatoes', function () {
   describe('injectImdbScoresOnRotten', function () {
     it('inject IMDb scores into the document', async function () {
       const dom = await JSDOM.fromFile(
-        FakeHtmlPath + 'rottentomatoes.m.shawshank_redemption.html',
+        FakeHtmlPath + 'rottentomatoes.com..m..shawshank_redemption.html',
         { url: 'https://www.rottentomatoes.com/m/shawshank_redemption' }
       );
 
