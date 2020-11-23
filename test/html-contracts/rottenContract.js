@@ -170,6 +170,36 @@ contract('RottenContract', function (fetchDOM, fetchText) {
       readReleaseYear(document).should.equal('1994');
     });
 
+    context('different release years', function () {
+      let document;
+
+      before(async function () {
+        document = await fetchDOM('https://www.rottentomatoes.com/m/akira');
+      });
+
+      it('can be in the html title', async function () {
+        readReleaseYear(document).should.equal('2020');
+      });
+
+      it('can be in the movie info table as release date (theaters)', function () {
+        document
+          .querySelectorAll('li.meta-row .meta-value time')[0]
+          .dateTime.should.contain(1988);
+      });
+
+      it('can be in the movie info table as release date (streaming)', function () {
+        document
+          .querySelectorAll('li.meta-row .meta-value time')[1]
+          .dateTime.should.contain(2009);
+      });
+
+      it('runtime is there, too', function () {
+        document
+          .querySelectorAll('li.meta-row .meta-value time')[2]
+          .dateTime.should.contain('P2h 4mM');
+      });
+    });
+
     it('director is an array', function () {
       readMetadata(document).director[0].name.should.equal('Frank Darabont');
     });

@@ -47,6 +47,42 @@ describe('rottenPage', function () {
         new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont')
       );
     });
+
+    context('release year - read oldest from multiple dates', function () {
+      const url = 'https://www.rottentomatoes.com/m/akira';
+      let document;
+
+      before(async function () {
+        document = await getTestDOM(url);
+      });
+
+      it('the first date from the table', async function () {
+        const rottenPage = new RottenPage(document, url);
+        const movie = await rottenPage.getMovieInfo();
+
+        movie.should.deep.equal(new MovieInfo('Akira', 1988, null));
+      });
+
+      it('the second date from the table', async function () {
+        document.querySelectorAll('li.meta-row .meta-value time')[1].dateTime =
+          'Sept. 23, 1966';
+
+        const rottenPage = new RottenPage(document, url);
+        const movie = await rottenPage.getMovieInfo();
+
+        movie.should.deep.equal(new MovieInfo('Akira', 1966, null));
+      });
+
+      it('from title', async function () {
+        document.head.querySelector('meta[property="og:title"]').content =
+          'Akira (1933)';
+
+        const rottenPage = new RottenPage(document, url);
+        const movie = await rottenPage.getMovieInfo();
+
+        movie.should.deep.equal(new MovieInfo('Akira', 1933, null));
+      });
+    });
   });
 
   describe(`getMovieInfoWithRatings`, function () {

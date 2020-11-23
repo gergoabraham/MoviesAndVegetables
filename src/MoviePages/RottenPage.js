@@ -52,7 +52,24 @@ class RottenPage extends MoviePage {
   }
 
   _readYear() {
+    const yearFromHtmlTitle = this._readYearFromHtmlTitle();
+    const yearsFromMovieInfoTable = this._readYearValuesFromMovieInfoTable();
+
+    return Math.min(yearFromHtmlTitle, ...yearsFromMovieInfoTable);
+  }
+
+  _readYearFromHtmlTitle() {
     return Number(this._getTitleMetaTag().match(/\d{4}(?=\)$)/));
+  }
+
+  _readYearValuesFromMovieInfoTable() {
+    const timeElements = this._document.querySelectorAll(
+      'li.meta-row .meta-value time[datetime]'
+    );
+
+    return Array.from(timeElements)
+      .map((elem) => new Date(elem.dateTime).getFullYear())
+      .filter((year) => !isNaN(year));
   }
 
   async _readCriticRatings() {
