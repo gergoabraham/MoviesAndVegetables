@@ -72,7 +72,7 @@ class BackgroundScript {
     return (
       `https://www.google.com/search?btnI=true&` +
       `q=${encodeURIComponent(title).replace(/%20/g, '+')}+${year}` +
-      `+movie+${remotePageName}`
+      `+site%3A${MoviePageFactory.getPageHostName(remotePageName)}`
     );
   }
 

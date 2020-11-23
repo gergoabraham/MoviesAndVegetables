@@ -31,6 +31,9 @@ class MoviePage {
   static get URL_PATTERN() {
     throw new Error(`Function not implemented.`);
   }
+  static get HOST_NAME() {
+    throw new Error(`Function not implemented.`);
+  }
 
   /**
    * @return {MovieInfo}

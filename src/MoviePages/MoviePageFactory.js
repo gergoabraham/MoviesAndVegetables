@@ -38,6 +38,16 @@ class MoviePageFactory {
       return null;
     }
   }
+
+  static getPageHostName(moviePageType) {
+    if (moviePageType == ImdbPage.NAME) {
+      return ImdbPage.HOST_NAME;
+    } else if (moviePageType == RottenPage.NAME) {
+      return RottenPage.HOST_NAME;
+    } else {
+      return null;
+    }
+  }
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {

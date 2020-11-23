@@ -14,6 +14,9 @@ class ImdbPage extends MoviePage {
   static get URL_PATTERN() {
     return /https:\/\/www\.imdb\.com\/title\/tt\d+\//;
   }
+  static get HOST_NAME() {
+    return 'www.imdb.com';
+  }
 
   /**
    * @return  {MovieInfo} movie
