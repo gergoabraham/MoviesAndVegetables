@@ -17,8 +17,6 @@ Do you like to check out a movie both on <b>IMDb</b> and <b>RottenTomatoes</b> w
 - check out a movie's RottenTomatoes <b>Tomatometer</b>, <b>AudienceScore</b> and <b>Critics Consensus</b> on <b>IMDb</b>,
 - or its IMDb <b>User score</b>, <b>Metascore</b> and <b>plot summary</b> on <b>RottenTomatoes</b>, and even the <b>TOP250 position</b>!
 
-<a href="https://github.com/gergooo/MoviesAndVegetables/blob/master/CHANGELOG.md">[Click here for the CHANGELOG]</a>
-
 <b>Please consider that this extension is currently under development, there is a lot missing. New features are being implemented and released continuously.</b>
 
 <b>Why does this extension need access for my data on IMDb, RottenTomatoes and especially on Google?</b>
@@ -53,7 +51,7 @@ There are multiple test levels:
 
 - `On push`: Every type of test is performed on every push by the CI server.
 - `Daily`: Contract and end-to-end tests are performed daily, so if any of the websites or browser features change, I receive an email immediately.
-- `Release`: Bumping version, generating [changelog](CHANGELOG.md) from tag messages, tagging, merging to master, pushing to remote with one `npm` command, then deploying to AMO by the CI server.
+- `Release`: Bumping version, generating changelog from tag messages, tagging, merging to master, pushing to remote with one `npm` command, then deploying to AMO by the CI server.
 
 ## Sources
 
