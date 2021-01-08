@@ -123,7 +123,7 @@ class ImdbPage extends MoviePage {
   }
 
   async _fetchCss() {
-    const styleSheetUrl = this._getStylesheetUrl(/title-flat.*\.css$/);
+    const styleSheetUrl = this._getStylesheetUrl(/\/S\/.*\.css$/);
 
     return ImdbPage._fetchTextContent(styleSheetUrl);
   }

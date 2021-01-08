@@ -373,13 +373,13 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
       );
 
       matchedStyleSheets = styleSheetLinks.filter((link) =>
-        link.match(/title-flat.*\.css$/)
+        link.match(/\/S\/.*\.css$/)
       );
     });
 
     context('link', function () {
-      it('html contains the needed "title-flat" stylesheet link', async function () {
-        matchedStyleSheets.length.should.equal(1);
+      it('html contains the needed "**/S/**/*.css" stylesheet link', async function () {
+        matchedStyleSheets.length.should.be.above(0);
       });
 
       it('as an absolute link', function () {
