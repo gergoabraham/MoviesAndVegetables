@@ -62,7 +62,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
         let titleBarWrapper;
 
         before(async function () {
-          document = await fetchDOM('https://www.imdb.com/title/tt5637536/');
+          document = await fetchDOM('https://www.imdb.com/title/tt1630029/');
           titleBarWrapper = document.getElementsByClassName(
             'title_bar_wrapper'
           )[0];
@@ -153,13 +153,14 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
         });
       });
 
-      context('there is no titleReviewBar', function () {
+      context.skip('there is no titleReviewBar', function () {
         let document;
 
         before(async function () {
-          document = await fetchDOM('https://www.imdb.com/title/tt5637536/');
+          document = await fetchDOM('https://www.imdb.com/title/tt1630029/');
         });
 
+        // todo: find a movie that doesn't have a titleReviewBar
         it("titleReviewBar doesn't exist", async function () {
           should.not.exist(
             document.getElementsByClassName('titleReviewBar')[0]
@@ -308,7 +309,7 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
 
       it('or it is not there', async function () {
         const document = await fetchDOM(
-          'https://www.imdb.com/title/tt5637536/'
+          'https://www.imdb.com/title/tt1630029/'
         );
 
         should.not.exist(
@@ -335,16 +336,16 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
       let document;
 
       before(`let's check some unimportant data`, async function () {
-        document = await fetchDOM('https://www.imdb.com/title/tt5637536/');
+        document = await fetchDOM('https://www.imdb.com/title/tt1630029/');
 
         const metadata = readMetadata(document);
 
         metadata['@type'].should.equal('Movie');
-        metadata.name.should.equal('Avatar 5');
+        metadata.name.should.equal('Avatar 2');
         document.head
           .querySelector('meta[property="og:title"')
           .content.match(/\d{4}/)[0]
-          .should.equal('2028');
+          .should.equal('2022');
       });
 
       it(`user score doesn't exist`, function () {

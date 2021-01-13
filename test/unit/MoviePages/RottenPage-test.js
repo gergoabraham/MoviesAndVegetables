@@ -120,13 +120,13 @@ describe('rottenPage', function () {
     context('on a movie without ratings', function () {
       it('read all stuff', async function () {
         const movie = await readMovieDataByRottenPage(
-          'https://www.rottentomatoes.com/m/avatar_5'
+          'https://www.rottentomatoes.com/m/avatar_2'
         );
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('Avatar 5', 2028, null),
-            'https://www.rottentomatoes.com/m/avatar_5',
+            new MovieInfo('Avatar 2', 2022, null),
+            'https://www.rottentomatoes.com/m/avatar_2',
             RottenPage.NAME,
             null,
             null,

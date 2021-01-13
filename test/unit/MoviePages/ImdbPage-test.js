@@ -78,13 +78,13 @@ describe('ImdbPage', function () {
     context(`on a movie without ratings`, function () {
       it('read all stuff', async function () {
         const movie = await readMovieDataByImdbPage(
-          'https://www.imdb.com/title/tt5637536/'
+          'https://www.imdb.com/title/tt1630029/'
         );
 
         movie.should.deep.equal(
           new MovieInfoWithRatings(
-            new MovieInfo('Avatar 5', 2028, null),
-            'https://www.imdb.com/title/tt5637536/',
+            new MovieInfo('Avatar 2', 2022, null),
+            'https://www.imdb.com/title/tt1630029/',
             ImdbPage.NAME,
             null,
             null,
@@ -98,7 +98,7 @@ describe('ImdbPage', function () {
     context(`on a not top250 movie's imdb page`, function () {
       it('toplistPosition is null', async function () {
         const movie = await readMovieDataByImdbPage(
-          'https://www.imdb.com/title/tt5637536/'
+          'https://www.imdb.com/title/tt1630029/'
         );
 
         movie.should.contain({ toplistPosition: null });
@@ -415,7 +415,7 @@ describe('ImdbPage', function () {
 
         it('no review bar', async function () {
           const document = await injectDefaultRatings(
-            'https://www.imdb.com/title/tt5637536/'
+            'https://www.imdb.com/title/tt1630029/'
           );
           const titleReviewBar = getTitleReviewBar(document);
 
@@ -429,7 +429,7 @@ describe('ImdbPage', function () {
 
         before(async function () {
           document = await injectDefaultRatings(
-            'https://www.imdb.com/title/tt5637536/'
+            'https://www.imdb.com/title/tt1630029/'
           );
         });
 

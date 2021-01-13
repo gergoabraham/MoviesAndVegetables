@@ -265,10 +265,10 @@ contract('RottenContract', function (fetchDOM, fetchText) {
       let document;
 
       before(`let's check some unimportant data`, async function () {
-        document = await fetchDOM('https://www.rottentomatoes.com/m/avatar_5');
+        document = await fetchDOM('https://www.rottentomatoes.com/m/avatar_2');
 
-        readMetadata(document).name.should.equal('Avatar 5');
-        readReleaseYear(document).should.equal('2028');
+        readMetadata(document).name.should.equal('Avatar 2');
+        readReleaseYear(document).should.equal('2022');
       });
 
       it(`tomatometer doesn't exist`, function () {
