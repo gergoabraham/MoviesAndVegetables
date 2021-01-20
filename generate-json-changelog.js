@@ -23,7 +23,7 @@ async function generateChangelog() {
   });
 
   const newVersion = {
-    version: process.env.npm_package_version,
+    version: 'v' + process.env.npm_package_version,
     date: new Date().toISOString().substring(0, 10),
     description: process.env.npm_config_message,
   };
