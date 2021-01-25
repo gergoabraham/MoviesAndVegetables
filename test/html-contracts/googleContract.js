@@ -31,7 +31,7 @@ contract('GoogleContract', function (fetchDOM) {
       hrefs
         .filter(
           (href) =>
-            href && href.match(/https:\/\/www\.rottentomatoes\.com\/m\/amblin/)
+            href && href.match(/https:\/\/www\.rottentomatoes\.com\/m\/amblin/i)
         )
         .length.should.be.least(1);
     });

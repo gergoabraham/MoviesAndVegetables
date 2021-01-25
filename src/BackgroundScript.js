@@ -103,7 +103,7 @@ class BackgroundScript {
     const urls = aElements.map((elem) => elem.href);
     const movieUrls = urls.filter((href) => href && href.match(urlPattern));
 
-    return movieUrls[0].match(urlPattern)[0];
+    return movieUrls[0].match(urlPattern)[0].toLowerCase();
   }
 
   static async _fetchMovieData(movieUrl, moviePageName) {
