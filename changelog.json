@@ -1,5 +1,10 @@
 [
  {
+  "version": "v0.6.2",
+  "date": "2021-01-25",
+  "description": "Increased efficiency when finding less famous or foreign movies."
+ },
+ {
   "version": "v0.6.1",
   "date": "2021-01-08",
   "description": "Hotfix for showing Metacritics background color because of changes on IMDb"
