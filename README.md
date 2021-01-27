@@ -29,7 +29,7 @@ Please write a mail to the following address if you find any issue, or have a fe
 
 <b>Donation</b>
 
-If you like this extension, please <a href="https://www.buymeacoffee.com/gergoabraham">buy me a coffee</a> or <a href="https://www.patreon.com/gergoabraham">become my patron</a>. ◕ ◡ ◕
+If you like this extension, please <a href="https://www.buymeacoffee.com/gergoabraham">buy me a coffee</a>. ◕ ◡ ◕
 
 ## Developer showcase
 
