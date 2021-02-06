@@ -85,16 +85,11 @@ class RottenPage extends MoviePage {
   }
 
   _readTomatometer() {
-    return this._readScore(0);
+    return Number(this._getScoreInfo().tomatometerAllCritics.score);
   }
 
   _readNumberOfCriticRatings() {
-    return Number(
-      this._document.body
-        .getElementsByClassName('mop-ratings-wrap__half')[0]
-        .querySelectorAll('small.mop-ratings-wrap__text--small')[0]
-        .textContent.replace(/[^0-9]/g, '')
-    );
+    return this._getScoreInfo().tomatometerAllCritics.ratingCount;
   }
 
   async _readTomatometerLogoUrl() {
@@ -112,11 +107,7 @@ class RottenPage extends MoviePage {
   }
 
   _readTomatometerFreshness() {
-    const tomatometerIcon = this._document
-      .getElementsByClassName('mop-ratings-wrap__half')[0]
-      .querySelector('span.mop-ratings-wrap__icon.meter-tomato');
-
-    return tomatometerIcon.className.match(/(certified.fresh|fresh|rotten)/)[0];
+    return this._getScoreInfo().tomatometerAllCritics.tomatometerState;
   }
 
   async _readUserRatings() {
@@ -132,7 +123,7 @@ class RottenPage extends MoviePage {
   }
 
   _readAudienceScore() {
-    return this._readScore(1);
+    return Number(this._getScoreInfo().audienceAll.score);
   }
 
   _readScore(i) {
@@ -146,12 +137,7 @@ class RottenPage extends MoviePage {
   }
 
   _readNumberOfUserRatings() {
-    return Number(
-      this._document.body
-        .getElementsByClassName('mop-ratings-wrap__half')[1]
-        .querySelectorAll('strong.mop-ratings-wrap__text--small')[0]
-        .textContent.replace(/[^0-9]/g, '')
-    );
+    return this._getScoreInfo().audienceAll.ratingCount;
   }
 
   async _readAudienceScoreLogoUrl() {
@@ -169,11 +155,15 @@ class RottenPage extends MoviePage {
   }
 
   _readAudienceScoreFreshness() {
-    const freshnessIcon = this._document
-      .getElementsByClassName('mop-ratings-wrap__half')[1]
-      .querySelector('span.mop-ratings-wrap__icon.meter-tomato');
+    return this._getScoreInfo().audienceAll.audienceClass;
+  }
 
-    return freshnessIcon.className.match(/(upright|spilled)/)[0];
+  _getScoreInfo() {
+    return JSON.parse(
+      this._document.body.innerHTML.match(
+        /RottenTomatoes\.context\.scoreInfo = ([^;]+\n?);/
+      )[1]
+    );
   }
 
   async _readLogoUrl(freshness) {
@@ -212,12 +202,12 @@ class RottenPage extends MoviePage {
   }
 
   _readCriticsConsensus() {
-    const criticsConsensusElement = this._document.querySelector(
-      'section.mop-ratings-wrap__row.js-scoreboard-container'
-    ).previousElementSibling;
+    const criticsConsensusMatch = this._document.body.innerHTML.match(
+      /what-to-know__section-body">\n +<span>(.+)<\/span>/
+    );
 
-    return criticsConsensusElement
-      ? new Summary('Critics Consensus', criticsConsensusElement.innerHTML)
+    return criticsConsensusMatch
+      ? new Summary('Critics Consensus', criticsConsensusMatch[1])
       : null;
   }
 
