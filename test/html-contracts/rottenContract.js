@@ -9,7 +9,7 @@
 const contract = require('../tools/ContractTestDescription');
 
 contract('RottenContract', function (fetchDOM, fetchText) {
-  context('structure', function () {
+  context.skip('structure', function () {
     it('there is a ratings-wrap__info', async function () {
       const document = await fetchDOM(
         'https://www.rottentomatoes.com/m/shawshank_redemption'
@@ -92,7 +92,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
           });
         });
 
-        context('tomatometer', function () {
+        context('audience score', function () {
           it('second child is audience score', function () {
             ratingContainer.children[1].className.should.equal(
               'mop-ratings-wrap__half audience-score'
@@ -112,28 +112,12 @@ contract('RottenContract', function (fetchDOM, fetchText) {
   context('data', function () {
     let document;
 
-    function getAudienceScoreCountElement(document) {
-      return document
-        .getElementsByClassName('mop-ratings-wrap__half')[1]
-        .querySelectorAll('strong.mop-ratings-wrap__text--small')[0];
-    }
-
-    function getTomatometerElement(document) {
-      return document
-        .getElementsByClassName('mop-ratings-wrap__half')[0]
-        .getElementsByClassName('mop-ratings-wrap__percentage')[0];
-    }
-
-    function getTomatometerCountElement(document) {
-      return document.body
-        .getElementsByClassName('mop-ratings-wrap__half')[0]
-        .querySelectorAll('small.mop-ratings-wrap__text--small')[0];
-    }
-
-    function getAudienceScoreElement(document) {
-      return document
-        .getElementsByClassName('mop-ratings-wrap__half')[1]
-        .getElementsByClassName('mop-ratings-wrap__percentage')[0];
+    function getScoreInfo(document) {
+      return JSON.parse(
+        document.body.innerHTML.match(
+          /RottenTomatoes\.context\.scoreInfo = ([^;]+\n?);/
+        )[1]
+      );
     }
 
     function readMetadata(document) {
@@ -150,10 +134,10 @@ contract('RottenContract', function (fetchDOM, fetchText) {
         .content.match(/\d{4}/)[0];
     }
 
-    function getCriticsConsensusElement(document) {
-      return document.querySelector(
-        'section.mop-ratings-wrap__row.js-scoreboard-container'
-      ).previousElementSibling;
+    function getCriticsConsensus(document) {
+      return document.body.innerHTML.match(
+        /what-to-know__section-body">\n +<span>(.+)<\/span>/
+      )?.[1];
     }
 
     before(async function () {
@@ -205,58 +189,43 @@ contract('RottenContract', function (fetchDOM, fetchText) {
     });
 
     context('tomatometer', function () {
-      it('value is a number', async function () {
-        const tomatoMeter = getTomatometerElement(document).innerHTML;
-
-        Number(tomatoMeter.match(/\d+(?=%)/))
+      it('scoreboard contains tomatometer', async function () {
+        Number(getScoreInfo(document).tomatometerAllCritics.score)
           .should.be.above(80)
           .and.most(100);
       });
 
-      it('freshness is in the class name', function () {
-        const freshnessIcon = document.querySelector(
-          'span.mop-ratings-wrap__icon.meter-tomato'
+      it('and the freshness state', function () {
+        getScoreInfo(
+          document
+        ).tomatometerAllCritics.tomatometerState.should.equal(
+          'certified-fresh'
         );
-
-        freshnessIcon.className.should
-          .include(' icon big ')
-          .and.include(' certified-fresh');
       });
 
-      it('count is a number', async function () {
-        const tomatometerCount = getTomatometerCountElement(document).innerHTML;
-
-        Number(tomatometerCount.match(/\d+/))
-          .should.be.above(60)
-          .and.below(100);
+      it('and the vote count', async function () {
+        getScoreInfo(document)
+          .tomatometerAllCritics.ratingCount.should.be.above(60)
+          .and.most(100);
       });
     });
 
     context('audience score', function () {
-      it('value is a number', async function () {
-        const audienceScore = getAudienceScoreElement(document).textContent;
-
-        Number(audienceScore.match(/\d+(?=%)/))
+      it('scoreboard contains audience score', async function () {
+        Number(getScoreInfo(document).audienceAll.score)
           .should.be.above(80)
           .and.most(100);
       });
 
-      it('popcorn freshness is in the class name', function () {
-        const freshnessIcon = document.querySelectorAll(
-          'span.mop-ratings-wrap__icon.meter-tomato'
-        )[1];
-
-        freshnessIcon.className.should
-          .include(' icon big ')
-          .and.include(' upright');
+      it('and the freshness state', function () {
+        getScoreInfo(document).audienceAll.audienceClass.should.equal(
+          'upright'
+        );
       });
 
-      it('count is a number', async function () {
-        const audienceScoreCount = getAudienceScoreCountElement(document)
-          .textContent;
-
-        Number(audienceScoreCount.replace(/[^\d]/g, ''))
-          .should.be.above(880000)
+      it('and the vote count', async function () {
+        getScoreInfo(document)
+          .audienceAll.ratingCount.should.be.above(880000)
           .and.most(2000000);
       });
     });
@@ -272,57 +241,19 @@ contract('RottenContract', function (fetchDOM, fetchText) {
       });
 
       it(`tomatometer doesn't exist`, function () {
-        should.not.exist(getTomatometerElement(document));
+        should.not.exist(getScoreInfo(document).tomatometerAllCritics.score);
       });
 
-      it(`tomatometer count contains N/A`, function () {
-        getTomatometerCountElement(document).textContent.should.contain('N/A');
+      it(`tomatometer count doesn't exist`, function () {
+        should.not.exist(getScoreInfo(document).tomatometerAllCritics.count);
       });
 
       it(`audience score doesn't exist`, function () {
-        should.not.exist(getAudienceScoreElement(document));
+        should.not.exist(getScoreInfo(document).audienceAll.score);
       });
 
-      it(`audience score count contains "Not yet available"`, function () {
-        getAudienceScoreCountElement(document).textContent.should.contain(
-          'Not yet available'
-        );
-      });
-    });
-
-    context('missing tomatomer, but existing audience score', function () {
-      let document;
-
-      before(`let's check some unimportant data`, async function () {
-        document = await fetchDOM('https://www.rottentomatoes.com/m/amblin');
-
-        readMetadata(document).name.should.equal("Amblin'");
-        readReleaseYear(document).should.equal('1968');
-      });
-
-      it(`tomatometer doesn't exist`, function () {
-        should.not.exist(getTomatometerElement(document));
-      });
-
-      it(`tomatometer count contains N/A`, function () {
-        getTomatometerCountElement(document).textContent.should.contain('N/A');
-      });
-
-      it(`audience score exists`, function () {
-        const audienceScore = getAudienceScoreElement(document).innerHTML;
-
-        Number(audienceScore.match(/\d+(?=%)/))
-          .should.be.above(20)
-          .and.most(100);
-      });
-
-      it(`audience score count exists`, function () {
-        const audienceScoreCount = getAudienceScoreCountElement(document)
-          .innerHTML;
-
-        Number(audienceScoreCount.replace(/[^\d]/g, ''))
-          .should.be.above(10)
-          .and.most(2000);
+      it(`audience score count doesn't exist`, function () {
+        should.not.exist(getScoreInfo(document).audienceAll.ratingCount);
       });
     });
 
@@ -332,19 +263,17 @@ contract('RottenContract', function (fetchDOM, fetchText) {
           'https://www.rottentomatoes.com/m/shawshank_redemption'
         );
 
-        getCriticsConsensusElement(document).innerHTML.should.contain(
+        getCriticsConsensus(document).should.contain(
           '<em>The Shawshank Redemption</em> is an uplifting'
         );
       });
 
-      it('or it says "No consensus yet."', async function () {
+      it("or it doesn't exist", async function () {
         const document = await fetchDOM(
           'https://www.rottentomatoes.com/m/amblin'
         );
 
-        getCriticsConsensusElement(document).textContent.should.equal(
-          'No consensus yet.'
-        );
+        should.not.exist(getCriticsConsensus(document));
       });
     });
   });
