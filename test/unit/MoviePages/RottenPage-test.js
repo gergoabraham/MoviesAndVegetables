@@ -205,7 +205,7 @@ describe('rottenPage', function () {
     });
   });
 
-  describe('injectRatings', function () {
+  describe.skip('injectRatings', function () {
     context('all scores are present', function () {
       let document;
 
