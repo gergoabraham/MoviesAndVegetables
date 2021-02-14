@@ -109,7 +109,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
     });
   });
 
-  context('data', function () {
+  context.skip('data', function () {
     let document;
 
     function getScoreInfo(document) {
@@ -278,7 +278,7 @@ contract('RottenContract', function (fetchDOM, fetchText) {
     });
   });
 
-  context('style', function () {
+  context.skip('style', function () {
     let matchedStyleSheets;
 
     before('get URL for latest stylesheet', async function () {
