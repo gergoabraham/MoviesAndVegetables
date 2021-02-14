@@ -1,5 +1,10 @@
 [
  {
+  "version": "v0.6.3",
+  "date": "2021-02-14",
+  "description": "Partly adapted for changed RottenTomatoes website:<br>Tomatometer, Audience Score and Critics consensus are shown on IMDb again."
+ },
+ {
   "version": "v0.6.2",
   "date": "2021-01-25",
   "description": "Increased efficiency when finding less famous or foreign movies."
