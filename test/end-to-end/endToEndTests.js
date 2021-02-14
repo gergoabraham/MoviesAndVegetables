@@ -49,7 +49,7 @@ describe('End-to-end tests', async function () {
     });
   });
 
-  context('on RottenTomatoes', function () {
+  context.skip('on RottenTomatoes', function () {
     // eslint-disable-next-line no-invalid-this
     this.retries(3);
 

@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title></title>
 
-    <!-- HEAD CONTENT -->
-    <meta property="og:title" content="The Shawshank Redemption (1994)" />
+<head>
+  <meta charset="utf-8" />
+  <title></title>
 
-    <script type="application/ld+json">
+  <!-- HEAD CONTENT -->
+  <meta property="og:title" content="The Shawshank Redemption (1994)" />
+
+  <script type="application/ld+json">
       {
         "name": "The Shawshank Redemption",
         "director": [
@@ -18,43 +19,36 @@
       }
     </script>
 
-    <link />
-    <link href="blabla.com" />
-    <link href="/assets/global-123456789ad.css" />
-    <link />
-    <!-- HEAD CONTENT -->
-  </head>
+  <link />
+  <link href="blabla.com" />
+  <link href="/assets/global-123456789ad.css" />
+  <link />
+  <!-- HEAD CONTENT -->
+</head>
 
-  <body>
-    <!-- BODY CONTENT -->
-    <section class="mop-ratings-wrap__info">
-      <strong>Critics Consensus</strong>
-      <p class="mop-ratings-wrap__text mop-ratings-wrap__text--concensus"
-        ><em>The Shawshank Redemption</em> is an uplifting movie.</p
-      >
+<body>
+  <!-- BODY CONTENT -->
 
-      <section class="mop-ratings-wrap__row js-scoreboard-container">
-        <div class="mop-ratings-wrap__half">
-          <span
-            class="mop-ratings-wrap__icon meter-tomato icon big blabla certified-fresh"
-          ></span>
-          <span class="mop-ratings-wrap__percentage">90%</span>
-          <strong class="mop-ratings-wrap__text--small">Total count:</strong>
-          <small class="mop-ratings-wrap__text--small">71</small>
-        </div>
 
-        <div class="mop-ratings-wrap__half audience-score">
-          <span
-            class="mop-ratings-wrap__icon meter-tomato icon big blabla upright"
-          ></span>
-          <span class="mop-ratings-wrap__percentage">98%</span>
-          <strong class="mop-ratings-wrap__text--small"
-            >User Ratings: 885,688</strong
-          >
-        </div>
-      </section>
-    </section>
+  <p class="what-to-know__section-body">
+    <span><em>The Shawshank Redemption</em> is an uplifting movie.</span>
+  </p>
 
-    <!-- BODY CONTENT -->
-  </body>
+  <script type="application/json">
+      root.RottenTomatoes.context.scoreInfo = {
+        "tomatometerAllCritics": {
+          "ratingCount": 71,
+          "score": "90",
+          "tomatometerState": "certified-fresh"
+        },
+        "audienceAll": {
+          "ratingCount": 885688,
+          "score": "98",
+          "audienceClass": "upright"
+        }
+      };
+    </script>
+  <!-- BODY CONTENT -->
+</body>
+
 </html>

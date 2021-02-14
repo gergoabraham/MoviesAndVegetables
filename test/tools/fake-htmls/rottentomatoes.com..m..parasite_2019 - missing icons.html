@@ -1,44 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title></title>
 
-    <!-- HEAD CONTENT -->
-    <meta property="og:title" content="Parasite (2019)" />
+<head>
+  <meta charset="utf-8" />
+  <title></title>
 
-    <script type="application/ld+json">
+  <!-- HEAD CONTENT -->
+  <meta property="og:title" content="Parasite (2019)" />
+
+  <script type="application/ld+json">
       {
         "name": "Parasite"
       }
     </script>
-    <!-- HEAD CONTENT -->
-  </head>
+  <!-- HEAD CONTENT -->
+</head>
 
-  <body>
-    <!-- BODY CONTENT -->
-    <p>No consensus yet.</p>
-    <section class="mop-ratings-wrap__row js-scoreboard-container">
-      <div class="mop-ratings-wrap__half">
-        <span
-          class="mop-ratings-wrap__icon meter-tomato icon big blabla"
-        ></span>
-        <span class="mop-ratings-wrap__percentage">99%</span>
-        <strong class="mop-ratings-wrap__text--small">Total count:</strong>
-        <small class="mop-ratings-wrap__text--small">450</small>
-      </div>
+<body>
+  <!-- BODY CONTENT -->
+  <script type="application/json">
+      root.RottenTomatoes.context.scoreInfo = {
+        "tomatometerAllCritics": {
+          "ratingCount": 450,
+          "score": "99",
+          "tomatometerState": null
+        },
+        "audienceAll": {
+          "ratingCount": 7274,
+          "score": "90",
+          "audienceClass": null
+        }
+      };
+    </script>
+  <!-- BODY CONTENT -->
+</body>
 
-      <div class="mop-ratings-wrap__half audience-score">
-        <span
-          class="mop-ratings-wrap__icon meter-tomato icon big blabla"
-        ></span>
-        <span class="mop-ratings-wrap__percentage">90%</span>
-        <strong class="mop-ratings-wrap__text--small"
-          >User Ratings: 7,274</strong
-        >
-      </div>
-    </section>
-
-    <!-- BODY CONTENT -->
-  </body>
 </html>
