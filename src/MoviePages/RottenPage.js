@@ -25,7 +25,7 @@ class RottenPage extends MoviePage {
   async getMovieInfo() {
     const metaDataJSON = this._readMetadataJSON();
 
-    const title = metaDataJSON.name;
+    const title = metaDataJSON.name.replace(/&\w+;/, '+');
     const year = this._readYear();
     const director = this._readDirectorFromMetadata(metaDataJSON);
 
@@ -36,12 +36,26 @@ class RottenPage extends MoviePage {
    * @return  {MovieInfoWithRatings} movie
    */
   async getMovieInfoWithRatings() {
-    const criticRatings = await this._readCriticRatings();
-    const userRatings = await this._readUserRatings();
-    const criticsConsensus = this._readCriticsConsensus();
+    let movieInfo = null;
+    let criticRatings = null;
+    let userRatings = null;
+    let criticsConsensus = null;
+
+    try {
+      movieInfo = await this.getMovieInfo();
+    } catch (e) {}
+    try {
+      criticRatings = await this._readCriticRatings();
+    } catch (e) {}
+    try {
+      userRatings = await this._readUserRatings();
+    } catch (e) {}
+    try {
+      criticsConsensus = this._readCriticsConsensus();
+    } catch (e) {}
 
     return new MovieInfoWithRatings(
-      await this.getMovieInfo(),
+      movieInfo,
       this._url,
       RottenPage.NAME,
       null,
@@ -85,11 +99,11 @@ class RottenPage extends MoviePage {
   }
 
   _readTomatometer() {
-    return Number(this._getScoreInfo().tomatometerAllCritics.score);
+    return Number(this._text.match(/"tomatometerScore":"(\d+)"/)[1]);
   }
 
   _readNumberOfCriticRatings() {
-    return this._getScoreInfo().tomatometerAllCritics.ratingCount;
+    return Number(this._text.match(/"tomatometerCount":(\d+)/)[1]);
   }
 
   async _readTomatometerLogoUrl() {
@@ -107,11 +121,13 @@ class RottenPage extends MoviePage {
   }
 
   _readTomatometerFreshness() {
-    return this._getScoreInfo().tomatometerAllCritics.tomatometerState;
+    return this._text.match(/"tomatometerState":"([\w-]+)"/)[1];
   }
 
   async _readUserRatings() {
     const audienceScore = this._readAudienceScore();
+
+    Logger.log(audienceScore);
 
     return audienceScore
       ? new Ratings(
@@ -123,21 +139,11 @@ class RottenPage extends MoviePage {
   }
 
   _readAudienceScore() {
-    return Number(this._getScoreInfo().audienceAll.score);
-  }
-
-  _readScore(i) {
-    const audienceScoreElement = this._document.body
-      .getElementsByClassName('mop-ratings-wrap__half')
-      [i].getElementsByClassName('mop-ratings-wrap__percentage')[0];
-
-    return audienceScoreElement
-      ? Number(audienceScoreElement.innerHTML.replace(/[^0-9]/g, ''))
-      : null;
+    return Number(this._text.match(/"audienceScore":"(\d+)"/)[1]);
   }
 
   _readNumberOfUserRatings() {
-    return this._getScoreInfo().audienceAll.ratingCount;
+    return Number(this._text.match(/"audienceCount":(\d+)/)[1]);
   }
 
   async _readAudienceScoreLogoUrl() {
@@ -155,15 +161,7 @@ class RottenPage extends MoviePage {
   }
 
   _readAudienceScoreFreshness() {
-    return this._getScoreInfo().audienceAll.audienceClass;
-  }
-
-  _getScoreInfo() {
-    return JSON.parse(
-      this._document.body.innerHTML.match(
-        /RottenTomatoes\.context\.scoreInfo = ([^;]+\n?);/
-      )[1]
-    );
+    return this._text.match(/"audienceState":"([\w-]+)"/)[1];
   }
 
   async _readLogoUrl(freshness) {
@@ -202,8 +200,8 @@ class RottenPage extends MoviePage {
   }
 
   _readCriticsConsensus() {
-    const criticsConsensusMatch = this._document.body.innerHTML.match(
-      /what-to-know__section-body">\n +<span>(.+)<\/span>/
+    const criticsConsensusMatch = this._text.match(
+      /data-qa="critics-consensus">(.+)<\/span>/
     );
 
     return criticsConsensusMatch

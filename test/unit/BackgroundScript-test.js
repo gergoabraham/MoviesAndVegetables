@@ -24,7 +24,7 @@ describe('Background script', function () {
   });
 
   describe('main search algorithm', function () {
-    it(`search remote page using "feeling lucky" and return with the scores`, async function () {
+    it.skip(`search remote page using "feeling lucky" and return with the scores`, async function () {
       // Uses the html files:
       // - google.com..search...btnI=true&q=The+Shawshank+Redemption+1994+site%3Awww.rottentomatoes.com.html
       // - rottentomatoes.m.shawshank_redemption.html

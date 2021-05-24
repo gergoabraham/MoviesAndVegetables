@@ -85,7 +85,7 @@ describe('rottenPage', function () {
     });
   });
 
-  describe(`getMovieInfoWithRatings`, function () {
+  describe.skip(`getMovieInfoWithRatings`, function () {
     context('on a movie with ratings', function () {
       it('read all stuff', async function () {
         const movie = await readMovieDataByRottenPage(
