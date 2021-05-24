@@ -321,10 +321,11 @@ class ImdbPage extends MoviePage {
         '[class*=ReviewContent__StyledInlineList]'
       );
 
-      const consensus = doc.createElement('li');
+      const consensus = this._generateElement(`
+        <li>${movie.summary.title}: ${movie.summary.content}</li>
+        `);
 
       consensus.title = `${movie.summary.title} from ${movie.pageName}`;
-      consensus.innerHTML = `${movie.summary.title}: ${movie.summary.content}`;
 
       criticsList.append(consensus);
     }
