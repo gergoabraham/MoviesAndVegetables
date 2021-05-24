@@ -25,6 +25,7 @@ describe('End-to-end tests', async function () {
 
   context('on IMDb', function () {
     before(async function () {
+      await driver.get('https://www.imdb.com/');
       await driver.get('https://www.imdb.com/title/tt0110912/');
     });
 
