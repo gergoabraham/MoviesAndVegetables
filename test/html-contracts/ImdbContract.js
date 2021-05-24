@@ -8,7 +8,7 @@
 
 const contract = require('../tools/ContractTestDescription');
 
-contract('ImdbContract', function (fetchDOM, fetchText) {
+contract.skip('ImdbContract', function (fetchDOM, fetchText) {
   context('structure', function () {
     context('user score - ratings wrapper', async function () {
       context('full version', function () {
@@ -17,9 +17,8 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
 
         before(async function () {
           document = await fetchDOM('https://www.imdb.com/title/tt0111161/');
-          ratingsWrapper = document.getElementsByClassName(
-            'ratings_wrapper'
-          )[0];
+          ratingsWrapper =
+            document.getElementsByClassName('ratings_wrapper')[0];
         });
 
         it('ratings_wrapper exists', function () {
@@ -63,9 +62,8 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
 
         before(async function () {
           document = await fetchDOM('https://www.imdb.com/title/tt1630029/');
-          titleBarWrapper = document.getElementsByClassName(
-            'title_bar_wrapper'
-          )[0];
+          titleBarWrapper =
+            document.getElementsByClassName('title_bar_wrapper')[0];
         });
 
         it('title_bar_wrapper exists', function () {
@@ -227,8 +225,9 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
       });
 
       it('value is a number', async function () {
-        const rating = document.querySelector('span[itemprop="ratingValue"')
-          .innerHTML;
+        const rating = document.querySelector(
+          'span[itemprop="ratingValue"'
+        ).innerHTML;
         const valueWithoutGroupingCharacters = rating.replace(/,|&nbsp;/g, '');
 
         isNaN(valueWithoutGroupingCharacters).should.be.false;
@@ -238,8 +237,9 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
       });
 
       it('count is a number', async function () {
-        const rating = document.querySelector('span[itemprop="ratingCount"')
-          .innerHTML;
+        const rating = document.querySelector(
+          'span[itemprop="ratingCount"'
+        ).innerHTML;
         const valueWithoutGroupingCharacters = rating.replace(/,|&nbsp;/g, '');
 
         isNaN(valueWithoutGroupingCharacters).should.be.false;
@@ -287,8 +287,9 @@ contract('ImdbContract', function (fetchDOM, fetchText) {
         const criticsPage = await fetchDOM(
           'https://www.imdb.com/title/tt0111161/criticreviews'
         );
-        const count = criticsPage.querySelector('span[itemprop="ratingCount"')
-          .textContent;
+        const count = criticsPage.querySelector(
+          'span[itemprop="ratingCount"'
+        ).textContent;
 
         isNaN(count).should.equal(false);
         Number(count).should.be.above(10).and.below(200);
