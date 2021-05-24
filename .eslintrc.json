@@ -19,6 +19,7 @@
     "newline-after-var": "warn",
     "newline-before-return": "warn",
     "no-console": "warn",
+    "no-empty": "off",
     "yoda": "warn"
   },
   "globals": {
