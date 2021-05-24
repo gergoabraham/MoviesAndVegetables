@@ -198,127 +198,55 @@ class ImdbPage extends MoviePage {
    * @param  {MovieInfoWithRatings} movie
    */
   injectRatings(movie) {
-    // this._injectTomatoMeter(this._document, movie);
+    this._injectTomatoMeter(this._document, movie);
     this._injectAudienceScore(this._document, movie);
     // this._injectCriticsConsensus(this._document, movie);
   }
 
   _injectTomatoMeter(doc, movie) {
-    const tomatoMeter = this._createTomatoMeterElement(movie);
-    const titleReviewBar = doc.getElementsByClassName('titleReviewBar')[0];
-
-    if (!titleReviewBar) {
-      this._addTomatometerWithNewReviewBar(doc, tomatoMeter);
-    } else {
-      this._addTomatometerToExistingReviewBar(doc, titleReviewBar, tomatoMeter);
-    }
-  }
-
-  _createTomatoMeterElement(movie) {
-    let tomatometerHtml;
-
-    if (movie.criticRatings) {
-      tomatometerHtml = this._createFilledTomatometerHtml(movie);
-    } else {
-      tomatometerHtml = this._createEmptyTomatometerHtml(movie);
-    }
-
-    return this._generateElement(tomatometerHtml);
-  }
-
-  _createFilledTomatometerHtml(movie) {
-    const iconLogo = movie.criticRatings.custom
-      ? `<img src="${movie.criticRatings.custom}" height="27px" width="27px" style="vertical-align: baseline">`
-      : '';
-
-    return (
-      `<div class="titleReviewBarItem" id="mv-tomatometer" style="margin-bottom: 18px">` +
-      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none">` +
-      `        ${iconLogo}` +
-      `        <div class="metacriticScore titleReviewBarSubItem" style="color: black; width: auto;">` +
-      `            <span>${movie.criticRatings.score}%</span>` +
-      `        </div>` +
-      `        <div class="titleReviewBarSubItem">` +
-      `            <div>Tomatometer</div>` +
-      `            <div>` +
-      `                <span class="subText">Total Count: ${this._groupThousands(
-        movie.criticRatings.count
-      )}</span>` +
-      `            </div>` +
-      `        </div>` +
-      `    </a>` +
-      `</div>`
+    const userRatingElement = doc.querySelector(
+      '[data-testid=hero-title-block__aggregate-rating]'
     );
-  }
 
-  _createEmptyTomatometerHtml(movie) {
-    return (
-      `<div class="titleReviewBarItem" id="mv-tomatometer">` +
-      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none;">` +
-      `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
-      `            <span style="color: black;">-</span>` +
-      `        </div>` +
-      `        <div class="titleReviewBarSubItem">` +
-      `            <div>Tomatometer</div>` +
-      `            <div>` +
-      `                <span class="subText">Total Count: N/A</span>` +
-      `            </div>` +
-      `        </div>` +
-      `    </a>` +
-      `</div>`
+    const tomatoMeter = userRatingElement.cloneNode(true);
+
+    tomatoMeter.id = 'mv-tomatometer';
+    tomatoMeter.children[0].textContent = 'TOMATOMETER';
+
+    tomatoMeter.children[1].title = `Open ${movie.info.title} on ${movie.pageName}`;
+    tomatoMeter.children[1].href = movie.url;
+
+    const scoreElement = tomatoMeter.querySelector(
+      '[class|=AggregateRatingButton__Rating]'
     );
-  }
 
-  _addTomatometerWithNewReviewBar(doc, newTomatoMeter) {
-    const plotSummaryWrapper = doc.getElementsByClassName(
-      'plot_summary_wrapper'
-    )[0];
-    const newTitleReviewBar = this._createEmptyTitleReviewBar(doc);
+    scoreElement.children[0].textContent = `${movie.criticRatings.score}%`;
+    scoreElement.children[1].remove();
 
-    plotSummaryWrapper.appendChild(newTitleReviewBar);
-    newTitleReviewBar.appendChild(newTomatoMeter);
-  }
+    const numberOfVotesElement = tomatoMeter.querySelector(
+      '[class|=AggregateRatingButton__TotalRatingAmount]'
+    );
 
-  _createEmptyTitleReviewBar(doc) {
-    const titleReviewBar = doc.createElement('div');
+    numberOfVotesElement.textContent = `${this._groupThousands(
+      movie.criticRatings.count
+    )} votes`;
 
-    titleReviewBar.className = 'titleReviewBar';
+    const originalLogo = tomatoMeter.querySelector('svg');
 
-    return titleReviewBar;
-  }
+    originalLogo.children[0].remove();
 
-  _addTomatometerToExistingReviewBar(doc, titleReviewBar, newTomatoMeter) {
-    const newDivider = this._createDividerElement(doc);
-    const firstItem = titleReviewBar.children[0];
+    const tomatoLogo = document.createElementNS(
+      originalLogo.namespaceURI,
+      'image'
+    );
 
-    if (this._isItMetascore(firstItem)) {
-      firstItem.after(newTomatoMeter);
-      newTomatoMeter.before(newDivider);
-    } else {
-      titleReviewBar.prepend(newTomatoMeter);
-      newTomatoMeter.after(newDivider);
-    }
+    tomatoLogo.setAttribute('width', '24px');
+    tomatoLogo.setAttribute('height', '24px');
+    tomatoLogo.setAttribute('href', movie.criticRatings.custom);
 
-    this._makeTitleReviewBarWrappable(titleReviewBar);
-  }
+    originalLogo.append(tomatoLogo);
 
-  _makeTitleReviewBarWrappable(titleReviewBar) {
-    titleReviewBar.style.height = 'auto';
-    titleReviewBar.style.paddingBottom = '0px';
-
-    titleReviewBar.lastElementChild.style.marginBottom = '18px';
-  }
-
-  _createDividerElement(doc) {
-    const newDivider = doc.createElement('div');
-
-    newDivider.className = 'divider';
-
-    return newDivider;
-  }
-
-  _isItMetascore(element) {
-    return element.getElementsByClassName('metacriticScore')[0];
+    userRatingElement.after(tomatoMeter);
   }
 
   _injectAudienceScore(doc, movie) {
@@ -329,7 +257,7 @@ class ImdbPage extends MoviePage {
     const audienceScore = userRatingElement.cloneNode(true);
 
     audienceScore.id = 'mv-audience-score';
-    audienceScore.children[0].textContent = 'Audience Score';
+    audienceScore.children[0].textContent = 'AUDIENCE SCORE';
 
     audienceScore.children[1].title = `Open ${movie.info.title} on ${movie.pageName}`;
     audienceScore.children[1].href = movie.url;
