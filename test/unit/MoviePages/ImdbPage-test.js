@@ -105,7 +105,7 @@ describe('ImdbPage', function () {
       });
     });
 
-    context(`on a series' imdb page`, function () {
+    context.skip(`on a series' imdb page`, function () {
       it('reject (for now, TODO)', async function () {
         const url = 'https://www.imdb.com/title/tt0149460/';
         const document = await getTestDOM(url);
@@ -229,9 +229,8 @@ describe('ImdbPage', function () {
         let ratingsWrapper;
 
         before(function () {
-          ratingsWrapper = document.getElementsByClassName(
-            'ratings_wrapper'
-          )[0];
+          ratingsWrapper =
+            document.getElementsByClassName('ratings_wrapper')[0];
         });
 
         it('add AudienceScore before star-rating-widget', function () {
