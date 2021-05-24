@@ -200,7 +200,7 @@ class ImdbPage extends MoviePage {
   injectRatings(movie) {
     this._injectTomatoMeter(this._document, movie);
     this._injectAudienceScore(this._document, movie);
-    // this._injectCriticsConsensus(this._document, movie);
+    this._injectCriticsConsensus(this._document, movie);
   }
 
   _injectTomatoMeter(doc, movie) {
@@ -301,17 +301,16 @@ class ImdbPage extends MoviePage {
 
   _injectCriticsConsensus(doc, movie) {
     if (movie.summary) {
-      const consensus = this._generateElement(
-        `<div` +
-          `  id="mv-critics-consensus"` +
-          `  title="${movie.summary.title} from ${movie.pageName}"` +
-          `  style="padding: 0px 20px 18px 20px; display: flex; align-items: center">` +
-          `  <h4 style="padding-right: 20px">${movie.summary.title}:</h4>` +
-          `  <div>${movie.summary.content}</div>` +
-          `</div>`
+      const criticsList = doc.querySelector(
+        '[class*=ReviewContent__StyledInlineList]'
       );
 
-      doc.getElementsByClassName('titleReviewBar')[0].after(consensus);
+      const consensus = doc.createElement('li');
+
+      consensus.title = `${movie.summary.title} from ${movie.pageName}`;
+      consensus.textContent = `${movie.summary.title}: ${movie.summary.content}`;
+
+      criticsList.append(consensus);
     }
   }
 }
