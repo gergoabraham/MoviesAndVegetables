@@ -115,7 +115,7 @@ class RottenPage extends MoviePage {
   }
 
   _readTomatometerFreshness() {
-    return this._text.match(/"tomatometerState":"(\w+)"/)[1];
+    return this._text.match(/"tomatometerState":"([\w-]+)"/)[1];
   }
 
   async _readUserRatings() {
@@ -153,7 +153,7 @@ class RottenPage extends MoviePage {
   }
 
   _readAudienceScoreFreshness() {
-    return this._text.match(/"audienceState":"(\w+)"/)[1];
+    return this._text.match(/"audienceState":"([\w-]+)"/)[1];
   }
 
   async _readLogoUrl(freshness) {
