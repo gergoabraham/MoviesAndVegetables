@@ -198,9 +198,9 @@ class ImdbPage extends MoviePage {
    * @param  {MovieInfoWithRatings} movie
    */
   injectRatings(movie) {
-    this._injectTomatoMeter(this._document, movie);
+    // this._injectTomatoMeter(this._document, movie);
     this._injectAudienceScore(this._document, movie);
-    this._injectCriticsConsensus(this._document, movie);
+    // this._injectCriticsConsensus(this._document, movie);
   }
 
   _injectTomatoMeter(doc, movie) {
@@ -322,102 +322,49 @@ class ImdbPage extends MoviePage {
   }
 
   _injectAudienceScore(doc, movie) {
-    let ratingsWrapper = doc.getElementsByClassName('ratings_wrapper')[0];
-    const audienceScoreElement = this._createAudienceScoreElement(movie);
-
-    if (ratingsWrapper) {
-      this._addAudienceScoreToExistingRatingsWrapper(
-        ratingsWrapper,
-        audienceScoreElement
-      );
-    } else {
-      ratingsWrapper = this._addAudienceScoreToNewRatingsWrapper(
-        doc,
-        audienceScoreElement
-      );
-    }
-
-    ratingsWrapper.style.width = 'auto';
-  }
-
-  _addAudienceScoreToExistingRatingsWrapper(ratingsWrapper, audienceScoreElem) {
-    audienceScoreElem.style.borderLeft = '1px solid #6b6b6b';
-    ratingsWrapper.children[0].after(audienceScoreElem);
-
-    this._fixUserScoreWidth(ratingsWrapper);
-  }
-
-  _fixUserScoreWidth(ratingsWrapper) {
-    const imdbRating = ratingsWrapper.children[0];
-
-    imdbRating.style.width = '95px';
-  }
-
-  _addAudienceScoreToNewRatingsWrapper(doc, audienceScoreElement) {
-    const newRatingsWrapper = doc.createElement('div');
-
-    newRatingsWrapper.className = 'ratings_wrapper';
-
-    const titleBarWrapper = doc.getElementsByClassName('title_bar_wrapper')[0];
-
-    titleBarWrapper.prepend(newRatingsWrapper);
-
-    newRatingsWrapper.appendChild(audienceScoreElement);
-
-    return newRatingsWrapper;
-  }
-
-  _createAudienceScoreElement(movie) {
-    let audienceScoreHtml;
-
-    if (movie.userRatings) {
-      audienceScoreHtml = this._createFilledAudienceScoreHtml(movie);
-    } else {
-      audienceScoreHtml = this._createEmptyAudienceScoreHtml(movie);
-    }
-
-    return this._generateElement(audienceScoreHtml);
-  }
-
-  _createFilledAudienceScoreHtml(movie) {
-    const iconLogo = movie.userRatings.custom
-      ? `<img src="${movie.userRatings.custom}" height="32px" width="32px">`
-      : '';
-
-    return (
-      `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center; padding: 0px; width: 100px">` +
-      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none">` +
-      `        <div style="display: flex; align-items: center; justify-content: center; height: 40px;">` +
-      `            ${iconLogo}` +
-      `            <div>` +
-      `                <div class="ratingValue">` +
-      `                    <strong style="color: white">` +
-      `                        <span itemprop="ratingValue">${movie.userRatings.score}%</span>` +
-      `                    </strong>` +
-      `                </div>` +
-      `                <span class="small" itemprop="ratingCount">${this._groupThousands(
-        movie.userRatings.count
-      )}</span>` +
-      `            </div>` +
-      `        </div>` +
-      `    </a>` +
-      `</div>`
+    const userRatingElement = doc.querySelector(
+      '[data-testid=hero-title-block__aggregate-rating]'
     );
-  }
 
-  _createEmptyAudienceScoreHtml(movie) {
-    return (
-      `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center;padding-left: 0px; width: 90px;">` +
-      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none;">` +
-      `        <div class="ratingValue">` +
-      `            <strong>` +
-      `                <span itemprop="ratingValue">-</span>` +
-      `            </strong>` +
-      `        </div>` +
-      `        <span class="small" itemprop="ratingCount">N/A</span>` +
-      `    </a>` +
-      `</div>`
+    const audienceScore = userRatingElement.cloneNode(true);
+
+    audienceScore.id = 'mv-audience-score';
+    audienceScore.children[0].textContent = 'Audience Score';
+
+    audienceScore.children[1].title = `Open ${movie.info.title} on ${movie.pageName}`;
+    audienceScore.children[1].href = movie.url;
+
+    const scoreElement = audienceScore.querySelector(
+      '[class|=AggregateRatingButton__Rating]'
     );
+
+    scoreElement.children[0].textContent = `${movie.userRatings.score}%`;
+    scoreElement.children[1].remove();
+
+    const numberOfVotesElement = audienceScore.querySelector(
+      '[class|=AggregateRatingButton__TotalRatingAmount]'
+    );
+
+    numberOfVotesElement.textContent = `${this._groupThousands(
+      movie.userRatings.count
+    )} votes`;
+
+    const originalLogo = audienceScore.querySelector('svg');
+
+    originalLogo.children[0].remove();
+
+    const audienceLogo = document.createElementNS(
+      originalLogo.namespaceURI,
+      'image'
+    );
+
+    audienceLogo.setAttribute('width', '24px');
+    audienceLogo.setAttribute('height', '24px');
+    audienceLogo.setAttribute('href', movie.userRatings.custom);
+
+    originalLogo.append(audienceLogo);
+
+    userRatingElement.after(audienceScore);
   }
 
   _groupThousands(number) {
