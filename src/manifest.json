@@ -41,6 +41,7 @@
     {
       "matches": ["*://*.imdb.com/title/*"],
       "js": [
+        "Utilities/Logger.js",
         "MovieData/Ratings.js",
         "MovieData/Summary.js",
         "MovieData/MovieInfo.js",
