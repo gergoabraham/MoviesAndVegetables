@@ -36,12 +36,20 @@ class RottenPage extends MoviePage {
    * @return  {MovieInfoWithRatings} movie
    */
   async getMovieInfoWithRatings() {
-    const criticRatings = await this._readCriticRatings();
-    const userRatings = await this._readUserRatings();
-    const criticsConsensus = this._readCriticsConsensus();
+    let movieInfo = null;
+    let criticRatings = null;
+    let userRatings = null;
+    let criticsConsensus = null;
+
+    try {
+      movieInfo = await this.getMovieInfo();
+      criticRatings = await this._readCriticRatings();
+      userRatings = await this._readUserRatings();
+      criticsConsensus = this._readCriticsConsensus();
+    } catch (e) {}
 
     return new MovieInfoWithRatings(
-      await this.getMovieInfo(),
+      movieInfo,
       this._url,
       RottenPage.NAME,
       null,

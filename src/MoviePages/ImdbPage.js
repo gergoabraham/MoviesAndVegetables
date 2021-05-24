@@ -39,13 +39,22 @@ class ImdbPage extends MoviePage {
    * @return  {MovieInfoWithRatings} movie
    */
   async getMovieInfoWithRatings() {
-    const criticRatings = await this._readCriticRatings();
-    const userRatings = this._readUserRatings();
-    const toplistPosition = this._getToplistPosition();
-    const summary = this._readSummary();
+    let movieInfo = null;
+    let criticRatings = null;
+    let userRatings = null;
+    let toplistPosition = null;
+    let summary = null;
+
+    try {
+      movieInfo = await this.getMovieInfo();
+      criticRatings = await this._readCriticRatings();
+      userRatings = await this._readUserRatings();
+      toplistPosition = this._getToplistPosition();
+      summary = this._readSummary();
+    } catch (e) {}
 
     return new MovieInfoWithRatings(
-      await this.getMovieInfo(),
+      movieInfo,
       this._url,
       ImdbPage.NAME,
       toplistPosition,
