@@ -43,8 +43,14 @@ class RottenPage extends MoviePage {
 
     try {
       movieInfo = await this.getMovieInfo();
+    } catch (e) {}
+    try {
       criticRatings = await this._readCriticRatings();
+    } catch (e) {}
+    try {
       userRatings = await this._readUserRatings();
+    } catch (e) {}
+    try {
       criticsConsensus = this._readCriticsConsensus();
     } catch (e) {}
 
@@ -120,6 +126,8 @@ class RottenPage extends MoviePage {
 
   async _readUserRatings() {
     const audienceScore = this._readAudienceScore();
+
+    Logger.log(audienceScore);
 
     return audienceScore
       ? new Ratings(

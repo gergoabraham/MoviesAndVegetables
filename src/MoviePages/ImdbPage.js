@@ -204,6 +204,8 @@ class ImdbPage extends MoviePage {
   }
 
   _injectTomatoMeter(doc, movie) {
+    if (!movie.criticRatings) return;
+
     const userRatingElement = doc.querySelector(
       '[data-testid=hero-title-block__aggregate-rating]'
     );
@@ -250,6 +252,8 @@ class ImdbPage extends MoviePage {
   }
 
   _injectAudienceScore(doc, movie) {
+    if (!movie.userRatings) return;
+
     const userRatingElement = doc.querySelector(
       '[data-testid=hero-title-block__aggregate-rating]'
     );
