@@ -198,6 +198,18 @@ class ImdbPage extends MoviePage {
    * @param  {MovieInfoWithRatings} movie
    */
   injectRatings(movie) {
+    const isNewTitlePage = !!document.querySelector(
+      '[class*=TitleBlock__Container]'
+    );
+
+    if (isNewTitlePage) {
+      this._injectRatingsIntoNewPage(movie);
+    } else {
+      this._injectRatingsIntoOldPage(movie);
+    }
+  }
+
+  _injectRatingsIntoNewPage(movie) {
     this._injectTomatoMeter(this._document, movie);
     this._injectAudienceScore(this._document, movie);
     this._injectCriticsConsensus(this._document, movie);
@@ -317,6 +329,258 @@ class ImdbPage extends MoviePage {
       criticsList.append(consensus);
     }
   }
+
+  // -------------- OLD PAGE --------------------------------------------------
+  _injectRatingsIntoOldPage(movie) {
+    this._old_injectTomatoMeter(this._document, movie);
+    this._old_injectAudienceScore(this._document, movie);
+    this._old_injectCriticsConsensus(this._document, movie);
+  }
+
+  _old_injectTomatoMeter(doc, movie) {
+    const tomatoMeter = this._old_createTomatoMeterElement(movie);
+    const titleReviewBar = doc.getElementsByClassName('titleReviewBar')[0];
+
+    if (!titleReviewBar) {
+      this._old_addTomatometerWithNewReviewBar(doc, tomatoMeter);
+    } else {
+      this._old_addTomatometerToExistingReviewBar(
+        doc,
+        titleReviewBar,
+        tomatoMeter
+      );
+    }
+  }
+
+  _old_createTomatoMeterElement(movie) {
+    let tomatometerHtml;
+
+    if (movie.criticRatings) {
+      tomatometerHtml = this._old_createFilledTomatometerHtml(movie);
+    } else {
+      tomatometerHtml = this._old_createEmptyTomatometerHtml(movie);
+    }
+
+    return this._generateElement(tomatometerHtml);
+  }
+
+  _old_createFilledTomatometerHtml(movie) {
+    const iconLogo = movie.criticRatings.custom
+      ? `<img src="${movie.criticRatings.custom}" height="27px" width="27px" style="vertical-align: baseline">`
+      : '';
+
+    return (
+      `<div class="titleReviewBarItem" id="mv-tomatometer" style="margin-bottom: 18px">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none">` +
+      `        ${iconLogo}` +
+      `        <div class="metacriticScore titleReviewBarSubItem" style="color: black; width: auto;">` +
+      `            <span>${movie.criticRatings.score}%</span>` +
+      `        </div>` +
+      `        <div class="titleReviewBarSubItem">` +
+      `            <div>Tomatometer</div>` +
+      `            <div>` +
+      `                <span class="subText">Total Count: ${this._old_groupThousands(
+        movie.criticRatings.count
+      )}</span>` +
+      `            </div>` +
+      `        </div>` +
+      `    </a>` +
+      `</div>`
+    );
+  }
+
+  _old_createEmptyTomatometerHtml(movie) {
+    return (
+      `<div class="titleReviewBarItem" id="mv-tomatometer">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none;">` +
+      `        <div class="metacriticScore titleReviewBarSubItem" style="color: black">` +
+      `            <span style="color: black;">-</span>` +
+      `        </div>` +
+      `        <div class="titleReviewBarSubItem">` +
+      `            <div>Tomatometer</div>` +
+      `            <div>` +
+      `                <span class="subText">Total Count: N/A</span>` +
+      `            </div>` +
+      `        </div>` +
+      `    </a>` +
+      `</div>`
+    );
+  }
+
+  _old_addTomatometerWithNewReviewBar(doc, newTomatoMeter) {
+    const plotSummaryWrapper = doc.getElementsByClassName(
+      'plot_summary_wrapper'
+    )[0];
+    const newTitleReviewBar = this._old_createEmptyTitleReviewBar(doc);
+
+    plotSummaryWrapper.appendChild(newTitleReviewBar);
+    newTitleReviewBar.appendChild(newTomatoMeter);
+  }
+
+  _old_createEmptyTitleReviewBar(doc) {
+    const titleReviewBar = doc.createElement('div');
+
+    titleReviewBar.className = 'titleReviewBar';
+
+    return titleReviewBar;
+  }
+
+  _old_addTomatometerToExistingReviewBar(doc, titleReviewBar, newTomatoMeter) {
+    const newDivider = this._old_createDividerElement(doc);
+    const firstItem = titleReviewBar.children[0];
+
+    if (this._old_isItMetascore(firstItem)) {
+      firstItem.after(newTomatoMeter);
+      newTomatoMeter.before(newDivider);
+    } else {
+      titleReviewBar.prepend(newTomatoMeter);
+      newTomatoMeter.after(newDivider);
+    }
+
+    this._old_makeTitleReviewBarWrappable(titleReviewBar);
+  }
+
+  _old_makeTitleReviewBarWrappable(titleReviewBar) {
+    titleReviewBar.style.height = 'auto';
+    titleReviewBar.style.paddingBottom = '0px';
+
+    titleReviewBar.lastElementChild.style.marginBottom = '18px';
+  }
+
+  _old_createDividerElement(doc) {
+    const newDivider = doc.createElement('div');
+
+    newDivider.className = 'divider';
+
+    return newDivider;
+  }
+
+  _old_isItMetascore(element) {
+    return element.getElementsByClassName('metacriticScore')[0];
+  }
+
+  _old_injectAudienceScore(doc, movie) {
+    let ratingsWrapper = doc.getElementsByClassName('ratings_wrapper')[0];
+    const audienceScoreElement = this._old_createAudienceScoreElement(movie);
+
+    if (ratingsWrapper) {
+      this._old_addAudienceScoreToExistingRatingsWrapper(
+        ratingsWrapper,
+        audienceScoreElement
+      );
+    } else {
+      ratingsWrapper = this._old_addAudienceScoreToNewRatingsWrapper(
+        doc,
+        audienceScoreElement
+      );
+    }
+
+    ratingsWrapper.style.width = 'auto';
+  }
+
+  _old_addAudienceScoreToExistingRatingsWrapper(
+    ratingsWrapper,
+    audienceScoreElem
+  ) {
+    audienceScoreElem.style.borderLeft = '1px solid #6b6b6b';
+    ratingsWrapper.children[0].after(audienceScoreElem);
+
+    this._old_fixUserScoreWidth(ratingsWrapper);
+  }
+
+  _old_fixUserScoreWidth(ratingsWrapper) {
+    const imdbRating = ratingsWrapper.children[0];
+
+    imdbRating.style.width = '95px';
+  }
+
+  _old_addAudienceScoreToNewRatingsWrapper(doc, audienceScoreElement) {
+    const newRatingsWrapper = doc.createElement('div');
+
+    newRatingsWrapper.className = 'ratings_wrapper';
+
+    const titleBarWrapper = doc.getElementsByClassName('title_bar_wrapper')[0];
+
+    titleBarWrapper.prepend(newRatingsWrapper);
+
+    newRatingsWrapper.appendChild(audienceScoreElement);
+
+    return newRatingsWrapper;
+  }
+
+  _old_createAudienceScoreElement(movie) {
+    let audienceScoreHtml;
+
+    if (movie.userRatings) {
+      audienceScoreHtml = this._old_createFilledAudienceScoreHtml(movie);
+    } else {
+      audienceScoreHtml = this._old_createEmptyAudienceScoreHtml(movie);
+    }
+
+    return this._generateElement(audienceScoreHtml);
+  }
+
+  _old_createFilledAudienceScoreHtml(movie) {
+    const iconLogo = movie.userRatings.custom
+      ? `<img src="${movie.userRatings.custom}" height="32px" width="32px">`
+      : '';
+
+    return (
+      `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center; padding: 0px; width: 100px">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none">` +
+      `        <div style="display: flex; align-items: center; justify-content: center; height: 40px;">` +
+      `            ${iconLogo}` +
+      `            <div>` +
+      `                <div class="ratingValue">` +
+      `                    <strong style="color: white">` +
+      `                        <span itemprop="ratingValue">${movie.userRatings.score}%</span>` +
+      `                    </strong>` +
+      `                </div>` +
+      `                <span class="small" itemprop="ratingCount">${this._old_groupThousands(
+        movie.userRatings.count
+      )}</span>` +
+      `            </div>` +
+      `        </div>` +
+      `    </a>` +
+      `</div>`
+    );
+  }
+
+  _old_createEmptyAudienceScoreHtml(movie) {
+    return (
+      `<div class="imdbRating" id="mv-audience-score" style="background: none; text-align: center;padding-left: 0px; width: 90px;">` +
+      `    <a href="${movie.url}" title="Open ${movie.info.title} on ${movie.pageName}" style="text-decoration: none;">` +
+      `        <div class="ratingValue">` +
+      `            <strong>` +
+      `                <span itemprop="ratingValue">-</span>` +
+      `            </strong>` +
+      `        </div>` +
+      `        <span class="small" itemprop="ratingCount">N/A</span>` +
+      `    </a>` +
+      `</div>`
+    );
+  }
+
+  _old_groupThousands(number) {
+    return new Intl.NumberFormat(window.navigator.language).format(number);
+  }
+
+  _old_injectCriticsConsensus(doc, movie) {
+    if (movie.summary) {
+      const consensus = this._generateElement(
+        `<div` +
+          `  id="mv-critics-consensus"` +
+          `  title="${movie.summary.title} from ${movie.pageName}"` +
+          `  style="padding: 0px 20px 18px 20px; display: flex; align-items: center">` +
+          `  <h4 style="padding-right: 20px">${movie.summary.title}:</h4>` +
+          `  <div>${movie.summary.content}</div>` +
+          `</div>`
+      );
+
+      doc.getElementsByClassName('titleReviewBar')[0].after(consensus);
+    }
+  }
+  // -------------- OLD PAGE above ---------------------------------------------
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {
