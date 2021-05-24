@@ -108,19 +108,24 @@ class BackgroundScript {
 
   static async _fetchMovieData(movieUrl, moviePageName) {
     const moviePageResponse = await fetch(movieUrl);
-    const moviePageDOM = await BackgroundScript._getDOM(moviePageResponse);
+    const text = await moviePageResponse.text();
+    const moviePageDOM = await BackgroundScript._getDOM(
+      moviePageResponse,
+      text
+    );
 
     const remotePage = MoviePageFactory.create(
       moviePageName,
       moviePageDOM,
-      moviePageResponse.url
+      moviePageResponse.url,
+      text
     );
 
     return remotePage.getMovieInfoWithRatings();
   }
 
-  static async _getDOM(response) {
-    const text = await response.text();
+  static async _getDOM(response, text) {
+    text = text || (await response.text());
 
     Logger.logFetch(response.url, text);
 

@@ -11,13 +11,15 @@ class MoviePage {
   /**
    * @param  {Document} document
    * @param  {string} url
+   * @param  {string} text
    */
-  constructor(document, url) {
+  constructor(document, url, text) {
     if (this.constructor === MoviePage) {
       throw new Error(`Class MoviePages shouldn't be instantiated.`);
     }
 
     this._document = document;
+    this._text = text;
 
     const inputUrl = new URL(url);
 
