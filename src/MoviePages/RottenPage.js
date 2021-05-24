@@ -25,7 +25,7 @@ class RottenPage extends MoviePage {
   async getMovieInfo() {
     const metaDataJSON = this._readMetadataJSON();
 
-    const title = metaDataJSON.name;
+    const title = metaDataJSON.name.replace(/&\w+;/, '+');
     const year = this._readYear();
     const director = this._readDirectorFromMetadata(metaDataJSON);
 

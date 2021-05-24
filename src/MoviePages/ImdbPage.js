@@ -28,7 +28,7 @@ class ImdbPage extends MoviePage {
       throw new Error('Not a movie');
     }
 
-    const title = metaDataJSON.name;
+    const title = metaDataJSON.name.replace(/&\w+;/, '+');
     const year = this._readYear();
     const director = this._readDirectorFromMetadata(metaDataJSON);
 
