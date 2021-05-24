@@ -308,7 +308,7 @@ class ImdbPage extends MoviePage {
       const consensus = doc.createElement('li');
 
       consensus.title = `${movie.summary.title} from ${movie.pageName}`;
-      consensus.textContent = `${movie.summary.title}: ${movie.summary.content}`;
+      consensus.innerHTML = `${movie.summary.title}: ${movie.summary.content}`;
 
       criticsList.append(consensus);
     }

@@ -192,8 +192,8 @@ class RottenPage extends MoviePage {
   }
 
   _readCriticsConsensus() {
-    const criticsConsensusMatch = this._document.body.innerHTML.match(
-      /what-to-know__section-body">\n +<span>(.+)<\/span>/
+    const criticsConsensusMatch = this._text.match(
+      /data-qa="critics-consensus">(.+)<\/span>/
     );
 
     return criticsConsensusMatch
