@@ -218,9 +218,7 @@ class ImdbPage extends MoviePage {
   _injectTomatoMeter(doc, movie) {
     if (!movie.criticRatings) return;
 
-    const userRatingElement = doc.querySelector(
-      '[data-testid=hero-title-block__aggregate-rating]'
-    );
+    const userRatingElement = this._getUserScoreElement(doc);
 
     const tomatoMeter = userRatingElement.cloneNode(true);
 
@@ -266,9 +264,7 @@ class ImdbPage extends MoviePage {
   _injectAudienceScore(doc, movie) {
     if (!movie.userRatings) return;
 
-    const userRatingElement = doc.querySelector(
-      '[data-testid=hero-title-block__aggregate-rating]'
-    );
+    const userRatingElement = this._getUserScoreElement(doc);
 
     const audienceScore = userRatingElement.cloneNode(true);
 
@@ -309,6 +305,10 @@ class ImdbPage extends MoviePage {
     originalLogo.append(audienceLogo);
 
     userRatingElement.after(audienceScore);
+  }
+
+  _getUserScoreElement(doc) {
+    return doc.querySelector('[data-testid=hero-rating-bar__aggregate-rating]');
   }
 
   _groupThousands(number) {
