@@ -1,5 +1,10 @@
 [
  {
+  "version": "v0.7.1",
+  "date": "2021-07-08",
+  "description": "Adapted to changed IMDb"
+ },
+ {
   "version": "v0.7.0",
   "date": "2021-05-24",
   "description": "The new title page of IMDb is now supported. The old one is supported, too.<br>(RottenTomatoes doesn't work currently)"
