@@ -49,7 +49,9 @@ class RottenPage extends MoviePage {
     } catch (e) {}
     try {
       userRatings = await this._readUserRatings();
-    } catch (e) {}
+    } catch (e) {
+      console.log(e.toString());
+    }
     try {
       criticsConsensus = this._readCriticsConsensus();
     } catch (e) {}
@@ -99,7 +101,7 @@ class RottenPage extends MoviePage {
   }
 
   _readTomatometer() {
-    return Number(this._text.match(/"tomatometerScore":"(\d+)"/)[1]);
+    return Number(this._text.match(/"tomatometerScore":"?(\d+)"?/)[1]);
   }
 
   _readNumberOfCriticRatings() {
@@ -139,7 +141,7 @@ class RottenPage extends MoviePage {
   }
 
   _readAudienceScore() {
-    return Number(this._text.match(/"audienceScore":"(\d+)"/)[1]);
+    return Number(this._text.match(/"audienceScore":"?(\d+)"?/)[1]);
   }
 
   _readNumberOfUserRatings() {
