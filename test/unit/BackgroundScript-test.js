@@ -24,7 +24,7 @@ describe('Background script', function () {
   });
 
   describe('main search algorithm', function () {
-    it.skip(`search remote page using "feeling lucky" and return with the scores`, async function () {
+    it(`search remote page using "feeling lucky" and return with the scores`, async function () {
       // Uses the html files:
       // - google.com..search...btnI=true&q=The+Shawshank+Redemption+1994+site%3Awww.rottentomatoes.com.html
       // - rottentomatoes.m.shawshank_redemption.html
@@ -45,23 +45,23 @@ describe('Background script', function () {
           null,
           new Summary(
             'Critics Consensus',
-            '<em>The Shawshank Redemption</em> is an uplifting movie.'
+            '<em>The Shawshank Redemption</em> is an uplifting, deeply satisfying prison drama with sensitive direction and fine performances.'
           ),
           new Ratings(
-            90,
-            71,
+            91,
+            82,
             'https://www.rottentomatoes.com/assets/certified_fresh.svg'
           ),
           new Ratings(
             98,
-            885688,
+            887391,
             'https://www.rottentomatoes.com/assets/aud_score-fresh.svg'
           )
         )
       );
     });
 
-    it.skip('return with the first result when "feeling lucky" doesn\'t work - one way', async function () {
+    it('return with the first result when "feeling lucky" doesn\'t work - one way', async function () {
       // Uses the html files:
       // - google.com..search...btnI=true&q=Amblin'+1968+site%3Awww.rottentomatoes.com.html
       // - rottentomatoes.m.amblin.html
@@ -72,45 +72,20 @@ describe('Background script', function () {
         remotePageName: RottenPage.NAME,
       }).should.eventually.deep.equal(
         new MovieInfoWithRatings(
-          new MovieInfo("Amblin'", 1968, null),
+          new MovieInfo("Amblin'", 1968, 'Steven Spielberg'),
           `https://www.rottentomatoes.com/m/amblin`,
           RottenPage.NAME,
           null,
-          new Summary('Critics Consensus', 'No consensus yet.'),
+          null,
           null,
           new Ratings(
-            60,
-            309,
+            61,
+            311,
             'https://www.rottentomatoes.com/assets/aud_score-fresh.svg'
           )
         )
       );
     });
-
-    it('return with the first result when "feeling lucky" doesn\'t work - other way', async function () {
-      // Uses the html files:
-      // - google.com..search...btnI=true&q=Amblin'+1968+site%3Awww.imdb.com.html
-      // - imdb.title.tt0064010.html
-      const movieInfo = new MovieInfo("Amblin'", 1968);
-
-      await BackgroundScript._getRemotePageData({
-        movieInfo,
-        remotePageName: ImdbPage.NAME,
-      }).should.eventually.deep.equal(
-        new MovieInfoWithRatings(
-          new MovieInfo("Amblin'", 1968, null),
-          `https://www.imdb.com/title/tt0064010/`,
-          ImdbPage.NAME,
-          null,
-          null,
-          null,
-          new Ratings(6.4, 1044, '<svg id="home_img">This is the logo.</svg>')
-        )
-      );
-    });
-
-    it.skip('return null if "feeling lucky" is not the movie', function () {});
-    it.skip('return null if the first result is not the movie', function () {});
   });
 
   describe('special cases', function () {
