@@ -10,7 +10,7 @@ const { JSDOM } = require('jsdom');
 
 describe('Content script on IMDb', function () {
   describe('injectRottenScoresOnImdb', function () {
-    it.skip('inject RottenTomatoes scores into the document', async function () {
+    it.only('inject RottenTomatoes scores into the document', async function () {
       const dom = await JSDOM.fromFile(
         FakeHtmlPath + 'imdb.com..title..tt0111161 - listed in top250.html',
         { url: 'https://www.imdb.com/title/tt0111161/' }
@@ -27,7 +27,7 @@ describe('Content script on IMDb', function () {
       audienceScore.querySelector('span').textContent.should.equal('98%');
 
       tomatoMeter.should.exist;
-      tomatoMeter.querySelector('span').textContent.should.equal('90%');
+      tomatoMeter.querySelector('span').textContent.should.equal('91%');
     });
   });
 });

@@ -217,15 +217,13 @@ class ImdbPage extends MoviePage {
     tomatoMeter.children[1].href = movie.url;
 
     const scoreElement = tomatoMeter.querySelector(
-      '[class|=AggregateRatingButton__Rating]'
+      '[data-testid=hero-rating-bar__aggregate-rating__score]'
     );
 
     scoreElement.children[0].textContent = `${movie.criticRatings.score}%`;
     scoreElement.children[1].remove();
 
-    const numberOfVotesElement = tomatoMeter.querySelector(
-      '[class|=AggregateRatingButton__TotalRatingAmount]'
-    );
+    const numberOfVotesElement = scoreElement.parentElement.lastElementChild;
 
     numberOfVotesElement.textContent = `${this._groupThousands(
       movie.criticRatings.count
@@ -263,15 +261,13 @@ class ImdbPage extends MoviePage {
     audienceScore.children[1].href = movie.url;
 
     const scoreElement = audienceScore.querySelector(
-      '[class|=AggregateRatingButton__Rating]'
+      '[data-testid=hero-rating-bar__aggregate-rating__score]'
     );
 
     scoreElement.children[0].textContent = `${movie.userRatings.score}%`;
     scoreElement.children[1].remove();
 
-    const numberOfVotesElement = audienceScore.querySelector(
-      '[class|=AggregateRatingButton__TotalRatingAmount]'
-    );
+    const numberOfVotesElement = scoreElement.parentElement.lastElementChild;
 
     numberOfVotesElement.textContent = `${this._groupThousands(
       movie.userRatings.count
@@ -306,7 +302,7 @@ class ImdbPage extends MoviePage {
   _injectCriticsConsensus(doc, movie) {
     if (movie.summary) {
       const criticsList = doc.querySelector(
-        '[class*=ReviewContent__StyledInlineList]'
+        '[data-testid=reviewContent-all-reviews]'
       );
 
       const consensus = this._generateElement(`
