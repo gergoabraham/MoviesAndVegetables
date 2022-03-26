@@ -204,91 +204,67 @@ class ImdbPage extends MoviePage {
   }
 
   _injectTomatoMeter(doc, movie) {
-    if (!movie.criticRatings) return;
-
-    const userRatingElement = this._getUserScoreElement(doc);
-
-    const tomatoMeter = userRatingElement.cloneNode(true);
-
-    tomatoMeter.id = 'mv-tomatometer';
-    tomatoMeter.children[0].textContent = 'TOMATOMETER';
-
-    tomatoMeter.children[1].title = `Open ${movie.info.title} on ${movie.pageName}`;
-    tomatoMeter.children[1].href = movie.url;
-
-    const scoreElement = tomatoMeter.querySelector(
-      '[data-testid=hero-rating-bar__aggregate-rating__score]'
-    );
-
-    scoreElement.children[0].textContent = `${movie.criticRatings.score}%`;
-    scoreElement.children[1].remove();
-
-    const numberOfVotesElement = scoreElement.parentElement.lastElementChild;
-
-    numberOfVotesElement.textContent = `${this._groupThousands(
-      movie.criticRatings.count
-    )} votes`;
-
-    const originalLogo = tomatoMeter.querySelector('svg');
-
-    originalLogo.children[0].remove();
-
-    const tomatoLogo = document.createElementNS(
-      originalLogo.namespaceURI,
-      'image'
-    );
-
-    tomatoLogo.setAttribute('width', '24px');
-    tomatoLogo.setAttribute('height', '24px');
-    tomatoLogo.setAttribute('href', movie.criticRatings.custom);
-
-    originalLogo.append(tomatoLogo);
-
-    userRatingElement.after(tomatoMeter);
+    this._injectScore({
+      doc,
+      movie,
+      ratingsToInject: movie.criticRatings,
+      scoreId: 'mv-tomatometer',
+      scoreName: 'TOMATOMETER',
+    });
   }
 
   _injectAudienceScore(doc, movie) {
-    if (!movie.userRatings) return;
+    this._injectScore({
+      doc,
+      movie,
+      ratingsToInject: movie.userRatings,
+      scoreId: 'mv-audience-score',
+      scoreName: 'AUDIENCE SCORE',
+    });
+  }
+
+  _injectScore({ doc, movie, ratingsToInject, scoreId, scoreName }) {
+    if (!ratingsToInject) return;
 
     const userRatingElement = this._getUserScoreElement(doc);
 
-    const audienceScore = userRatingElement.cloneNode(true);
+    const scoreElementContainer = userRatingElement.cloneNode(true);
 
-    audienceScore.id = 'mv-audience-score';
-    audienceScore.children[0].textContent = 'AUDIENCE SCORE';
+    scoreElementContainer.id = scoreId;
+    scoreElementContainer.children[0].textContent = scoreName;
 
-    audienceScore.children[1].title = `Open ${movie.info.title} on ${movie.pageName}`;
-    audienceScore.children[1].href = movie.url;
+    scoreElementContainer.children[1].title = `Open ${movie.info.title} on ${movie.pageName}`;
+    scoreElementContainer.children[1].href = movie.url;
 
-    const scoreElement = audienceScore.querySelector(
+    const scoreElement = scoreElementContainer.querySelector(
       '[data-testid=hero-rating-bar__aggregate-rating__score]'
     );
 
-    scoreElement.children[0].textContent = `${movie.userRatings.score}%`;
+    scoreElement.children[0].textContent = `${ratingsToInject.score}%`;
     scoreElement.children[1].remove();
 
     const numberOfVotesElement = scoreElement.parentElement.lastElementChild;
 
     numberOfVotesElement.textContent = `${this._groupThousands(
-      movie.userRatings.count
+      ratingsToInject.count
     )} votes`;
 
-    const originalLogo = audienceScore.querySelector('svg');
+    const originalLogo = scoreElementContainer.querySelector('svg');
 
     originalLogo.children[0].remove();
 
-    const audienceLogo = document.createElementNS(
+    const logoToInsert = document.createElementNS(
       originalLogo.namespaceURI,
       'image'
     );
 
-    audienceLogo.setAttribute('width', '24px');
-    audienceLogo.setAttribute('height', '24px');
-    audienceLogo.setAttribute('href', movie.userRatings.custom);
+    logoToInsert.setAttribute('width', '24px');
+    logoToInsert.setAttribute('height', '24px');
+    logoToInsert.setAttribute('href', ratingsToInject.custom);
 
-    originalLogo.append(audienceLogo);
+    originalLogo.append(logoToInsert);
 
-    userRatingElement.after(audienceScore);
+    userRatingElement.after(scoreElementContainer);
   }
 
   _getUserScoreElement(doc) {
