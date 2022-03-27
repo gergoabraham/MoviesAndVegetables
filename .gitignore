@@ -4,4 +4,4 @@ coverage
 .nyc_output
 web-ext-artifacts
 
-real-htmls-cache
+fetch-cache

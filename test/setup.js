@@ -18,7 +18,7 @@ const { JSDOM } = require('jsdom');
 
 global.DOMParser = new JSDOM().window.DOMParser;
 
-require('./tools/FakeHtmlFetcher').activateAsGlobalFetch();
+require('./tools/FetchCache').activateAsGlobalFetch();
 
 /* ------------ Global constants  ------------ */
 global.FakeHtmlPath = './test/tools/fake-htmls/';

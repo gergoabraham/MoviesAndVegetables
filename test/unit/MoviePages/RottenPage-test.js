@@ -7,6 +7,7 @@
 'use strict';
 
 const { JSDOM } = require('jsdom');
+const { shouldBeSimilar } = require('./helper');
 
 describe('rottenPage', function () {
   async function fetchFileContent(url) {
@@ -61,72 +62,60 @@ describe('rottenPage', function () {
             'https://www.rottentomatoes.com/m/shawshank_redemption'
           );
 
-          movie.should.deep.equal(
-            new MovieInfoWithRatings(
-              new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont'),
-              'https://www.rottentomatoes.com/m/shawshank_redemption',
-              RottenPage.NAME,
-              null,
-              new Summary(
-                'Critics Consensus',
-                '<em>The Shawshank Redemption</em> is an uplifting, deeply satisfying prison drama with sensitive direction and fine performances.'
-              ),
-              new Ratings(
-                91,
-                82,
-                'https://www.rottentomatoes.com/assets/certified_fresh.svg'
-              ),
-              new Ratings(
-                98,
-                887391,
-                'https://www.rottentomatoes.com/assets/aud_score-fresh.svg'
-              )
-            )
+          const expected = new MovieInfoWithRatings(
+            new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont'),
+            'https://www.rottentomatoes.com/m/shawshank_redemption',
+            RottenPage.NAME,
+            null,
+            new Summary(
+              'Critics Consensus',
+              '<em>The Shawshank Redemption</em> is an uplifting, deeply satisfying prison drama with sensitive direction and fine performances.'
+            ),
+            new Ratings(91, 82, /certified_fresh.+svg/),
+            new Ratings(98, 887391, /aud_score-fresh.+svg/)
           );
+
+          shouldBeSimilar(expected, movie);
         });
       });
 
-      context.skip('on a movie without ratings', function () {
+      context('on a movie without ratings', function () {
         it('read all stuff', async function () {
           const movie = await readMovieDataByRottenPage(
             'https://www.rottentomatoes.com/m/avatar_2'
           );
 
-          movie.should.deep.equal(
-            new MovieInfoWithRatings(
-              new MovieInfo('Avatar 2', 2022, null),
-              'https://www.rottentomatoes.com/m/avatar_2',
-              RottenPage.NAME,
-              null,
-              null,
-              null,
-              null
-            )
+          const expected = new MovieInfoWithRatings(
+            new MovieInfo('Avatar 2', 2022, 'James Cameron'),
+            'https://www.rottentomatoes.com/m/avatar_2',
+            RottenPage.NAME,
+            null,
+            null,
+            null,
+            null
           );
+
+          shouldBeSimilar(expected, movie);
         });
       });
 
-      context.skip('on a movie with only audience score', function () {
+      context('on a movie with only audience score', function () {
         it('read all stuff', async function () {
           const movie = await readMovieDataByRottenPage(
             'https://www.rottentomatoes.com/m/amblin'
           );
 
-          movie.should.deep.equal(
-            new MovieInfoWithRatings(
-              new MovieInfo("Amblin'", 1968, null),
-              'https://www.rottentomatoes.com/m/amblin',
-              RottenPage.NAME,
-              null,
-              null,
-              null,
-              new Ratings(
-                60,
-                309,
-                'https://www.rottentomatoes.com/assets/aud_score-fresh.svg'
-              )
-            )
+          const expected = new MovieInfoWithRatings(
+            new MovieInfo("Amblin'", 1968, 'Steven Spielberg'),
+            'https://www.rottentomatoes.com/m/amblin',
+            RottenPage.NAME,
+            null,
+            null,
+            null,
+            new Ratings(60, 309, /aud_score-fresh.+svg/)
           );
+
+          shouldBeSimilar(expected, movie);
         });
       });
     });

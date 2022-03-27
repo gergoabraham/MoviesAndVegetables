@@ -41,16 +41,15 @@ If you like this extension, please <a href="https://www.buymeacoffee.com/gergoab
 
 ### Testing
 
-There are multiple test levels:
+There are two test levels:
 
-- `Unit tests`: sociable (units see each other - mini integration), working fakes instead of mocks, results are checked instead of behaviour.
-- `Contract tests` for IMDb, RottenTomatoes and Google: on one hand, these tests make sure that when these websites change over time, I will know about it. On the other hand, thanks to these I can use much smaller fake html files for unit tests. This resulted that the unit tests' speed has increased by one order of magnitude.
+- `Unit tests`: sociable (units see each other - mini integration), working fakes instead of mocks, results are checked instead of behaviour. Also, html files are fetched and stored as files.
 - `End-to-end tests`: a minimal number of user journeys using geckodriver, just to make sure.
 
 ### CI, automatization
 
 - `On push`: Every type of test is performed on every push by the CI server.
-- `Daily`: Contract and end-to-end tests are performed daily, so if any of the websites or browser features change, I receive an email immediately.
+- `Daily`: Tests are performed daily, so if any of the websites or browser features change, I receive an email immediately.
 - `Release`: Bumping version, generating changelog from tag messages, tagging, merging to master, pushing to remote with one `npm` command, then deploying to AMO by the CI server.
 
 ## Sources
