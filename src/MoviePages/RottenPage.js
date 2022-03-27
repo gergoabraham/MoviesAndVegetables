@@ -27,7 +27,7 @@ class RottenPage extends MoviePage {
 
     const title = metaDataJSON.name.replace(/&\w+;/, '+');
     const year = this._readYear();
-    const director = this._readDirectorFromMetadata(metaDataJSON);
+    const director = this._readDirector();
 
     return new MovieInfo(title, year, director);
   }
@@ -49,9 +49,7 @@ class RottenPage extends MoviePage {
     } catch (e) {}
     try {
       userRatings = await this._readUserRatings();
-    } catch (e) {
-      console.log(e.toString());
-    }
+    } catch (e) {}
     try {
       criticsConsensus = this._readCriticsConsensus();
     } catch (e) {}
@@ -68,24 +66,17 @@ class RottenPage extends MoviePage {
   }
 
   _readYear() {
-    const yearFromHtmlTitle = this._readYearFromHtmlTitle();
-    const yearsFromMovieInfoTable = this._readYearValuesFromMovieInfoTable();
+    const scoreBoardInfoElement =
+      this._document.querySelector('.scoreboard__info');
 
-    return Math.min(yearFromHtmlTitle, ...yearsFromMovieInfoTable);
+    const year = scoreBoardInfoElement.textContent.match(/\d{4}/);
+
+    return Number(year);
   }
 
-  _readYearFromHtmlTitle() {
-    return Number(this._getTitleMetaTag().match(/\d{4}(?=\)$)/));
-  }
-
-  _readYearValuesFromMovieInfoTable() {
-    const timeElements = this._document.querySelectorAll(
-      'li.meta-row .meta-value time[datetime]'
-    );
-
-    return Array.from(timeElements)
-      .map((elem) => new Date(elem.dateTime).getFullYear())
-      .filter((year) => !isNaN(year));
+  _readDirector() {
+    return this._document.querySelector('[data-qa=movie-info-director]')
+      .textContent;
   }
 
   async _readCriticRatings() {
@@ -214,176 +205,7 @@ class RottenPage extends MoviePage {
   /**
    * @param  {MovieInfoWithRatings} movie
    */
-  injectRatings(movie) {
-    this._fixCenterAlignmentOfTomatometerAndAudienceScore();
-
-    const ratingsWrapElement = this._getRatingsWrapElement();
-
-    ratingsWrapElement.append(this._generateImdbRatingsRowElement(movie));
-
-    if (movie.summary) {
-      ratingsWrapElement.append(this._generateImdbSummaryElement(movie));
-    }
-  }
-
-  _getRatingsWrapElement() {
-    return this._document.querySelector('section.mop-ratings-wrap__info');
-  }
-
-  _fixCenterAlignmentOfTomatometerAndAudienceScore() {
-    const ratingsContainers = this._document.querySelectorAll(
-      'div.mop-ratings-wrap__half'
-    );
-
-    ratingsContainers.forEach((x) => (x.style.flexBasis = '100%'));
-  }
-
-  _generateImdbRatingsRowElement(movie) {
-    const ratingsRowElement = this._generateEmptyRatingsRowElement();
-    const metascoreElement = this._generateMetascoreElement(movie);
-    const userRatingsElement = this._generateUserRatingsElement(movie);
-
-    ratingsRowElement
-      .getElementsByClassName('mop-ratings-wrap__half')[0]
-      .appendChild(metascoreElement);
-
-    ratingsRowElement
-      .getElementsByClassName('mop-ratings-wrap__half')[1]
-      .appendChild(userRatingsElement);
-
-    return ratingsRowElement;
-  }
-
-  _generateEmptyRatingsRowElement() {
-    return this._generateElement(
-      `<section id="mv-imdb-scores" class="mop-ratings-wrap__row js-scoreboard-container"` +
-        `  style="border-top:2px solid #2a2c32;margin-top:30px;padding-top:20px">` +
-        `  <div class="mop-ratings-wrap__half" style="flex-basis: 100%">` +
-        `    </div>` +
-        `  <div class="mop-ratings-wrap__half audience-score" style="flex-basis: 100%">` +
-        `    </div>` +
-        `</section>`
-    );
-  }
-
-  _generateMetascoreElement(movie) {
-    let metascoreOuterHtml;
-
-    if (movie.criticRatings) {
-      metascoreOuterHtml = this._getFilledMetascoreHtml(movie);
-    } else {
-      metascoreOuterHtml = this._getEmptyMetascoreHtml(movie);
-    }
-
-    return this._generateElement(metascoreOuterHtml);
-  }
-
-  _getFilledMetascoreHtml(movie) {
-    return (
-      `<a href="${movie.url}criticreviews" class="unstyled articleLink" title="Open ${movie.info.title} Critic Reviews on ${movie.pageName}">` +
-      `      <h2 class="mop-ratings-wrap__score">` +
-      `        <span class="mop-ratings-wrap__percentage"` +
-      `              style="background-color: ${movie.criticRatings.custom}; padding: 0px 8px;">${movie.criticRatings.score}</span></h2>` +
-      `    <div class="mop-ratings-wrap__review-totals">` +
-      `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
-      `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
-      `      <small class="mop-ratings-wrap__text--small">${movie.criticRatings.count}</small>` +
-      `    </div>` +
-      `  </a>`
-    );
-  }
-
-  _getEmptyMetascoreHtml(movie) {
-    return (
-      `      <a href="${movie.url}criticreviews" class="unstyled articleLink" title="Open ${movie.info.title} Critic Reviews on ${movie.pageName}">` +
-      `        <div class="mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion"` +
-      ` >There are no<br>Metacritic reviews</div>` +
-      `    <div class="mop-ratings-wrap__review-totals">` +
-      `      <h3 class="mop-ratings-wrap__title mop-ratings-wrap__title--small">Metascore</h3>` +
-      `      <strong class="mop-ratings-wrap__text--small">Critic reviews: </strong>` +
-      `      <small class="mop-ratings-wrap__text--small">N/A</small>` +
-      `    </div></a>`
-    );
-  }
-
-  _generateUserRatingsElement(movie) {
-    let userRatingsElement;
-
-    if (movie.userRatings) {
-      userRatingsElement = this._generateFilledUserRatingsElement(movie);
-    } else {
-      userRatingsElement = this._generateEmptyUserRatingsElement(movie);
-    }
-
-    return userRatingsElement;
-  }
-
-  _generateFilledUserRatingsElement(movie) {
-    const userratingOuterHtml =
-      `<a href="${movie.url}" class="unstyled articleLink" title="Open ${movie.info.title} on ${movie.pageName}">` +
-      `    <h2 class="mop-ratings-wrap__score">` +
-      `        <span class="mop-ratings-wrap__percentage" style="vertical-align: middle;">${movie.userRatings.score.toLocaleString(
-        'en',
-        {
-          minimumFractionDigits: 1,
-          maximumFractionDigits: 1,
-        }
-      )}</span>` +
-      `    </h2>` +
-      `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
-      `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating${this._generateToplistPositionString(
-        movie
-      )}</h3>` +
-      `      <strong class="mop-ratings-wrap__text--small">User Ratings: ${movie.userRatings.count.toLocaleString(
-        'en'
-      )}</strong>` +
-      `    </div>` +
-      `      </a>`;
-
-    const userRatingsElement = this._generateElement(userratingOuterHtml);
-
-    const userRatingsLogo = this._generateElement(movie.userRatings.custom);
-
-    userRatingsLogo.style.verticalAlign = 'middle';
-    userRatingsElement.firstElementChild.prepend(userRatingsLogo);
-
-    return userRatingsElement;
-  }
-
-  _generateEmptyUserRatingsElement(movie) {
-    const userratingOuterHtml =
-      `      <a href="${movie.url}" class="unstyled articleLink" title="Open ${movie.info.title} on ${movie.pageName}">` +
-      `  <div class="audience-score__italics mop-ratings-wrap__text--subtle mop-ratings-wrap__text--small mop-ratings-wrap__text--cushion mop-ratings-wrap__text--not-released">` +
-      `        <p class="mop-ratings-wrap__prerelease-text">Coming soon</p>` +
-      `    </div>` +
-      `    <div class="mop-ratings-wrap__review-totals mop-ratings-wrap__review-totals--not-released">` +
-      `      <h3 class="mop-ratings-wrap__title audience-score__title mop-ratings-wrap__title--small">IMDb rating</h3>` +
-      `      <strong class="mop-ratings-wrap__text--small">User Ratings: N/A</strong>` +
-      `    </div>` +
-      `      </a>`;
-
-    return this._generateElement(userratingOuterHtml);
-  }
-
-  _generateToplistPositionString(movie) {
-    return movie.toplistPosition ? ` #${movie.toplistPosition}/250` : ``;
-  }
-
-  _generateImdbSummaryElement(movie) {
-    return this._generateElement(
-      `<div id="mv-imdb-summary"` +
-        ` title="${movie.summary.title} from ${movie.pageName}"` +
-        ` style="padding-top: 20px;">` +
-        `  <strong>${movie.summary.title}</strong>` +
-        `  <p` +
-        `    style="min-height: 0"` +
-        `    class="mop-ratings-wrap__text mop-ratings-wrap__text--concensus"` +
-        `  >` +
-        `    ${movie.summary.content}` +
-        `  </p>` +
-        `</div>`
-    );
-  }
+  injectRatings() {}
 }
 
 if (typeof exportToTestEnvironment !== 'undefined') {

@@ -1,18 +1,18 @@
 version: 2.1
 orbs:
-  browser-tools: circleci/browser-tools@1.0.1
+  browser-tools: circleci/browser-tools@1.2.4
 
 jobs:
   checkout_and_install_npm:
     docker:
-      - image: circleci/node:latest
+      - image: cimg/node:lts-browsers
     steps:
       - checkout
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - run: npm install
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
       - persist_to_workspace:
@@ -22,7 +22,7 @@ jobs:
 
   eslint:
     docker:
-      - image: circleci/node:latest
+      - image: cimg/node:lts-browsers
     steps:
       - attach_workspace:
           at: ./
@@ -30,7 +30,7 @@ jobs:
 
   webext-lint:
     docker:
-      - image: circleci/node:latest
+      - image: cimg/node:lts-browsers
     steps:
       - attach_workspace:
           at: ./
@@ -38,40 +38,24 @@ jobs:
 
   unit-test:
     docker:
-      - image: circleci/node:latest
+      - image: cimg/node:lts-browsers
     steps:
       - attach_workspace:
           at: ./
       - run: npm run _ci:unit-test
 
-  contract-test:
-    docker:
-      - image: circleci/node:latest
-    steps:
-      - attach_workspace:
-          at: ./
-      - run: npm run test:html-contracts
-
   end-to-end-test:
     docker:
-      - image: circleci/node:latest
+      - image: cimg/node:lts-browsers
     steps:
       - attach_workspace:
           at: ./
       - browser-tools/install-firefox
       - run: npm run test:end-to-end
 
-  tool-test:
-    docker:
-      - image: circleci/node:latest
-    steps:
-      - attach_workspace:
-          at: ./
-      - run: npm run test:tools
-
   deploy:
     docker:
-      - image: circleci/node:latest
+      - image: cimg/node:lts-browsers
     steps:
       - attach_workspace:
           at: ./
@@ -103,19 +87,7 @@ workflows:
           filters:
             tags:
               only: /.*/
-      - contract-test:
-          requires:
-            - checkout_and_install_npm
-          filters:
-            tags:
-              only: /.*/
       - end-to-end-test:
-          requires:
-            - checkout_and_install_npm
-          filters:
-            tags:
-              only: /.*/
-      - tool-test:
           requires:
             - checkout_and_install_npm
           filters:
@@ -126,9 +98,7 @@ workflows:
             - eslint
             - webext-lint
             - unit-test
-            - contract-test
             - end-to-end-test
-            - tool-test
           filters:
             tags:
               only: /^v.+/
@@ -144,7 +114,7 @@ workflows:
                 - master
     jobs:
       - checkout_and_install_npm
-      - contract-test:
+      - unit-test:
           requires:
             - checkout_and_install_npm
       - end-to-end-test:

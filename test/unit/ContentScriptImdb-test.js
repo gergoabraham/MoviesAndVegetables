@@ -10,11 +10,10 @@ const { JSDOM } = require('jsdom');
 
 describe('Content script on IMDb', function () {
   describe('injectRottenScoresOnImdb', function () {
-    it.skip('inject RottenTomatoes scores into the document', async function () {
-      const dom = await JSDOM.fromFile(
-        FakeHtmlPath + 'imdb.com..title..tt0111161 - listed in top250.html',
-        { url: 'https://www.imdb.com/title/tt0111161/' }
-      );
+    it('inject RottenTomatoes scores into the document', async function () {
+      const response = await fetch('https://www.imdb.com/title/tt0111161/');
+      const text = await response.text();
+      const dom = new JSDOM(text);
 
       global.document = dom.window.document;
 
@@ -24,10 +23,10 @@ describe('Content script on IMDb', function () {
       const tomatoMeter = document.getElementById('mv-tomatometer');
 
       audienceScore.should.exist;
-      audienceScore.querySelector('span').textContent.should.equal('98%');
+      audienceScore.querySelector('span').textContent.should.match(/\d\d%/);
 
       tomatoMeter.should.exist;
-      tomatoMeter.querySelector('span').textContent.should.equal('90%');
+      tomatoMeter.querySelector('span').textContent.should.match(/\d\d%/);
     });
   });
 });

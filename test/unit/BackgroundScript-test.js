@@ -7,6 +7,7 @@
 'use strict';
 
 const sinon = require('sinon');
+const { shouldBeSimilar } = require('./MoviePages/helper');
 
 describe('Background script', function () {
   it('register message listener on startup', function () {
@@ -24,93 +25,54 @@ describe('Background script', function () {
   });
 
   describe('main search algorithm', function () {
-    it.skip(`search remote page using "feeling lucky" and return with the scores`, async function () {
-      // Uses the html files:
-      // - google.com..search...btnI=true&q=The+Shawshank+Redemption+1994+site%3Awww.rottentomatoes.com.html
-      // - rottentomatoes.m.shawshank_redemption.html
+    it(`search remote page using "feeling lucky" and return with the scores`, async function () {
       const movieInfo = new MovieInfo(
         'The Shawshank Redemption',
         1994,
         'Frank Darabont'
       );
 
-      await BackgroundScript._getRemotePageData({
+      const actual = await BackgroundScript._getRemotePageData({
         movieInfo,
         remotePageName: RottenPage.NAME,
-      }).should.eventually.deep.equal(
-        new MovieInfoWithRatings(
-          new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont'),
-          `https://www.rottentomatoes.com/m/shawshank_redemption`,
-          RottenPage.NAME,
-          null,
-          new Summary(
-            'Critics Consensus',
-            '<em>The Shawshank Redemption</em> is an uplifting movie.'
-          ),
-          new Ratings(
-            90,
-            71,
-            'https://www.rottentomatoes.com/assets/certified_fresh.svg'
-          ),
-          new Ratings(
-            98,
-            885688,
-            'https://www.rottentomatoes.com/assets/aud_score-fresh.svg'
-          )
-        )
+      });
+
+      const expected = new MovieInfoWithRatings(
+        new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont'),
+        `https://www.rottentomatoes.com/m/shawshank_redemption`,
+        RottenPage.NAME,
+        null,
+        new Summary(
+          'Critics Consensus',
+          '<em>The Shawshank Redemption</em> is an uplifting, deeply satisfying prison drama with sensitive direction and fine performances.'
+        ),
+        new Ratings(91, 82, /certified_fresh.+svg$/),
+        new Ratings(98, 887391, /aud_score-fresh.+svg$/)
       );
+
+      shouldBeSimilar(expected, actual);
     });
 
-    it.skip('return with the first result when "feeling lucky" doesn\'t work - one way', async function () {
-      // Uses the html files:
-      // - google.com..search...btnI=true&q=Amblin'+1968+site%3Awww.rottentomatoes.com.html
-      // - rottentomatoes.m.amblin.html
-      const movieInfo = new MovieInfo("Amblin'", 1968);
+    it('return with the first result when "feeling lucky" doesn\'t work - one way', async function () {
+      const movieInfo = new MovieInfo("Amblin'", 1968, 'Steven Spielberg');
 
-      await BackgroundScript._getRemotePageData({
+      const actual = await BackgroundScript._getRemotePageData({
         movieInfo,
         remotePageName: RottenPage.NAME,
-      }).should.eventually.deep.equal(
-        new MovieInfoWithRatings(
-          new MovieInfo("Amblin'", 1968, null),
-          `https://www.rottentomatoes.com/m/amblin`,
-          RottenPage.NAME,
-          null,
-          new Summary('Critics Consensus', 'No consensus yet.'),
-          null,
-          new Ratings(
-            60,
-            309,
-            'https://www.rottentomatoes.com/assets/aud_score-fresh.svg'
-          )
-        )
+      });
+
+      const expected = new MovieInfoWithRatings(
+        new MovieInfo("Amblin'", 1968, 'Steven Spielberg'),
+        `https://www.rottentomatoes.com/m/amblin`,
+        RottenPage.NAME,
+        null,
+        null,
+        null,
+        new Ratings(60, 310, /aud_score-fresh.+svg/)
       );
+
+      shouldBeSimilar(expected, actual);
     });
-
-    it('return with the first result when "feeling lucky" doesn\'t work - other way', async function () {
-      // Uses the html files:
-      // - google.com..search...btnI=true&q=Amblin'+1968+site%3Awww.imdb.com.html
-      // - imdb.title.tt0064010.html
-      const movieInfo = new MovieInfo("Amblin'", 1968);
-
-      await BackgroundScript._getRemotePageData({
-        movieInfo,
-        remotePageName: ImdbPage.NAME,
-      }).should.eventually.deep.equal(
-        new MovieInfoWithRatings(
-          new MovieInfo("Amblin'", 1968, null),
-          `https://www.imdb.com/title/tt0064010/`,
-          ImdbPage.NAME,
-          null,
-          null,
-          null,
-          new Ratings(6.4, 1044, '<svg id="home_img">This is the logo.</svg>')
-        )
-      );
-    });
-
-    it.skip('return null if "feeling lucky" is not the movie', function () {});
-    it.skip('return null if the first result is not the movie', function () {});
   });
 
   describe('special cases', function () {

@@ -11,10 +11,9 @@ const { JSDOM } = require('jsdom');
 describe('Content script', function () {
   describe('injectScores', function () {
     it('inject scores into the document', async function () {
-      const dom = await JSDOM.fromFile(
-        FakeHtmlPath + 'imdb.com..title..tt0111161 - listed in top250.html',
-        { url: 'https://www.imdb.com/title/tt0111161/' }
-      );
+      const response = await fetch('https://www.imdb.com/title/tt0111161/');
+      const text = await response.text();
+      const dom = new JSDOM(text);
 
       global.document = dom.window.document;
 
