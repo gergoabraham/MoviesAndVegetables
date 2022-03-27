@@ -5,7 +5,7 @@ orbs:
 jobs:
   checkout_and_install_npm:
     docker:
-      - image: cimg/node:current
+      - image: cimg/node:lts-browsers
     steps:
       - checkout
       - restore_cache:
@@ -22,7 +22,7 @@ jobs:
 
   eslint:
     docker:
-      - image: cimg/node:current
+      - image: cimg/node:lts-browsers
     steps:
       - attach_workspace:
           at: ./
@@ -30,7 +30,7 @@ jobs:
 
   webext-lint:
     docker:
-      - image: cimg/node:current
+      - image: cimg/node:lts-browsers
     steps:
       - attach_workspace:
           at: ./
@@ -38,7 +38,7 @@ jobs:
 
   unit-test:
     docker:
-      - image: cimg/node:current
+      - image: cimg/node:lts-browsers
     steps:
       - attach_workspace:
           at: ./
@@ -46,7 +46,7 @@ jobs:
 
   end-to-end-test:
     docker:
-      - image: cimg/node:current
+      - image: cimg/node:lts-browsers
     steps:
       - attach_workspace:
           at: ./
@@ -55,7 +55,7 @@ jobs:
 
   deploy:
     docker:
-      - image: cimg/node:current
+      - image: cimg/node:lts-browsers
     steps:
       - attach_workspace:
           at: ./
