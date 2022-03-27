@@ -17,7 +17,7 @@
     "preversion": "npm run _force-develop-branch && npm test",
     "version": "npm run _bump-manifest-version && npm run _generate-changelog && git add src\\manifest.json changelog.json",
     "postversion": "npm run _merge-develop-to-master && npm run _push-everything",
-    "_ci:unit-test": "nyc --reporter=lcov mocha --forbid-only test/unit/ && codecov",
+    "_ci:unit-test": "nyc --reporter=lcov mocha --forbid-only --timeout 5000 test/unit/ && codecov",
     "_ci:deploy-to-amo": "web-ext sign -s src --channel listed -i icons/icon.psd | grep -q 'Your add-on has been submitted for review.' || error 1",
     "_force-develop-branch": "powershell -Command \"$branch = git branch --show-current; if ($branch -ne 'develop') {throw '### Version should be generated only on develop branch! ###'} \"",
     "_bump-manifest-version": "node bump-manifest-version.js",
