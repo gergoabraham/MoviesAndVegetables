@@ -11,10 +11,6 @@ class FetchCache {
   constructor(cacheFolder = 'fetch-cache') {
     this.CachePath = `./test/tools/${cacheFolder}/`;
     this.DBPath = this.CachePath + 'database.json';
-
-    import('node-fetch').then(
-      ({ default: nodeFetch }) => (this.nodeFetch = nodeFetch)
-    );
   }
 
   static activateAsGlobalFetch() {
@@ -31,6 +27,10 @@ class FetchCache {
     if (this.isAlreadyCached(fileName)) {
       return this.createResponseObjectUsingCache(fileName, url);
     } else {
+      if (!this.nodeFetch) {
+        this.nodeFetch = (await import('node-fetch')).default;
+      }
+
       response = await this.nodeFetch(url, {
         headers: {
           'User-Agent':
