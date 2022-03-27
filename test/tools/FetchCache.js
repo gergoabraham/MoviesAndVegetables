@@ -5,13 +5,16 @@
  */
 'use strict';
 
-const nodeFetch = require('node-fetch');
 const fs = require('fs');
 
 class FetchCache {
   constructor(cacheFolder = 'fetch-cache') {
     this.CachePath = `./test/tools/${cacheFolder}/`;
     this.DBPath = this.CachePath + 'database.json';
+
+    import('node-fetch').then(
+      ({ default: nodeFetch }) => (this.nodeFetch = nodeFetch)
+    );
   }
 
   static activateAsGlobalFetch() {
@@ -28,7 +31,7 @@ class FetchCache {
     if (this.isAlreadyCached(fileName)) {
       return this.createResponseObjectUsingCache(fileName, url);
     } else {
-      response = await nodeFetch(url, {
+      response = await this.nodeFetch(url, {
         headers: {
           'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0',
