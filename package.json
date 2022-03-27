@@ -3,8 +3,7 @@
   "version": "0.7.2",
   "scripts": {
     "tdd:unit": "mocha --watch --timeout 5000 test/unit/",
-    "tdd:html-contracts": "mocha test/html-contracts --watch --timeout 5000",
-    "clear-html-cache": "rm test/tools/real-htmls-cache -r",
+    "clear-html-cache": "rm test/tools/fetch-cache -r",
     "firefox": "web-ext -s src run",
     "coverage": "nyc --reporter=lcov mocha -R=progress --forbid-only test/unit/ && start coverage/lcov-report/index.html",
     "lint:eslint": "eslint --ignore-path .gitignore .",
@@ -13,7 +12,6 @@
     "test": "echo ### COMMIT SUITE ### && npm-run-all --aggregate-output -p lint:* test:*",
     "test:end-to-end": "mocha test/end-to-end --forbid-only --timeout 120000 --color",
     "test:end-to-end:with-head": "set endToEndWithHead=1&& mocha test/end-to-end  --forbid-only --timeout 120000 --color",
-    "test:html-contracts": "mocha test/html-contracts -R=progress --forbid-only --color --timeout 5000",
     "test:unit": "nyc --reporter=text-summary mocha -R=progress --forbid-only --timeout 5000 --color test/unit/",
     "build": "web-ext -s src build -i icons/icon.psd",
     "preversion": "npm run _force-develop-branch && npm test",

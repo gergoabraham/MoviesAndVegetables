@@ -10,7 +10,6 @@
 
     "FakeHtmlFetcher": "readonly",
     "FakeHtmlPath": "readonly",
-    "contract": "readonly",
 
     "ContentScriptImdb": "readonly",
     "ContentScriptRottenTomatoes": "readonly",
