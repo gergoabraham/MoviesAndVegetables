@@ -86,7 +86,7 @@ describe('rottenPage', function () {
           );
 
           const expected = new MovieInfoWithRatings(
-            new MovieInfo('Avatar 2', 2022, 'James Cameron'),
+            new MovieInfo('Avatar: The Way of Water', 2022, 'James Cameron'),
             'https://www.rottentomatoes.com/m/avatar_2',
             RottenPage.NAME,
             null,
