@@ -82,12 +82,12 @@ describe('rottenPage', function () {
       context('on a movie without ratings', function () {
         it('read all stuff', async function () {
           const movie = await readMovieDataByRottenPage(
-            'https://www.rottentomatoes.com/m/avatar_2'
+            'https://www.rottentomatoes.com/m/savage-watch-dog-the-savage-file'
           );
 
           const expected = new MovieInfoWithRatings(
-            new MovieInfo('Avatar: The Way of Water', 2022, 'James Cameron'),
-            'https://www.rottentomatoes.com/m/avatar_2',
+            new MovieInfo('Savage', 1972, 'Steven Spielberg'),
+            'https://www.rottentomatoes.com/m/savage-watch-dog-the-savage-file',
             RottenPage.NAME,
             null,
             null,
