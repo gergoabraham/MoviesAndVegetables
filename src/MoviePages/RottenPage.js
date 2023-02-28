@@ -41,6 +41,13 @@ class RottenPage extends MoviePage {
     let userRatings = null;
     let criticsConsensus = null;
 
+    const scoreDetailsElement =
+      this._document.getElementById('score-details-json');
+
+    this.scoreDetails = scoreDetailsElement
+      ? JSON.parse(scoreDetailsElement.textContent)
+      : null;
+
     try {
       movieInfo = await this.getMovieInfo();
     } catch (e) {}
@@ -92,11 +99,11 @@ class RottenPage extends MoviePage {
   }
 
   _readTomatometer() {
-    return Number(this._text.match(/"tomatometerScore":"?(\d+)"?/)[1]);
+    return this.scoreDetails.scoreboard.tomatometerScore.value;
   }
 
   _readNumberOfCriticRatings() {
-    return Number(this._text.match(/"tomatometerCount":(\d+)/)[1]);
+    return this.scoreDetails.scoreboard.tomatometerScore.ratingCount;
   }
 
   async _readTomatometerLogoUrl() {
@@ -114,7 +121,7 @@ class RottenPage extends MoviePage {
   }
 
   _readTomatometerFreshness() {
-    return this._text.match(/"tomatometerState":"([\w-]+)"/)[1];
+    return this.scoreDetails.scoreboard.tomatometerScore.state;
   }
 
   async _readUserRatings() {
@@ -132,11 +139,11 @@ class RottenPage extends MoviePage {
   }
 
   _readAudienceScore() {
-    return Number(this._text.match(/"audienceScore":"?(\d+)"?/)[1]);
+    return this.scoreDetails.scoreboard.audienceScore.value;
   }
 
   _readNumberOfUserRatings() {
-    return Number(this._text.match(/"audienceCount":(\d+)/)[1]);
+    return this.scoreDetails.scoreboard.audienceScore.ratingCount;
   }
 
   async _readAudienceScoreLogoUrl() {
@@ -154,7 +161,7 @@ class RottenPage extends MoviePage {
   }
 
   _readAudienceScoreFreshness() {
-    return this._text.match(/"audienceState":"([\w-]+)"/)[1];
+    return this.scoreDetails.scoreboard.audienceScore.state;
   }
 
   async _readLogoUrl(freshness) {
