@@ -10,6 +10,7 @@ const { Builder, By, until } = require('selenium-webdriver');
 const firefox = require('selenium-webdriver/firefox');
 const fs = require('fs');
 const cmd = require('node-cmd');
+const os = require('os');
 
 describe('End-to-end tests', async function () {
   const addonFolder = 'web-ext-artifacts';
@@ -87,6 +88,12 @@ describe('End-to-end tests', async function () {
     process.env.path = process.env.path + ';node_modules/geckodriver/';
 
     const options = new firefox.Options();
+
+    if (process.platform === 'win32') {
+      options.setBinary(
+        os.homedir() + '/AppData/Local/Mozilla Firefox/firefox.exe'
+      );
+    }
 
     if (process.env.endToEndWithHead != 1) {
       options.addArguments('-headless');
