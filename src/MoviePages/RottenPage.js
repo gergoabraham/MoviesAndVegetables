@@ -23,6 +23,7 @@ class RottenPage extends MoviePage {
    * @return  {MovieInfo} movie
    */
   async getMovieInfo() {
+    this._getScoreDetails();
     const metaDataJSON = this._readMetadataJSON();
 
     const title = metaDataJSON.name.replace(/&\w+;/, '+');
@@ -41,12 +42,7 @@ class RottenPage extends MoviePage {
     let userRatings = null;
     let criticsConsensus = null;
 
-    const scoreDetailsElement =
-      this._document.getElementById('score-details-json');
-
-    this.scoreDetails = scoreDetailsElement
-      ? JSON.parse(scoreDetailsElement.textContent)
-      : null;
+    this._getScoreDetails();
 
     try {
       movieInfo = await this.getMovieInfo();
@@ -72,11 +68,18 @@ class RottenPage extends MoviePage {
     );
   }
 
-  _readYear() {
-    const scoreBoardInfoElement =
-      this._document.querySelector('.scoreboard__info');
+  _getScoreDetails() {
+    const scoreDetailsElement = this._document.getElementById('scoreDetails');
 
-    const year = scoreBoardInfoElement.textContent.match(/\d{4}/);
+    this.scoreDetails = scoreDetailsElement
+      ? JSON.parse(scoreDetailsElement.textContent)
+      : null;
+  }
+
+  _readYear() {
+    const info = this.scoreDetails.scoreboard.info;
+
+    const year = info.match(/\d{4}/)[0];
 
     return Number(year);
   }
@@ -178,7 +181,7 @@ class RottenPage extends MoviePage {
   }
 
   async _fetchCss() {
-    const matchedStyleSheetUrl = this._getStylesheetUrl(/global.*\.css$/);
+    const matchedStyleSheetUrl = this._getStylesheetUrl(/index.*\.css$/);
 
     const relativeUrl = matchedStyleSheetUrl.match('/assets.+');
     const styleSheetUrl = this._convertToAbsoluteUrl(relativeUrl);
@@ -189,7 +192,7 @@ class RottenPage extends MoviePage {
   _findLogoUrlInCss(css, freshness) {
     return css.match(
       new RegExp(
-        `\\.icon\\.big\\.${freshness}[^{]*{background:transparent url\\(([^)]+)`,
+        `\\.icon__${freshness}[^}]*{background-image:url\\(([^)]+)`,
         'i'
       )
     )[1];
