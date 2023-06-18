@@ -82,12 +82,12 @@ describe('rottenPage', function () {
       context('on a movie without ratings', function () {
         it('read all stuff', async function () {
           const movie = await readMovieDataByRottenPage(
-            'https://www.rottentomatoes.com/m/savage-watch-dog-the-savage-file'
+            'https://www.rottentomatoes.com/m/street_scenes'
           );
 
           const expected = new MovieInfoWithRatings(
-            new MovieInfo('Savage', 1972, 'Steven Spielberg'),
-            'https://www.rottentomatoes.com/m/savage-watch-dog-the-savage-file',
+            new MovieInfo('Street Scenes', 1970, 'Martin Scorsese'),
+            'https://www.rottentomatoes.com/m/street_scenes',
             RottenPage.NAME,
             null,
             null,
