@@ -16,7 +16,7 @@ class RottenPage extends MoviePage {
     return /https:\/\/www\.rottentomatoes\.com\/m\/[^&/]+/;
   }
   static get HOST_NAME() {
-    return 'www.rottentomatoes.com';
+    return 'www.rottentomatoes.com/m';
   }
 
   /**
