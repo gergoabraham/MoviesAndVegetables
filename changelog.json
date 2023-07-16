@@ -1,5 +1,10 @@
 [
  {
+  "version": "v0.8.1",
+  "date": "2023-07-16",
+  "description": "Improved search algorithm: less popular movies are found with more confidence."
+ },
+ {
   "version": "v0.8.0",
   "date": "2023-07-16",
   "description": "Adapt to changed imdb"
