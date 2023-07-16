@@ -65,7 +65,7 @@ class ImdbPage extends MoviePage {
   }
 
   _readYear() {
-    return Number(this._getTitleMetaTag().match(/\d{4}(?=\) - IMDb)/)[0]);
+    return Number(this._getTitleMetaTag().match(/\((\d{4})\)/)[1]);
   }
 
   async _readCriticRatings() {
