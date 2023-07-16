@@ -1,5 +1,10 @@
 [
  {
+  "version": "v0.8.0",
+  "date": "2023-07-16",
+  "description": "Adapt to changed imdb"
+ },
+ {
   "version": "v0.7.5",
   "date": "2023-06-18",
   "description": "Adapted to changed RottenTomatoes"
