@@ -181,7 +181,7 @@ class RottenPage extends MoviePage {
   }
 
   async _fetchCss() {
-    const matchedStyleSheetUrl = this._getStylesheetUrl(/index.*\.css$/);
+    const matchedStyleSheetUrl = this._getStylesheetUrl(/default.*\.css$/);
 
     const relativeUrl = matchedStyleSheetUrl.match('/assets.+');
     const styleSheetUrl = this._convertToAbsoluteUrl(relativeUrl);
