@@ -1,6 +1,6 @@
 {
   "name": "movies-and-vegetables",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "scripts": {
     "tdd:unit": "mocha --watch --timeout 5000 test/unit/",
     "clear-html-cache": "rm -rf test/tools/fetch-cache",
