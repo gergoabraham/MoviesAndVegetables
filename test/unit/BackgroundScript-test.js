@@ -25,7 +25,7 @@ describe('Background script', function () {
   });
 
   describe('main search algorithm', function () {
-    it(`search remote page using "feeling lucky" and return with the scores`, async function () {
+    it(`search remote page using "feeling lucky" and return the scores`, async function () {
       const movieInfo = new MovieInfo(
         'The Shawshank Redemption',
         1994,
@@ -38,8 +38,8 @@ describe('Background script', function () {
       });
 
       const expected = new MovieInfoWithRatings(
-        new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont'),
-        `https://www.rottentomatoes.com/m/shawshank_redemption`,
+        movieInfo,
+        'https://www.rottentomatoes.com/m/shawshank_redemption',
         RottenPage.NAME,
         null,
         new Summary(
@@ -53,7 +53,7 @@ describe('Background script', function () {
       shouldBeSimilar(expected, actual);
     });
 
-    it('return with the first result when "feeling lucky" doesn\'t work - one way', async function () {
+    it('return the first result when "feeling lucky" doesn\'t work - one way', async function () {
       const movieInfo = new MovieInfo("Amblin'", 1968, 'Steven Spielberg');
 
       const actual = await BackgroundScript._getRemotePageData({
@@ -62,7 +62,7 @@ describe('Background script', function () {
       });
 
       const expected = new MovieInfoWithRatings(
-        new MovieInfo("Amblin'", 1968, 'Steven Spielberg'),
+        movieInfo,
         `https://www.rottentomatoes.com/m/amblin`,
         RottenPage.NAME,
         null,
