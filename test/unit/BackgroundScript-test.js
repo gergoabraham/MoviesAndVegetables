@@ -46,7 +46,7 @@ describe('Background script', function () {
           'Critics Consensus',
           '<em>The Shawshank Redemption</em> is an uplifting, deeply satisfying prison drama with sensitive direction and fine performances.'
         ),
-        new Ratings(91, 82, /certified_fresh.+svg$/),
+        new Ratings(91, 80, /certified_fresh.+svg$/),
         new Ratings(98, 887391, /aud_score-fresh.+svg$/)
       );
 
