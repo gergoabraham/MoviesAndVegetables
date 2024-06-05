@@ -1,5 +1,7 @@
 'use strict';
 
+const { expect } = require('chai');
+
 /**
  *
  * @param {MovieInfoWithRatings} exp
@@ -14,29 +16,50 @@ function shouldBeSimilar(exp, act) {
     throw new Error('shouldBeSimilar: received type not supported');
   }
 
-  exp.info.should.deep.equal(act.info);
-  exp.url.should.equal(act.url);
-  exp.pageName.should.equal(act.pageName);
-  (exp.toplistPosition === act.toplistPosition).should.be.true;
+  exp.info.should.deep.equal(act.info, '👉 wrong `info` 👈\n');
+  exp.url.should.equal(act.url, '👉 wrong `url` 👈\n');
+  exp.pageName.should.equal(act.pageName, '👉 wrong `pageName` 👈\n');
+  expect(exp.toplistPosition).to.equal(
+    act.toplistPosition,
+    '👉 wrong `toplistPosition` 👈\n'
+  );
 
-  exp.summary === act.summary || exp.summary.should.deep.equal(act.summary);
-  compareRatings(exp.criticRatings, act.criticRatings);
-  compareRatings(exp.userRatings, act.userRatings);
+  if (exp.summary === null) {
+    expect(act.summary, '👉 wrong `summary` 👈\n').to.be.null;
+  } else {
+    exp.summary.should.deep.equal(act.summary, '👉 wrong `summary` 👈\n');
+  }
+
+  compareRatings(exp.criticRatings, act.criticRatings, 'criticRatings');
+  compareRatings(exp.userRatings, act.userRatings, 'userRatings');
 }
 
 /**
  *
  * @param {Ratings} exp
  * @param {Ratings} act
+ * @param {type} string
  */
-function compareRatings(exp, act) {
+function compareRatings(exp, act, type) {
   if (exp === act) {
     return;
   }
 
-  act.custom.match(exp.custom).should.not.be.null;
-  act.count.should.be.greaterThanOrEqual(exp.count);
-  act.score.should.be.closeTo(exp.score, act.score * 0.1);
+  expect(act.count, `👉 \`${type}.count\` is missing 👈\n`).to.not.be.null;
+  act.count.should.be.greaterThanOrEqual(
+    exp.count,
+    `👉 wrong \`${type}.count\` 👈\n`
+  );
+
+  expect(act.score, `👉 \`${type}.score\` is missing 👈\n`).to.not.be.null;
+  act.score.should.be.closeTo(
+    exp.score,
+    act.score * 0.1,
+    `👉 wrong \`${type}.score\` 👈\n`
+  );
+
+  expect(act.custom, `👉 \`${type}.custom\` is missing 👈\n`).to.not.be.null;
+  act.custom.should.match(exp.custom, `👉 wrong \`${type}.custom\` 👈\n`);
 }
 
 module.exports = { shouldBeSimilar };
