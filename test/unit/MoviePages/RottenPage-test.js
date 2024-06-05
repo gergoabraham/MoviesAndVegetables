@@ -51,7 +51,7 @@ describe('rottenPage', function () {
       const movie = await rottenPage.getMovieInfo();
 
       movie.should.deep.equal(
-        new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont')
+        new MovieInfo('The Shawshank Redemption', null, 'Frank Darabont')
       );
     });
 
@@ -63,16 +63,16 @@ describe('rottenPage', function () {
           );
 
           const expected = new MovieInfoWithRatings(
-            new MovieInfo('The Shawshank Redemption', 1994, 'Frank Darabont'),
+            new MovieInfo('The Shawshank Redemption', null, 'Frank Darabont'),
             'https://www.rottentomatoes.com/m/shawshank_redemption',
             RottenPage.NAME,
             null,
             new Summary(
               'Critics Consensus',
-              '<em>The Shawshank Redemption</em> is an uplifting, deeply satisfying prison drama with sensitive direction and fine performances.'
+              'Steeped in old-fashioned storytelling and given evergreen humanity by Morgan Freeman and Tim Robbins, The Shawshank Redemption chronicles the hardship of incarceration patiently enough to come by its uplift honestly.'
             ),
-            new Ratings(91, 80, /certified_fresh.+svg/),
-            new Ratings(98, 887391, /aud_score-fresh.+svg/)
+            new Ratings(89, 141, /certified_fresh.+svg/),
+            new Ratings(98, 890259, /aud_score-fresh.+svg/)
           );
 
           shouldBeSimilar(expected, movie);
@@ -86,7 +86,7 @@ describe('rottenPage', function () {
           );
 
           const expected = new MovieInfoWithRatings(
-            new MovieInfo('Street Scenes', 1970, 'Martin Scorsese'),
+            new MovieInfo('Street Scenes', null, 'Martin Scorsese'),
             'https://www.rottentomatoes.com/m/street_scenes',
             RottenPage.NAME,
             null,
@@ -106,7 +106,7 @@ describe('rottenPage', function () {
           );
 
           const expected = new MovieInfoWithRatings(
-            new MovieInfo("Amblin'", 1968, 'Steven Spielberg'),
+            new MovieInfo("Amblin'", null, 'Steven Spielberg'),
             'https://www.rottentomatoes.com/m/amblin',
             RottenPage.NAME,
             null,

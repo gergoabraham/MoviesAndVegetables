@@ -38,13 +38,13 @@ describe('Background script', function () {
       });
 
       const expected = new MovieInfoWithRatings(
-        movieInfo,
+        new MovieInfo('The Shawshank Redemption', null, 'Frank Darabont'),
         'https://www.rottentomatoes.com/m/shawshank_redemption',
         RottenPage.NAME,
         null,
         new Summary(
           'Critics Consensus',
-          '<em>The Shawshank Redemption</em> is an uplifting, deeply satisfying prison drama with sensitive direction and fine performances.'
+          'Steeped in old-fashioned storytelling and given evergreen humanity by Morgan Freeman and Tim Robbins, The Shawshank Redemption chronicles the hardship of incarceration patiently enough to come by its uplift honestly.'
         ),
         new Ratings(91, 80, /certified_fresh.+svg$/),
         new Ratings(98, 887391, /aud_score-fresh.+svg$/)
@@ -62,7 +62,7 @@ describe('Background script', function () {
       });
 
       const expected = new MovieInfoWithRatings(
-        movieInfo,
+        new MovieInfo("Amblin'", null, 'Steven Spielberg'),
         `https://www.rottentomatoes.com/m/amblin`,
         RottenPage.NAME,
         null,
