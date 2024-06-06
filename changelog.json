@@ -1,5 +1,10 @@
 [
  {
+  "version": "v0.8.3",
+  "date": "2024-06-06",
+  "description": "Fix to show Rotten Tomatoes ratings again.\\nTomatometer and Audience score icons are not shown at the moment. :("
+ },
+ {
   "version": "v0.8.2",
   "date": "2023-08-20",
   "description": "Adapted to changed RottenTomatoes"
