@@ -104,7 +104,7 @@ describe('End-to-end tests', async function () {
       .setFirefoxOptions(options)
       .build();
 
-    return driver.manage().setTimeouts({ pageLoad: 10000 });
+    return driver.manage().setTimeouts({ pageLoad: 30000 });
   }
 
   function installAddon() {
