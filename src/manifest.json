@@ -3,7 +3,7 @@
 
   "name": "Movies and Vegetables",
   "description": "Links movies' IMDb and RottenTomatoes pages by showing their scores.",
-  "version": "0.8.3",
+  "version": "0.8.4",
 
   "author": "Gergő Ábrahám",
   "homepage_url": "https://github.com/gergooo/MoviesAndVegetables",
