@@ -24,6 +24,7 @@
 
   "background": {
     "scripts": [
+      "Assets/rottenTomatoesIcons.js",
       "Utilities/Logger.js",
       "MovieData/Ratings.js",
       "MovieData/Summary.js",

@@ -11,6 +11,7 @@
     "FakeHtmlFetcher": "readonly",
     "FakeHtmlPath": "readonly",
 
+    "rottenTomatoesIcons": "readonly",
     "ContentScriptImdb": "readonly",
     "ContentScriptRottenTomatoes": "readonly",
     "ContentScript": "readonly",

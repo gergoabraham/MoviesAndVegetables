@@ -57,7 +57,7 @@ describe('rottenPage', function () {
 
     describe(`getMovieInfoWithRatings`, function () {
       context('on a movie with ratings', function () {
-        it('read all stuff', async function () {
+        it('read all stuff: certified fresh + fresh', async function () {
           const movie = await readMovieDataByRottenPage(
             'https://www.rottentomatoes.com/m/shawshank_redemption'
           );
@@ -71,8 +71,50 @@ describe('rottenPage', function () {
               'Critics Consensus',
               'Steeped in old-fashioned storytelling and given evergreen humanity by Morgan Freeman and Tim Robbins, The Shawshank Redemption chronicles the hardship of incarceration patiently enough to come by its uplift honestly.'
             ),
-            new Ratings(89, 141, /certified_fresh.+svg/),
-            new Ratings(98, 890259, /aud_score-fresh.+svg/)
+            new Ratings(89, 141, rottenTomatoesIcons.critics.certifiedPositive),
+            new Ratings(98, 890259, rottenTomatoesIcons.audienceScore.positive)
+          );
+
+          shouldBeSimilar(expected, movie);
+        });
+
+        it('read all stuff: fresh tomatometer', async function () {
+          const movie = await readMovieDataByRottenPage(
+            'https://www.rottentomatoes.com/m/cemetery_man'
+          );
+
+          const expected = new MovieInfoWithRatings(
+            new MovieInfo('Cemetery Man', null, 'Michele Soavi'),
+            'https://www.rottentomatoes.com/m/cemetery_man',
+            RottenPage.NAME,
+            null,
+            new Summary(
+              'Critics Consensus',
+              'Cemetery Man will frustrate viewers seeking narrative cohesion or coherence, but this surreal blend of humor and horror should satisfy B-movie fans in the mood for quirk.'
+            ),
+            new Ratings(61, 31, rottenTomatoesIcons.critics.positive),
+            new Ratings(78, 9428, rottenTomatoesIcons.audienceScore.positive)
+          );
+
+          shouldBeSimilar(expected, movie);
+        });
+
+        it('read all stuff: rotten + rotten', async function () {
+          const movie = await readMovieDataByRottenPage(
+            'https://www.rottentomatoes.com/m/the_dead_dont_die_2019'
+          );
+
+          const expected = new MovieInfoWithRatings(
+            new MovieInfo("The Dead Don't Die (2019)", null, 'Jim Jarmusch'),
+            'https://www.rottentomatoes.com/m/the_dead_dont_die_2019',
+            RottenPage.NAME,
+            null,
+            new Summary(
+              'Critics Consensus',
+              "The Dead Don't Die dabbles with tones and themes to varying degrees of success, but sharp wit and a strong cast make this a zom-com with enough brains to consume."
+            ),
+            new Ratings(55, 317, rottenTomatoesIcons.critics.negative),
+            new Ratings(38, 4877, rottenTomatoesIcons.audienceScore.negative)
           );
 
           shouldBeSimilar(expected, movie);
@@ -112,7 +154,7 @@ describe('rottenPage', function () {
             null,
             null,
             null,
-            new Ratings(60, 309, /aud_score-fresh.+svg/)
+            new Ratings(60, 309, rottenTomatoesIcons.audienceScore.positive)
           );
 
           shouldBeSimilar(expected, movie);

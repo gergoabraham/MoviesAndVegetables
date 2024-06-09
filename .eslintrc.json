@@ -24,6 +24,7 @@
   },
   "globals": {
     "exportToTestEnvironment": "readonly",
+    "rottenTomatoesIcons": "writable",
     "MoviePageFactory": "writable",
     "ImdbPage": "writable",
     "RottenPage": "writable",

@@ -2,7 +2,7 @@
   "name": "movies-and-vegetables",
   "version": "0.8.3",
   "scripts": {
-    "tdd:unit": "mocha --watch --timeout 5000 test/unit/",
+    "tdd:unit": "mocha --watch --timeout 5000 --reporter-option maxDiffSize=500 test/unit/",
     "clear-html-cache": "rm -rf test/tools/fetch-cache",
     "firefox": "web-ext -s src run",
     "coverage": "nyc --reporter=lcov mocha -R=progress --forbid-only test/unit/ && open coverage/lcov-report/index.html",

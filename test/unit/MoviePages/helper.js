@@ -58,9 +58,8 @@ function compareRatings(exp, act, type) {
     `👉 wrong \`${type}.score\` 👈\n`
   );
 
-  // todo: re-enable
-  // expect(act.custom, `👉 \`${type}.custom\` is missing 👈\n`).to.not.be.null;
-  // act.custom.should.match(exp.custom, `👉 wrong \`${type}.custom\` 👈\n`);
+  expect(act.custom, `👉 \`${type}.custom\` is missing 👈\n`).to.not.be.null;
+  act.custom.should.equal(exp.custom, `👉 wrong \`${type}.custom\` 👈\n`);
 }
 
 module.exports = { shouldBeSimilar };

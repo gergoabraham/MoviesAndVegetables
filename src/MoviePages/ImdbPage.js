@@ -249,20 +249,11 @@ class ImdbPage extends MoviePage {
       ratingsToInject.count
     )} votes`;
 
-    const originalLogo = scoreElementContainer.querySelector('svg');
+    const originalLogosParent =
+      scoreElementContainer.querySelector('svg').parentElement;
 
-    originalLogo.children[0].remove();
-
-    const logoToInsert = document.createElementNS(
-      originalLogo.namespaceURI,
-      'image'
-    );
-
-    logoToInsert.setAttribute('width', '24px');
-    logoToInsert.setAttribute('height', '24px');
-    logoToInsert.setAttribute('href', ratingsToInject.custom);
-
-    originalLogo.append(logoToInsert);
+    originalLogosParent.children[0].remove();
+    originalLogosParent.append(this._generateElement(ratingsToInject.custom));
 
     userRatingElement.after(scoreElementContainer);
   }

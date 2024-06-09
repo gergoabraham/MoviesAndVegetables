@@ -37,6 +37,7 @@ require('../src/ContentScriptImdb');
 require('../src/ContentScriptRotten');
 require('../src/ContentScript');
 require('../src/BackgroundScript');
+require('../src/Assets/rottenTomatoesIcons');
 require('../src/MovieData/MovieInfo');
 require('../src/MovieData/Ratings');
 require('../src/MovieData/Summary');

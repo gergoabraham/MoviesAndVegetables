@@ -89,7 +89,7 @@ class RottenPage extends MoviePage {
       ? new Ratings(
           tomatometer,
           this._readNumberOfCriticRatings(),
-          await this._readTomatometerLogoUrl()
+          this._getTomatometerLogo()
         )
       : null;
   }
@@ -102,22 +102,23 @@ class RottenPage extends MoviePage {
     return this.scoreCard.criticsScore.ratingCount;
   }
 
-  async _readTomatometerLogoUrl() {
-    let logoUrl;
+  _getTomatometerLogo() {
+    const sentiment = this.scoreCard.criticsScore?.sentiment;
+    const certified = this.scoreCard.criticsScore?.certified;
 
-    try {
-      const freshness = this._readTomatometerFreshness();
+    if (!sentiment) return null;
 
-      logoUrl = await this._readLogoUrl(freshness);
-    } catch (e) {
-      logoUrl = null;
+    if (sentiment.match(/negative/i)) {
+      return rottenTomatoesIcons.critics.negative;
     }
 
-    return logoUrl;
-  }
-
-  _readTomatometerFreshness() {
-    return this.scoreDetails.scoreboard.tomatometerScore.state;
+    if (sentiment.match(/positive/i)) {
+      if (certified) {
+        return rottenTomatoesIcons.critics.certifiedPositive;
+      } else {
+        return rottenTomatoesIcons.critics.positive;
+      }
+    }
   }
 
   async _readUserRatings() {
@@ -129,7 +130,7 @@ class RottenPage extends MoviePage {
       ? new Ratings(
           audienceScore,
           this._readNumberOfUserRatings(),
-          await this._readAudienceScoreLogoUrl()
+          this._getAudienceScoreLogo()
         )
       : null;
   }
@@ -150,57 +151,18 @@ class RottenPage extends MoviePage {
     return audienceReviews ? audienceReviews.audienceScore.ratingCount : null;
   }
 
-  async _readAudienceScoreLogoUrl() {
-    let logoUrl;
+  _getAudienceScoreLogo() {
+    const sentiment = this.scoreCard.audienceScore.sentiment;
 
-    try {
-      const freshness = this._readAudienceScoreFreshness();
+    if (!sentiment) return null;
 
-      logoUrl = await this._readLogoUrl(freshness);
-    } catch (e) {
-      logoUrl = null;
+    if (sentiment.match(/negative/i)) {
+      return rottenTomatoesIcons.audienceScore.negative;
     }
 
-    return logoUrl;
-  }
-
-  _readAudienceScoreFreshness() {
-    return this.scoreDetails.scoreboard.audienceScore.state;
-  }
-
-  async _readLogoUrl(freshness) {
-    const css = await this._fetchCachedCss();
-    const relativeIconUrl = this._findLogoUrlInCss(css, freshness);
-
-    return this._convertToAbsoluteUrl(relativeIconUrl);
-  }
-
-  async _fetchCachedCss() {
-    this.css = this.css || (await this._fetchCss());
-
-    return this.css;
-  }
-
-  async _fetchCss() {
-    const matchedStyleSheetUrl = this._getStylesheetUrl(/default.*\.css$/);
-
-    const relativeUrl = matchedStyleSheetUrl.match('/assets.+');
-    const styleSheetUrl = this._convertToAbsoluteUrl(relativeUrl);
-
-    return RottenPage._fetchTextContent(styleSheetUrl);
-  }
-
-  _findLogoUrlInCss(css, freshness) {
-    return css.match(
-      new RegExp(
-        `\\.icon__${freshness}[^}]*{background-image:url\\(([^)]+)`,
-        'i'
-      )
-    )[1];
-  }
-
-  _convertToAbsoluteUrl(relativeUrl) {
-    return 'https://www.rottentomatoes.com' + relativeUrl;
+    if (sentiment.match(/positive/i)) {
+      return rottenTomatoesIcons.audienceScore.positive;
+    }
   }
 
   _readCriticsConsensus() {
