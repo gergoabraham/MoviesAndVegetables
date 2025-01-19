@@ -11,11 +11,13 @@ class Ratings {
    * @param  {number} score
    * @param  {number} count
    * @param  {string} custom
+   * @param  {boolean} isBanded
    */
-  constructor(score, count, custom) {
+  constructor(score, count, custom, isBanded = false) {
     this.score = score;
     this.count = count;
     this.custom = custom;
+    this.isBanded = isBanded;
   }
 }
 

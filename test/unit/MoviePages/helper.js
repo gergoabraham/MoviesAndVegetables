@@ -60,6 +60,8 @@ function compareRatings(exp, act, type) {
 
   expect(act.custom, `👉 \`${type}.custom\` is missing 👈\n`).to.not.be.null;
   act.custom.should.equal(exp.custom, `👉 wrong \`${type}.custom\` 👈\n`);
+
+  act.isBanded.should.equal(exp.isBanded, `👉 wrong \`${type}.isBanded\` 👈\n`);
 }
 
 module.exports = { shouldBeSimilar };

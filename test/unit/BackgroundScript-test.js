@@ -47,7 +47,12 @@ describe('Background script', function () {
           'Steeped in old-fashioned storytelling and given evergreen humanity by Morgan Freeman and Tim Robbins, The Shawshank Redemption chronicles the hardship of incarceration patiently enough to come by its uplift honestly.'
         ),
         new Ratings(91, 80, rottenTomatoesIcons.critics.certifiedPositive),
-        new Ratings(98, 887391, rottenTomatoesIcons.audienceScore.positive)
+        new Ratings(
+          98,
+          250000,
+          rottenTomatoesIcons.audienceScore.positive,
+          true
+        )
       );
 
       shouldBeSimilar(expected, actual);
@@ -68,7 +73,7 @@ describe('Background script', function () {
         null,
         null,
         null,
-        new Ratings(60, 310, rottenTomatoesIcons.audienceScore.positive)
+        new Ratings(60, 250, rottenTomatoesIcons.audienceScore.positive, true)
       );
 
       shouldBeSimilar(expected, actual);

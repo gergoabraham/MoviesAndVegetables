@@ -72,7 +72,12 @@ describe('rottenPage', function () {
               'Steeped in old-fashioned storytelling and given evergreen humanity by Morgan Freeman and Tim Robbins, The Shawshank Redemption chronicles the hardship of incarceration patiently enough to come by its uplift honestly.'
             ),
             new Ratings(89, 141, rottenTomatoesIcons.critics.certifiedPositive),
-            new Ratings(98, 890259, rottenTomatoesIcons.audienceScore.positive)
+            new Ratings(
+              98,
+              250000,
+              rottenTomatoesIcons.audienceScore.positive,
+              true
+            )
           );
 
           shouldBeSimilar(expected, movie);
@@ -93,7 +98,12 @@ describe('rottenPage', function () {
               'Cemetery Man will frustrate viewers seeking narrative cohesion or coherence, but this surreal blend of humor and horror should satisfy B-movie fans in the mood for quirk.'
             ),
             new Ratings(61, 31, rottenTomatoesIcons.critics.positive),
-            new Ratings(78, 9428, rottenTomatoesIcons.audienceScore.positive)
+            new Ratings(
+              78,
+              5000,
+              rottenTomatoesIcons.audienceScore.positive,
+              true
+            )
           );
 
           shouldBeSimilar(expected, movie);
@@ -114,7 +124,12 @@ describe('rottenPage', function () {
               "The Dead Don't Die dabbles with tones and themes to varying degrees of success, but sharp wit and a strong cast make this a zom-com with enough brains to consume."
             ),
             new Ratings(55, 317, rottenTomatoesIcons.critics.negative),
-            new Ratings(38, 4877, rottenTomatoesIcons.audienceScore.negative)
+            new Ratings(
+              38,
+              1000,
+              rottenTomatoesIcons.audienceScore.negative,
+              true
+            )
           );
 
           shouldBeSimilar(expected, movie);
@@ -154,7 +169,12 @@ describe('rottenPage', function () {
             null,
             null,
             null,
-            new Ratings(60, 309, rottenTomatoesIcons.audienceScore.positive)
+            new Ratings(
+              60,
+              250,
+              rottenTomatoesIcons.audienceScore.positive,
+              true
+            )
           );
 
           shouldBeSimilar(expected, movie);

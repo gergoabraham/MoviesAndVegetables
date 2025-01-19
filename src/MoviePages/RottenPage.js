@@ -130,7 +130,8 @@ class RottenPage extends MoviePage {
       ? new Ratings(
           audienceScore,
           this._readNumberOfUserRatings(),
-          this._getAudienceScoreLogo()
+          this._getAudienceScoreLogo(),
+          true
         )
       : null;
   }
@@ -140,15 +141,9 @@ class RottenPage extends MoviePage {
   }
 
   _readNumberOfUserRatings() {
-    const audienceReviewsManagerElement = this._document.querySelector(
-      'script[type="application/json"][data-json="reviewsData"]'
-    );
-
-    const audienceReviews = audienceReviewsManagerElement
-      ? JSON.parse(audienceReviewsManagerElement.textContent)
-      : null;
-
-    return audienceReviews ? audienceReviews.audienceScore.ratingCount : null;
+    return +this.scoreCard.audienceScore.bandedRatingCount
+      .match(/\d+/g)
+      .join('');
   }
 
   _getAudienceScoreLogo() {

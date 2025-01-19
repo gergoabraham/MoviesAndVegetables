@@ -247,7 +247,7 @@ class ImdbPage extends MoviePage {
 
     numberOfVotesElement.textContent = `${this._groupThousands(
       ratingsToInject.count
-    )} votes`;
+    )}${ratingsToInject.isBanded ? '+' : ''} votes`;
 
     const originalLogosParent =
       scoreElementContainer.querySelector('svg').parentElement;
