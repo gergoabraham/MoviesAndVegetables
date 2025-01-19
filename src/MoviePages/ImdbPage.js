@@ -219,7 +219,7 @@ class ImdbPage extends MoviePage {
       movie,
       ratingsToInject: movie.userRatings,
       scoreId: 'mv-audience-score',
-      scoreName: 'AUDIENCE SCORE',
+      scoreName: 'POPCORNMETER',
     });
   }
 
