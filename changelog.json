@@ -1,5 +1,10 @@
 [
  {
+  "version": "v0.9.0",
+  "date": "2025-01-26",
+  "description": "Adapt to Popcornmeter and banded counts"
+ },
+ {
   "version": "v0.8.4",
   "date": "2024-06-09",
   "description": "Fix to show Tomatometer and Audience Score icons."
