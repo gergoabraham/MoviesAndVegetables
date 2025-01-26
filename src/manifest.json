@@ -8,6 +8,12 @@
   "author": "Gergő Ábrahám",
   "homepage_url": "https://github.com/gergooo/MoviesAndVegetables",
 
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{8d78f34c-3b12-480c-88aa-c2702d484114}"
+    }
+  },
+
   "permissions": [
     "https://www.google.com/*",
     "https://www.rottentomatoes.com/*",
